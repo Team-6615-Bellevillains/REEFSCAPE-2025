@@ -34,6 +34,7 @@ public class RobotContainer {
         swerve.setDefaultCommand(swerve.driveCommand(driveAngularVelocity, driverController));
         driverController.a().onTrue(new GrabAlgaeCommand(algae));
         driverController.b().whileTrue(algae.spitAlgae());
+        driverController.x().onTrue(algae.resetAlgaeState());
         
         operatorController.a().onTrue(pivot.setArmPositionCommand(0));
         operatorController.b().onTrue(pivot.setArmPositionCommand(1));

@@ -1,14 +1,15 @@
 package frc.robot.subsystems;
 
 import java.io.File; 
-import java.util.function.Supplier;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import swervelib.SwerveDrive;
+import swervelib.SwerveInputStream;
 import swervelib.parser.SwerveParser;
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -26,9 +27,10 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
 
-  public Command driveCommand(Supplier<ChassisSpeeds> velocity){
+  public Command driveCommand(SwerveInputStream velocity, CommandXboxController controller){
     return run(()->{
-      swerveDrive.driveFieldOriented(velocity.get());
+      SwerveInputStream adjustedInput = controller.leftBumper().getAsBoolean() ?  velocity.scaleTranslation(0.5).scaleRotation(0.5) : velocity;
+      swerveDrive.driveFieldOriented(adjustedInput.get());
     });
   }
   
