@@ -46,4 +46,11 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
             grabberMotor.set(0.3);
         });
     }
+
+    public Command resetAlgaeState(){
+        return this.run(()->{
+            angleController.setReference(0, ControlType.kPosition);
+            grabberMotor.set(-0.1);
+        });
+    }
 }
