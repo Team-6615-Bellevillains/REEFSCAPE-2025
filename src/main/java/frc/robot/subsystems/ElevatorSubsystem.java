@@ -50,13 +50,13 @@ public class ElevatorSubsystem extends SubsystemBase {
                 moveElevator(0);
                 break;
             case 2:
-                moveElevator(19);
+                moveElevator(11);
                 break;
             case 3:
-                moveElevator(36);
+                moveElevator(26.75);
                 break;
             case 4:
-                moveElevator(elevatorHeight+0.5);
+                moveElevator(elevatorHeight-0.5);  
                 break;
         }
     }

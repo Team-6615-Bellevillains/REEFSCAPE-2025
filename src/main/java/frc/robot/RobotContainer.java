@@ -25,17 +25,24 @@ public class RobotContainer {
                                                             .deadband(0.1)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
-    
+
+    SwerveInputStream driveAngularVelocitySlow = SwerveInputStream.of(swerve.getSwerveDrive(),
+                                                                () -> driverController.getLeftY() * -0.5,
+                                                                () -> driverController.getLeftX() * -0.5)
+                                                            .withControllerRotationAxis(driverController::getRightX)
+                                                            .deadband(0.05)
+                                                            .scaleTranslation(0.8)
+                                                            .allianceRelativeControl(true).cubeRotationControllerAxis(true).cubeTranslationControllerAxis(true);
+
     public RobotContainer(){
         configureBindings();
     }
 
     private void configureBindings(){
-        swerve.setDefaultCommand(swerve.driveCommand(driveAngularVelocity, driverController));
+        swerve.setDefaultCommand(swerve.driveCommand(driveAngularVelocity, driveAngularVelocitySlow, driverController));
         driverController.a().onTrue(new GrabAlgaeCommand(algae));
         driverController.b().whileTrue(algae.spitAlgae());
         driverController.x().onTrue(algae.resetAlgaeState());
-        
         operatorController.a().onTrue(pivot.setArmPositionCommand(0));
         operatorController.b().onTrue(pivot.setArmPositionCommand(1));
         operatorController.x().onTrue(pivot.setArmPositionCommand(2));

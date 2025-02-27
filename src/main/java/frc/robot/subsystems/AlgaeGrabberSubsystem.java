@@ -21,12 +21,10 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (this.getCurrentCommand() == null) grabberMotor.set(-0.1);
     }
 
     public void setPositionDegrees(double degrees){
-        System.out.println(degrees);
-        angleController.setReference((degrees*20)/360, ControlType.kPosition);
+        angleController.setReference(((degrees)*20)/360, ControlType.kPosition);
     }
 
     public double getPositionDegrees(){
