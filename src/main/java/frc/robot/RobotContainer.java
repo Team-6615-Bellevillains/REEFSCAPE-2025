@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.GrabAlgaeCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
@@ -47,9 +48,12 @@ public class RobotContainer {
         operatorController.b().onTrue(pivot.setArmPositionCommand(1));
         operatorController.x().onTrue(pivot.setArmPositionCommand(2));
         operatorController.y().whileTrue(pivot.spitCoral());
-        operatorController.povUp().onTrue(elevator.setPositionCommand(4));
+        operatorController.povUp().onTrue(l4position());
         operatorController.povRight().onTrue(elevator.setPositionCommand(3));
         operatorController.povLeft().onTrue(elevator.setPositionCommand(2));
         operatorController.povDown().onTrue(elevator.setPositionCommand(1));
+    }
+    public Command l4position(){
+        return pivot.setArmPositionCommand(1).alongWith(elevator.setPositionCommand(4));
     }
 }
