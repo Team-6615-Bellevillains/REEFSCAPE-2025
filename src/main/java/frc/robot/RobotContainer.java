@@ -52,9 +52,12 @@ public class RobotContainer {
         operatorController.povUp().onTrue(l4position());
         operatorController.povRight().onTrue(elevator.setPositionCommand(3));
         operatorController.povLeft().onTrue(elevator.setPositionCommand(2));
-        operatorController.povDown().onTrue(elevator.setPositionCommand(1));
+        operatorController.povDown().onTrue(l1position());
     }
     public Command l4position(){
         return pivot.setArmPositionCommand(1).alongWith(elevator.setPositionCommand(4));
     }
+    public Command l1position(){
+        return pivot.setArmPositionCommand(0).alongWith(elevator.setPositionCommand(1));
+}
 }
