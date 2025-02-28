@@ -79,6 +79,16 @@ public class PivotArmSubsystem extends SubsystemBase {
             conveyorMotor.stopMotor();
         });
     }
+        
+    public Command reverseCoral(){
+        return this.runEnd(() -> {
+            grabberMotor.set(-0.2);
+            conveyorMotor.set(0.2);
+        }, () -> {
+            grabberMotor.stopMotor();
+            conveyorMotor.stopMotor();
+        });
+    }
 
 
 }

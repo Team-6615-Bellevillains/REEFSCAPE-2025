@@ -48,6 +48,7 @@ public class RobotContainer {
         operatorController.b().onTrue(pivot.setArmPositionCommand(1));
         operatorController.x().onTrue(pivot.setArmPositionCommand(2));
         operatorController.y().whileTrue(pivot.spitCoral());
+        operatorController.leftBumper().whileTrue(pivot.reverseCoral());
         operatorController.povUp().onTrue(l4position());
         operatorController.povRight().onTrue(elevator.setPositionCommand(3));
         operatorController.povLeft().onTrue(elevator.setPositionCommand(2));
