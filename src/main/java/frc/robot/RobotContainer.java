@@ -1,11 +1,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.GoToElevatorPositionCommand;
 import frc.robot.commands.GrabAlgaeCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem.Position;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
@@ -43,13 +45,13 @@ public class RobotContainer {
         driverController.a().onTrue(new GrabAlgaeCommand(algae));
         driverController.b().whileTrue(algae.spitAlgae());
         driverController.x().onTrue(algae.resetAlgaeState());
-        operatorController.a().onTrue(pivot.setArmPositionCommand(0));
-        operatorController.b().onTrue(pivot.setArmPositionCommand(1));
-        operatorController.x().onTrue(pivot.setArmPositionCommand(2));
+        operatorController.a().onTrue(pivot.setArmPositionCommand(false));
+        operatorController.b().onTrue(pivot.setArmPositionCommand(true));
         operatorController.y().whileTrue(pivot.spitCoral());
-        operatorController.povUp().onTrue(elevator.setPositionCommand(4));
-        operatorController.povRight().onTrue(elevator.setPositionCommand(3));
-        operatorController.povLeft().onTrue(elevator.setPositionCommand(2));
-        operatorController.povDown().onTrue(elevator.setPositionCommand(1));
+        operatorController.leftBumper().whileTrue(pivot.reverseCoral());
+        operatorController.povUp().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
+        operatorController.povRight().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
+        operatorController.povLeft().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
+        operatorController.povDown().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
     }
 }

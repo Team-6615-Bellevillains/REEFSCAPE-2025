@@ -17,16 +17,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PivotArmSubsystem extends SubsystemBase {
     
-    private SparkMax armMotor = new SparkMax(35, MotorType.kBrushless);
-    private SparkClosedLoopController armController = armMotor.getClosedLoopController();
+    public SparkMax armMotor = new SparkMax(35, MotorType.kBrushless);
+    public SparkClosedLoopController armController = armMotor.getClosedLoopController();
     private SparkMax grabberMotor = new SparkMax(33, MotorType.kBrushless);
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
+    private boolean out = false;
     private static final double GEAR_RATIO = 9;
 
     public PivotArmSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
         config.closedLoop
-        .p(3)
+        .p(1)
         .i(0)
         .d(0)
         .outputRange(-0.80, 0.5);
@@ -36,6 +37,8 @@ public class PivotArmSubsystem extends SubsystemBase {
         SparkFlexConfig config2 = new SparkFlexConfig();
         config2.idleMode(IdleMode.kBrake);
         conveyorMotor.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        out = false;
     }
 
     @Override
@@ -43,18 +46,15 @@ public class PivotArmSubsystem extends SubsystemBase {
      //System.out.println((armMotor.getEncoder().getPosition()/9)*360);
     }
 
-    public void setArmPosition(int position){
-        switch (position) {
-            case 0:
-                armController.setReference(0, ControlType.kPosition);
-                break;
-        
-            case 1:
-                armController.setReference(degreesToRotations(25), ControlType.kPosition);
-                break;
+    public boolean positionOut(){
+        return out;
+    }
 
-            case 2:
-                armController.setReference(degreesToRotations(45), ControlType.kPosition);
+    public void setArmPosition(boolean out){
+        if(out){
+            armController.setReference(degreesToRotations(25), ControlType.kPosition);
+        } else {
+            armController.setReference(0, ControlType.kPosition);
         }
     }
 
@@ -62,12 +62,12 @@ public class PivotArmSubsystem extends SubsystemBase {
         return armMotor.getEncoder().getPosition()/(-GEAR_RATIO)*360;
     }
 
-    private double degreesToRotations(double degrees){
+    public double degreesToRotations(double degrees){
         return -(degrees/360)*GEAR_RATIO;
     }
 
-    public Command setArmPositionCommand(int position){
-        return this.runOnce(()->setArmPosition(position));
+    public Command setArmPositionCommand(boolean out){
+        return this.runOnce(()->setArmPosition(out));
     }
 
     public Command spitCoral(){
@@ -80,5 +80,14 @@ public class PivotArmSubsystem extends SubsystemBase {
         });
     }
 
+    public Command reverseCoral(){
+        return this.runEnd(() -> {
+            grabberMotor.set(-0.1);
+            conveyorMotor.set(0.2);
+        }, () -> {
+            grabberMotor.stopMotor();
+            conveyorMotor.stopMotor();
+        });
+    }
 
 }

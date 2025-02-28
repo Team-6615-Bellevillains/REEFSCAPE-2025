@@ -20,6 +20,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static final double upLimit = 0.3; 
     private static final double elevatorHeight = 57;
     private static final double rotationLimit = 46.125;
+    private Position position;
+    private static final double l2Inches = 11;
+    private static final double l3Inches = 27.25;
+    private static final double l4Inches = elevatorHeight;
 
     public ElevatorSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
@@ -33,35 +37,81 @@ public class ElevatorSubsystem extends SubsystemBase {
         rightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         config.closedLoop.outputRange(-downLimit, upLimit);
         leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        position = Position.L1;
     }
 
     private double inchesToRotations(double inches){
         return (rotationLimit/elevatorHeight)*inches;
     }
 
+    private double getPositionInches(){
+        return (leftMotor.getEncoder().getPosition())/(rotationLimit/elevatorHeight);
+    }
+
     private void moveElevator(double inches){
+        System.out.println("Moving elevator to "+inches);
         rightController.setReference(-inchesToRotations(inches), ControlType.kPosition);
         leftController.setReference(inchesToRotations(inches), ControlType.kPosition);
     }
 
-    public void setPosition(int level){
-        switch(level){
-            case 1:
+    public void setPosition(Position newPosition){
+        switch(newPosition){
+            case L1:
                 moveElevator(0);
+                position = Position.L1;
                 break;
-            case 2:
-                moveElevator(11);
+            case L2:
+                moveElevator(l2Inches);
+                position = Position.L2;
                 break;
-            case 3:
-                moveElevator(26.75);
+            case L3:
+                moveElevator(l3Inches);
+                position = Position.L3;
                 break;
-            case 4:
-                moveElevator(elevatorHeight-0.5);  
+            case L4:
+                moveElevator(l4Inches);  
+                position = Position.L4;
                 break;
         }
     }
 
-    public Command setPositionCommand(int level){
-        return this.runOnce(() -> setPosition(level));
+    public boolean atPosition(){
+        switch (position) {
+            case L1:
+                if (getPositionInches()<1.0){
+                    return true;
+                } else return false;
+            case L2:
+                if (getPositionInches()<(l2Inches+1) && getPositionInches()>(l2Inches-1)){
+                    return true;
+                } else return false;
+
+            case L3:
+                if (getPositionInches()<(l3Inches+1) && getPositionInches()>(l3Inches-1)){
+                    return true;
+                } else return false;
+            case L4:
+                if (getPositionInches()<(l4Inches+1) && getPositionInches()>(l4Inches-1)){
+                    return true;
+                } else return false;
+            default:
+                return false;
+                
+        }
+    }
+
+    public Position getPosition(){
+        return position;
+    }
+    
+    //public Command setPositionCommand(Position level){
+    //    return this.runOnce(() -> setPosition(level));
+    //}
+
+    public enum Position{
+        L1,
+        L2,
+        L3,
+        L4
     }
 }
