@@ -33,6 +33,7 @@ public class PivotArmSubsystem extends SubsystemBase {
         .outputRange(-0.80, 0.5);
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         armMotor.getEncoder().setPosition(0);
+        armController.setReference( 0, ControlType.kPosition);
 
         SparkFlexConfig config2 = new SparkFlexConfig();
         config2.idleMode(IdleMode.kBrake);
@@ -83,16 +84,6 @@ public class PivotArmSubsystem extends SubsystemBase {
     public Command reverseCoral(){
         return this.runEnd(() -> {
             grabberMotor.set(-0.2);
-            conveyorMotor.set(0.2);
-        }, () -> {
-            grabberMotor.stopMotor();
-            conveyorMotor.stopMotor();
-        });
-    }
-
-    public Command reverseCoral(){
-        return this.runEnd(() -> {
-            grabberMotor.set(-0.1);
             conveyorMotor.set(0.2);
         }, () -> {
             grabberMotor.stopMotor();

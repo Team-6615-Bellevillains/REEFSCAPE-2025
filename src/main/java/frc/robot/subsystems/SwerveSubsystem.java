@@ -20,13 +20,16 @@ import swervelib.SwerveInputStream;
 import swervelib.parser.SwerveParser;
 
 public class SwerveSubsystem extends SubsystemBase {
-    private double maximumSpeed = Units.feetToMeters(4);
+    private double maximumSpeed = Units.feetToMeters(10);
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     private SwerveDrive swerveDrive;
 
     public SwerveSubsystem(){
         try {
-           swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed); 
+           swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
+           swerveDrive.setChassisDiscretization(true, 0.02);
+           swerveDrive.setCosineCompensator(true);
+           swerveDrive.setAngularVelocityCompensation(true, false, 0.1);
         } catch (Exception e) {
             throw new RuntimeException("swerve drive config files missing");
         }
@@ -95,6 +98,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public ChassisSpeeds getRobotVelocity(){
     return swerveDrive.getRobotVelocity();
+  }
+
+  public Command resetHeading(){
+    return this.run(()->{
+      swerveDrive.zeroGyro();
+    });
   }
 
 }

@@ -3,7 +3,10 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +18,13 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     public static final double CONVERSION_FACTOR = 20/360;
 
     public AlgaeGrabberSubsystem(){
+        SparkFlexConfig config = new SparkFlexConfig();
+        config.closedLoop
+        .p(1)
+        .i(0)
+        .d(0);
+        angleMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         angleMotor.getEncoder().setPosition(0);
         angleController.setReference(0, ControlType.kPosition);
     }

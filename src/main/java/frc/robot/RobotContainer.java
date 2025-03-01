@@ -46,6 +46,8 @@ public class RobotContainer {
         driverController.a().onTrue(new GrabAlgaeCommand(algae));
         driverController.b().whileTrue(algae.spitAlgae());
         driverController.x().onTrue(algae.resetAlgaeState());
+        driverController.rightBumper().onTrue(swerve.resetHeading());
+
         operatorController.a().onTrue(pivot.setArmPositionCommand(false));
         operatorController.b().onTrue(pivot.setArmPositionCommand(true));
         operatorController.y().whileTrue(pivot.spitCoral());
@@ -54,5 +56,6 @@ public class RobotContainer {
         operatorController.povRight().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
         operatorController.povLeft().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
         operatorController.povDown().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
+        
     }
 }
