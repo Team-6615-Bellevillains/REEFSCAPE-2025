@@ -12,7 +12,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PivotArmSubsystem extends SubsystemBase {
@@ -74,7 +74,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     public Command spitCoral(){
         return this.runEnd(() -> {
             grabberMotor.set(0.3);
-            conveyorMotor.set(-0.2);
+            conveyorMotor.set(-0.1);
         }, () -> {
             grabberMotor.stopMotor();
             conveyorMotor.stopMotor();
@@ -83,8 +83,8 @@ public class PivotArmSubsystem extends SubsystemBase {
         
     public Command reverseCoral(){
         return this.runEnd(() -> {
-            grabberMotor.set(-0.2);
-            conveyorMotor.set(0.2);
+            grabberMotor.set(-0.3);
+            conveyorMotor.set(0.1);
         }, () -> {
             grabberMotor.stopMotor();
             conveyorMotor.stopMotor();

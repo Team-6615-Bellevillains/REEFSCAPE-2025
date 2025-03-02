@@ -58,4 +58,8 @@ public class RobotContainer {
         operatorController.povDown().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
         
     }
+
+    public Command getAutonomousCommand(){
+        return swerve.getAutonomousCommand();
+    }
 }
