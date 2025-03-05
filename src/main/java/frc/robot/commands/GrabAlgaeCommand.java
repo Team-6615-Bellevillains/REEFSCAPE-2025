@@ -8,6 +8,7 @@ public class GrabAlgaeCommand extends Command{
     private final AlgaeGrabberSubsystem subsystem;
     private int delayTicks;
     private AlgaeGrabProgress algaeGrabProgress;
+    boolean stopped;
 
     public GrabAlgaeCommand(AlgaeGrabberSubsystem subsystem ){
         this.subsystem = subsystem;

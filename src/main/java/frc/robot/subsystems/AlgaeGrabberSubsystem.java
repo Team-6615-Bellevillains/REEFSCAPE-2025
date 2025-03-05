@@ -17,19 +17,19 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     private final SparkFlex grabberMotor = new SparkFlex(31, MotorType.kBrushless);
     public static final double CONVERSION_FACTOR = 20/360;
     public AlgaeGrabberSubsystem(){
-        SparkFlexConfig config = new SparkFlexConfig();
-        config.closedLoop
+        SparkFlexConfig angleMotorConfig = new SparkFlexConfig();
+        angleMotorConfig.closedLoop
         .p(1)
         .i(0)
         .d(0);
-        angleMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        angleMotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         angleMotor.getEncoder().setPosition(0);
         angleController.setReference(0, ControlType.kPosition);
         
-        SparkFlexConfig config = new SparkFlexConfig();
-        config.smartCurrentLimit(10);
-        grabberMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        SparkFlexConfig grabberMotorConfig = new SparkFlexConfig();
+        grabberMotorConfig.smartCurrentLimit(10);
+        grabberMotor.configure(grabberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
