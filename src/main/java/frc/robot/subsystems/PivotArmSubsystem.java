@@ -11,6 +11,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,6 +23,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     private SparkMax grabberMotor = new SparkMax(33, MotorType.kBrushless);
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
     private static final double GEAR_RATIO = 9;
+
 
     public PivotArmSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
@@ -46,7 +48,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     public void setArmPosition(int position){
         switch (position) {
             case 0:
-                armController.setReference(0, ControlType.kPosition);
+                armController.setReference(degreesToRotations(-5), ControlType.kPosition);
                 break;
         
             case 1:
@@ -55,6 +57,7 @@ public class PivotArmSubsystem extends SubsystemBase {
 
             case 2:
                 armController.setReference(degreesToRotations(45), ControlType.kPosition);
+                break;
         }
     }
 
@@ -69,7 +72,26 @@ public class PivotArmSubsystem extends SubsystemBase {
     public Command setArmPositionCommand(int position){
         return this.runOnce(()->setArmPosition(position));
     }
+    
+    public double grabberMotorCurrent(){
+        return grabberMotor.getOutputCurrent();
+    }
+    public double grabberMotorRpm(){
+        return grabberMotor.getEncoder().getVelocity();
+    }
+    public double grabberMotorRotations() {
+        return grabberMotor.getEncoder().getPosition();
+    }
 
+    public void loadCoral(){
+            grabberMotor.set(0.1);
+            conveyorMotor.set(-0.1);
+        }
+    
+    public void stopMotors(){
+        grabberMotor.stopMotor();
+        conveyorMotor.stopMotor();
+    };
     public Command spitCoral(){
         return this.runEnd(() -> {
             grabberMotor.set(0.3);
@@ -79,7 +101,7 @@ public class PivotArmSubsystem extends SubsystemBase {
             conveyorMotor.stopMotor();
         });
     }
-        
+    
     public Command reverseCoral(){
         return this.runEnd(() -> {
             grabberMotor.set(-0.2);
@@ -89,6 +111,6 @@ public class PivotArmSubsystem extends SubsystemBase {
             conveyorMotor.stopMotor();
         });
     }
-
-
+   
 }
+

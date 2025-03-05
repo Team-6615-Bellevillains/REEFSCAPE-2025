@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.GrabAlgaeCommand;
+import frc.robot.commands.LoadCoralCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
@@ -35,6 +36,7 @@ public class RobotContainer {
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true).cubeRotationControllerAxis(true).cubeTranslationControllerAxis(true);
 
+
     public RobotContainer(){
         configureBindings();
     }
@@ -49,6 +51,7 @@ public class RobotContainer {
         operatorController.x().onTrue(pivot.setArmPositionCommand(2));
         operatorController.y().whileTrue(pivot.spitCoral());
         operatorController.leftBumper().whileTrue(pivot.reverseCoral());
+        operatorController.rightBumper().onTrue(new LoadCoralCommand(pivot));
         operatorController.povUp().onTrue(l4position());
         operatorController.povRight().onTrue(elevator.setPositionCommand(3));
         operatorController.povLeft().onTrue(elevator.setPositionCommand(2));
@@ -59,5 +62,6 @@ public class RobotContainer {
     }
     public Command l1position(){
         return pivot.setArmPositionCommand(0).alongWith(elevator.setPositionCommand(1));
-}
+    }
+   
 }
