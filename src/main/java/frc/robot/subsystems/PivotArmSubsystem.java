@@ -12,52 +12,54 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PivotArmSubsystem extends SubsystemBase {
     
-    private SparkMax armMotor = new SparkMax(35, MotorType.kBrushless);
-    private SparkClosedLoopController armController = armMotor.getClosedLoopController();
+    public SparkMax armMotor = new SparkMax(35, MotorType.kBrushless);
+    public SparkClosedLoopController armController = armMotor.getClosedLoopController();
     private SparkMax grabberMotor = new SparkMax(33, MotorType.kBrushless);
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
+    private boolean out = false;
     private static final double GEAR_RATIO = 9;
 
 
     public PivotArmSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
         config.closedLoop
-        .p(3)
+        .p(1)
         .i(0)
         .d(0)
         .outputRange(-0.80, 0.5);
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         armMotor.getEncoder().setPosition(0);
+        armController.setReference( 0, ControlType.kPosition);
 
         SparkFlexConfig config2 = new SparkFlexConfig();
         config2.idleMode(IdleMode.kBrake);
         conveyorMotor.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        out = false;
     }
 
     @Override
     public void periodic() {
      //System.out.println((armMotor.getEncoder().getPosition()/9)*360);
+
+     SmartDashboard.putNumber("grabber rpm", grabberMotor.getEncoder().getVelocity());
     }
 
-    public void setArmPosition(int position){
-        switch (position) {
-            case 0:
-                armController.setReference(degreesToRotations(-5), ControlType.kPosition);
-                break;
-        
-            case 1:
-                armController.setReference(degreesToRotations(25), ControlType.kPosition);
-                break;
+    public boolean positionOut(){
+        return out;
+    }
 
-            case 2:
-                armController.setReference(degreesToRotations(45), ControlType.kPosition);
-                break;
+    public void setArmPosition(boolean out){
+        if(out){
+            armController.setReference(degreesToRotations(30), ControlType.kPosition);
+        } else {
+            armController.setReference(0, ControlType.kPosition);
         }
     }
 
@@ -65,12 +67,12 @@ public class PivotArmSubsystem extends SubsystemBase {
         return armMotor.getEncoder().getPosition()/(-GEAR_RATIO)*360;
     }
 
-    private double degreesToRotations(double degrees){
+    public double degreesToRotations(double degrees){
         return -(degrees/360)*GEAR_RATIO;
     }
 
-    public Command setArmPositionCommand(int position){
-        return this.runOnce(()->setArmPosition(position));
+    public Command setArmPositionCommand(boolean out){
+        return this.runOnce(()->setArmPosition(out));
     }
     
     public double grabberMotorCurrent(){
@@ -95,7 +97,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     public Command spitCoral(){
         return this.runEnd(() -> {
             grabberMotor.set(0.3);
-            conveyorMotor.set(-0.2);
+            conveyorMotor.set(-0.1);
         }, () -> {
             grabberMotor.stopMotor();
             conveyorMotor.stopMotor();
@@ -104,13 +106,22 @@ public class PivotArmSubsystem extends SubsystemBase {
     
     public Command reverseCoral(){
         return this.runEnd(() -> {
-            grabberMotor.set(-0.2);
-            conveyorMotor.set(0.2);
+            grabberMotor.set(-0.3);
+            conveyorMotor.set(0.1);
         }, () -> {
             grabberMotor.stopMotor();
             conveyorMotor.stopMotor();
         });
     }
-   
+
+    /* 
+     * this command sets the grabber position to the opposite of what it was (please forgve me for the awful name)
+    */
+    public Command invertInOut(){
+        return this.runOnce(()->{
+            out = !out;
+            setArmPosition(out);
+        });
+    }
 }
 

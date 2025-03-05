@@ -3,7 +3,10 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,8 +16,14 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     private final SparkClosedLoopController angleController = angleMotor.getClosedLoopController();
     private final SparkFlex grabberMotor = new SparkFlex(31, MotorType.kBrushless);
     public static final double CONVERSION_FACTOR = 20/360;
-
     public AlgaeGrabberSubsystem(){
+        SparkFlexConfig config = new SparkFlexConfig();
+        config.closedLoop
+        .p(1)
+        .i(0)
+        .d(0);
+        angleMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         angleMotor.getEncoder().setPosition(0);
         angleController.setReference(0, ControlType.kPosition);
     }
@@ -35,20 +44,20 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
         grabberMotor.set(speed);
     }
 
-    public double checkGrabberCurrent(){
-        return grabberMotor.getOutputCurrent();
+    public double checkGrabberRPM(){
+        return grabberMotor.getEncoder().getVelocity();
     }
 
     public Command spitAlgae(){
-        return this.run(()->{
-            grabberMotor.set(0.3);
+        return this.runOnce(()->{
+                
         });
     }
 
     public Command resetAlgaeState(){
         return this.run(()->{
             angleController.setReference(0, ControlType.kPosition);
-            grabberMotor.set(-0.1);
+            grabberMotor.set(0);
         });
     }
 }
