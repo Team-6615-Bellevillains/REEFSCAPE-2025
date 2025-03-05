@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 
@@ -19,7 +20,8 @@ public class GrabAlgaeCommand extends Command{
     public void initialize() {
         System.out.println("Initializing GrabAlgaeCommand");
         subsystem.setPositionDegrees(65);
-        subsystem.setGrabberSpeed(-0.5);
+        subsystem.setGrabberSpeed(-1);
+        stopped = false;
         delayTicks = 30;
     }
 

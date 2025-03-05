@@ -26,6 +26,10 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
 
         angleMotor.getEncoder().setPosition(0);
         angleController.setReference(0, ControlType.kPosition);
+        
+        SparkFlexConfig config = new SparkFlexConfig();
+        config.smartCurrentLimit(10);
+        grabberMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
