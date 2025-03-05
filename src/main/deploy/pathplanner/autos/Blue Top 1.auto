@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Top 1.1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Top 1.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Top 1.3"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Blue Top",
+  "choreoAuto": false
+}

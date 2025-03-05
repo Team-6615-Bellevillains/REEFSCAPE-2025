@@ -16,7 +16,6 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     private final SparkClosedLoopController angleController = angleMotor.getClosedLoopController();
     private final SparkFlex grabberMotor = new SparkFlex(31, MotorType.kBrushless);
     public static final double CONVERSION_FACTOR = 20/360;
-
     public AlgaeGrabberSubsystem(){
         SparkFlexConfig config = new SparkFlexConfig();
         config.closedLoop
@@ -45,13 +44,13 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
         grabberMotor.set(speed);
     }
 
-    public double checkGrabberCurrent(){
-        return grabberMotor.getOutputCurrent();
+    public double checkGrabberRPM(){
+        return grabberMotor.getEncoder().getVelocity();
     }
 
     public Command spitAlgae(){
-        return this.run(()->{
-            grabberMotor.set(0.3);
+        return this.runOnce(()->{
+                
         });
     }
 

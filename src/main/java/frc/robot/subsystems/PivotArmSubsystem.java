@@ -13,7 +13,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PivotArmSubsystem extends SubsystemBase {
@@ -47,7 +46,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     public void periodic() {
      //System.out.println((armMotor.getEncoder().getPosition()/9)*360);
 
-     SmartDashboard.putNumber("grabber current", grabberMotor.getEncoder().getVelocity());
+     SmartDashboard.putNumber("grabber rpm", grabberMotor.getEncoder().getVelocity());
     }
 
     public boolean positionOut(){
@@ -56,7 +55,7 @@ public class PivotArmSubsystem extends SubsystemBase {
 
     public void setArmPosition(boolean out){
         if(out){
-            armController.setReference(degreesToRotations(25), ControlType.kPosition);
+            armController.setReference(degreesToRotations(30), ControlType.kPosition);
         } else {
             armController.setReference(0, ControlType.kPosition);
         }
@@ -94,4 +93,13 @@ public class PivotArmSubsystem extends SubsystemBase {
         });
     }
 
+    /* 
+     * this command sets the grabber position to the opposite of what it was (please forgve me for the awful name)
+    */
+    public Command invertInOut(){
+        return this.runOnce(()->{
+            out = !out;
+            setArmPosition(out);
+        });
+    }
 }

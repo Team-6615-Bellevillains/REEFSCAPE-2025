@@ -24,9 +24,9 @@ public class RobotContainer {
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerve.getSwerveDrive(),
                                                                 () -> driverController.getLeftY() * -1,
                                                                 () -> driverController.getLeftX() * -1)
-                                                            .withControllerRotationAxis(driverController::getRightX)
-                                                            .deadband(0.1)
-                                                            .scaleTranslation(0.8)
+                                                            .withControllerRotationAxis(()->{
+                                                                return -driverController.getRightX();
+                                                            })
                                                             .allianceRelativeControl(true);
 
     SwerveInputStream driveAngularVelocitySlow = SwerveInputStream.of(swerve.getSwerveDrive(),
@@ -43,15 +43,14 @@ public class RobotContainer {
 
     private void configureBindings(){
         swerve.setDefaultCommand(swerve.driveCommand(driveAngularVelocity, driveAngularVelocitySlow, driverController));
-        driverController.a().onTrue(new GrabAlgaeCommand(algae));
-        driverController.b().whileTrue(algae.spitAlgae());
+        driverController.a().onTrue(swerve.resetHeading());
         driverController.x().onTrue(algae.resetAlgaeState());
-        driverController.rightBumper().onTrue(swerve.resetHeading());
+        driverController.leftBumper().onTrue(algae.spitAlgae());
+        driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
 
-        operatorController.a().onTrue(pivot.setArmPositionCommand(false));
-        operatorController.b().onTrue(pivot.setArmPositionCommand(true));
-        operatorController.y().whileTrue(pivot.spitCoral());
-        operatorController.leftBumper().whileTrue(pivot.reverseCoral());
+        operatorController.a().whileTrue(pivot.spitCoral());
+        operatorController.b().onTrue(pivot.invertInOut());
+        operatorController.x().whileTrue(pivot.reverseCoral());
         operatorController.povUp().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
         operatorController.povRight().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
         operatorController.povLeft().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));

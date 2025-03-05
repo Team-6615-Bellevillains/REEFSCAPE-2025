@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -23,22 +24,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.LimelightHelpers;
 import swervelib.SwerveDrive;
 import swervelib.SwerveInputStream;
 import swervelib.parser.SwerveParser;
-import limelight.Limelight;
-import limelight.networktables.AngularVelocity3d;
-import limelight.networktables.LimelightPoseEstimator;
-import limelight.networktables.Orientation3d;
-import limelight.networktables.PoseEstimate;
-import limelight.networktables.LimelightSettings.LEDMode;
 
 public class SwerveSubsystem extends SubsystemBase {
     private double maximumSpeed = Units.feetToMeters(10);
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     private SwerveDrive swerveDrive;
-    private Limelight limelight;
-    private LimelightPoseEstimator limelightPoseEstimator;
+    //private Limelight limelight;
+    //private LimelightPoseEstimator limelightPoseEstimator;
     private Pigeon2 gyro = new Pigeon2(0);
     private final Field2d field = new Field2d();
 
@@ -80,33 +76,34 @@ public class SwerveSubsystem extends SubsystemBase {
             return false;
           }, 
           this);
-          limelight = new Limelight("limelight");
-          limelightPoseEstimator = limelight.getPoseEstimator(true);
-          limelight.getSettings().withLimelightLEDMode(LEDMode.PipelineControl).withCameraOffset(new Pose3d(.31 , .16, .455, new Rotation3d()));
           SmartDashboard.putData("field", field);
+          LimelightHelpers.setCameraPose_RobotSpace("limelight", -.31, .16, .455, 0, 0, 180);
     }
 
     @Override
     public void periodic() {
-      limelight.getSettings()
-        .withRobotOrientation(new Orientation3d(swerveDrive.getGyro().getRotation3d(),
-          new AngularVelocity3d(gyro.getAngularVelocityXWorld().getValue(), gyro.getAngularVelocityYWorld().getValue(),
-              gyro.getAngularVelocityXWorld().getValue())))
-        .save();
       
+
       boolean useVision = Math.abs(gyro.getAngularVelocityZWorld().getValueAsDouble())<=720;
 
-      // Get MegaTag2 pose
-      Optional<PoseEstimate> visionEstimate = limelightPoseEstimator.getPoseEstimate();
-      // If the pose is present
-      visionEstimate.ifPresent((PoseEstimate poseEstimate) -> {
-        // Add it to the pose estimator.
-        if ((poseEstimate.tagCount != 0) && useVision){
-        swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
-        swerveDrive.addVisionMeasurement(poseEstimate.pose.toPose2d(), poseEstimate.timestampSeconds);
-        }
-      });
+
       field.setRobotPose(getPose());
+      LimelightHelpers.SetRobotOrientation("limelight", swerveDrive.getYaw().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      if( !(Math.abs(gyro.getAngularVelocityYWorld().getValueAsDouble())>360 || mt2.tagCount == 0)){
+        swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1
+          , 9999999));
+        swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+      }
+      
+
+      // if ((mt1.tagCount != 0) && useVision &&
+      // !(mt1.tagCount == 1 && mt1.rawFiducials.length == 1 && (mt1.rawFiducials[0].ambiguity > 0.5 || mt1.rawFiducials[0].distToCamera > 3))
+      // && mt1.pose.relativeTo(getPose()).getTranslation().getNorm() < 10){
+      //     swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1
+      //     , 9999999));
+      //     swerveDrive.addVisionMeasurement(mt1.pose, mt1.timestampSeconds);
+      // }
     }
 
     public Command getAutonomousCommand(){
@@ -116,7 +113,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public Command driveCommand(SwerveInputStream velocity, SwerveInputStream slowedVelocity, CommandXboxController controller){
     return run(()->{
-      if (controller.leftBumper().getAsBoolean()){
+      if (controller.leftTrigger().getAsBoolean()){
         swerveDrive.driveFieldOriented(slowedVelocity.get());
         //System.out.println("slowing swerve drive");
       } else {
@@ -148,7 +145,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Command resetHeading(){
-    return this.run(()->{
+    return this.runOnce(()->{
       swerveDrive.zeroGyro();
     });
   }
