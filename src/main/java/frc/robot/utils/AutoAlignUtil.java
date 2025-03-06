@@ -54,8 +54,8 @@ public class AutoAlignUtil {
                         .nearest(
                             aprilTags
                                 .stream()
-                                .filter((AprilTag aprilTag) -> CORAL_APRIL_TAG_IDS.contains(aprilTag.ID))
-                                .map((AprilTag aprilTag) -> aprilTag.pose.toPose2d())
+                                .filter((aprilTag) -> CORAL_APRIL_TAG_IDS.contains(aprilTag.ID))
+                                .map((aprilTag) -> aprilTag.pose.toPose2d())
                                 .toList()
                         );
         
