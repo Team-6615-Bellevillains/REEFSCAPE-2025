@@ -24,6 +24,9 @@ public class AutoAlignUtil {
 
     private static Distance CORAL_SCORE_OFFSET = Units.Inches.of(2);
 
+    // To aid in visualizing how the field, AprilTags, and AutoAlignment work, we have a website:
+    // https://team-6615-bellevillains.github.io/AprilTagVisualizer/
+    // It does not work on mobile.
     private static Pose2d calculateTargetPose(Pose2d robotPose, CoralScoreDirection coralScoreDirection) {
         AprilTagFieldLayout aprilTagFieldLayout = AprilTagDataUtil.get().getFieldLayout();
         if (aprilTagFieldLayout == null) {
