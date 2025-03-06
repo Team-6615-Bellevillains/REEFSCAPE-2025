@@ -79,8 +79,8 @@ public class AutoAlignUtil {
         return poseOfTargettedTag.transformBy(new Transform2d(new Pose2d(), poseAdjustment));
     }
 
-    private static Command buildAutoAlign(Pose2d robotPose, CoralScoreDirection coralScoreDirection) {
-        Pose2d targetPose = calculateTargetPose(robotPose, coralScoreDirection);
+    private static Command buildAutoAlign(SwerveSubsystem swerveSubsystem, CoralScoreDirection coralScoreDirection) {
+        Pose2d targetPose = calculateTargetPose(swerveSubsystem.getPose(), coralScoreDirection);
         if (targetPose == null) {
             return Commands.print("Failed to load field data when calculating target pose!");
         }
@@ -99,6 +99,8 @@ public class AutoAlignUtil {
                         Units.RotationsPerSecondPerSecond.of(300)
                     )
                 )
+                // Cancel pathfinding if Driver wants to take over
+                .until(swerveSubsystem::isBeingControlledByHuman) 
             )
             .finallyDo((interrupted) -> {
                 SmartDashboard.putBoolean("Auto Align Status", !interrupted);
@@ -115,7 +117,7 @@ public class AutoAlignUtil {
     // and then pass the "starting robot pose" in with a 
     // Supplier<Pose2d>
     public static Command autoAlign(SwerveSubsystem swerveSubsystem, CoralScoreDirection coralScoreDirection) {
-        Supplier<Command> autoAlignSupplier = () -> buildAutoAlign(swerveSubsystem.getPose(), coralScoreDirection);
+        Supplier<Command> autoAlignSupplier = () -> buildAutoAlign(swerveSubsystem, coralScoreDirection);
         return Commands.deferredProxy(autoAlignSupplier);
     }
     
