@@ -1,12 +1,14 @@
 package frc.robot.utils;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -23,24 +25,36 @@ public class AutoAlignUtil {
     }
 
     private static Distance CORAL_SCORE_OFFSET = Units.Inches.of(2);
+    private static Set<Integer> CORAL_APRIL_TAG_IDS = new HashSet<>(){{
+        // Red Reef
+        for (int id = 6; id <= 11; id++) {
+            add(id);
+        }
+
+        // Blue Reef
+        for (int id = 17; id <= 22; id++) {
+            add(id);
+        }
+    }};
 
     // To aid in visualizing how the field, AprilTags, and AutoAlignment work, we have a website:
     // https://team-6615-bellevillains.github.io/AprilTagVisualizer/
     // It does not work on mobile.
     private static Pose2d calculateTargetPose(Pose2d robotPose, CoralScoreDirection coralScoreDirection) {
-        AprilTagFieldLayout aprilTagFieldLayout = AprilTagDataUtil.get().getFieldLayout();
-        if (aprilTagFieldLayout == null) {
+        List<AprilTag> aprilTags = AprilTagDataUtil.get().getAprilTags();
+        if (aprilTags.size() == 0) {
             return null;
         }
 
         // 1. Get a list of all the AprilTags on the field
-        // 2. Get the poses of each AprilTag in the list
+        // 2. Filter out the non-Coral AprilTags
+        // 2. Get the poses of each AprilTag
         // 3. Out of all of the poses, find the closest one to the current robot pose.
         Pose2d poseOfTargettedTag = robotPose
                         .nearest(
-                            aprilTagFieldLayout
-                                .getTags()
+                            aprilTags
                                 .stream()
+                                .filter((AprilTag aprilTag) -> CORAL_APRIL_TAG_IDS.contains(aprilTag.ID))
                                 .map((AprilTag aprilTag) -> aprilTag.pose.toPose2d())
                                 .toList()
                         );

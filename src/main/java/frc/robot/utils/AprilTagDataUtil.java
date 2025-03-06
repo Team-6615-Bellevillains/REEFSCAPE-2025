@@ -2,7 +2,10 @@ package frc.robot.utils;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.Filesystem;
 
@@ -40,7 +43,11 @@ public class AprilTagDataUtil {
         return instance;
     }
 
-    public AprilTagFieldLayout getFieldLayout() {
-        return instance.aprilTagFieldLayout;
+    public List<AprilTag> getAprilTags() {
+        if (instance.aprilTagFieldLayout == null) {
+            return new ArrayList<>();
+        }
+
+        return instance.aprilTagFieldLayout.getTags();
     }
 }
