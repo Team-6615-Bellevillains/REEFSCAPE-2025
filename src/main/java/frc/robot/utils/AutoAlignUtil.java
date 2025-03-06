@@ -24,7 +24,7 @@ public class AutoAlignUtil {
         LEFT, RIGHT;
     }
 
-    private static Distance CORAL_SCORE_OFFSET = Units.Inches.of(2);
+    private static Distance CORAL_SCORE_OFFSET = Units.Inches.of(6);
     private static Set<Integer> CORAL_APRIL_TAG_IDS = new HashSet<>(){{
         // Red Reef
         for (int id = 6; id <= 11; id++) {
@@ -58,6 +58,8 @@ public class AutoAlignUtil {
                                 .map((aprilTag) -> aprilTag.pose.toPose2d())
                                 .toList()
                         );
+
+        System.out.println(poseOfTargettedTag);
         
         // An AprilTag with 0 rotation faces the Red alliance wall.
         // This means that scoring "Right" is actually "Up", relative to the field.
@@ -77,7 +79,7 @@ public class AutoAlignUtil {
         // ------------------------ Bottom of Field
 
         Pose2d poseAdjustment = new Pose2d(
-            Units.Inches.of(0), 
+            Units.Centimeters.of(73.5/2 + 8.5 + 1), 
             CORAL_SCORE_OFFSET, 
             new Rotation2d()
         );
@@ -90,7 +92,16 @@ public class AutoAlignUtil {
         // Account for AprilTag Angle
         poseAdjustment = poseAdjustment.rotateBy(poseOfTargettedTag.getRotation());
 
-        return poseOfTargettedTag.transformBy(new Transform2d(new Pose2d(), poseAdjustment));
+        System.out.println(poseAdjustment);
+
+        Pose2d finalPose = new Pose2d(
+            poseOfTargettedTag.getTranslation().plus(poseAdjustment.getTranslation()), 
+            poseOfTargettedTag.getRotation()
+        );
+
+        System.out.println(finalPose);
+
+        return finalPose;
     }
 
     private static Command buildAutoAlign(SwerveSubsystem swerveSubsystem, CoralScoreDirection coralScoreDirection) {
@@ -98,6 +109,9 @@ public class AutoAlignUtil {
         if (targetPose == null) {
             return Commands.print("Failed to load field data when calculating target pose!");
         }
+
+        // return Commands.print("NOOP");
+        //8.5
         
         return Commands.print("Auto Aligning to " + targetPose)
             .andThen(Commands.runOnce(() -> {
@@ -107,9 +121,9 @@ public class AutoAlignUtil {
                 AutoBuilder.pathfindToPose(
                     targetPose, 
                     new PathConstraints(
-                        Units.FeetPerSecond.of(1), 
+                        Units.FeetPerSecond.of(3), 
                         Units.FeetPerSecondPerSecond.of(4), 
-                        Units.RotationsPerSecond.of(120), 
+                        Units.RotationsPerSecond.of(360), 
                         Units.RotationsPerSecondPerSecond.of(300)
                     )
                 )

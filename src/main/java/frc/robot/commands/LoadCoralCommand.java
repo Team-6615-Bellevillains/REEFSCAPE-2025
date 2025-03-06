@@ -52,7 +52,7 @@ public class LoadCoralCommand extends Command{
 
     @Override
     public boolean isFinished() {
-        return sawTrigger >1 && rotationsSinceTrigger()>5;
+        return sawTrigger >1 && rotationsSinceTrigger()>4;
     }
             
     @Override

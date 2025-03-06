@@ -62,8 +62,8 @@ public class SwerveSubsystem extends SubsystemBase {
         this::resetOdometry, 
         this::getRobotVelocity, 
         (speeds, feedForward)->{swerveDrive.setChassisSpeeds(speeds);}, 
-        new PPHolonomicDriveController(new PIDConstants(5.0, 0.0,0.0), 
-        new PIDConstants(1.0,0.0,0.0)), 
+        new PPHolonomicDriveController(new PIDConstants(2.0, 0.0,0.0), 
+        new PIDConstants(2.0,0.0,0.0)), 
         config, 
         () -> {
             // Boolean supplier that controls when the path will be mirrored for the red alliance
@@ -79,8 +79,8 @@ public class SwerveSubsystem extends SubsystemBase {
           }, 
           this);
           SmartDashboard.putData("field", field);
-          // 56.5, 45, 67.5 / 73, 36.5
-          LimelightHelpers.setCameraPose_RobotSpace("limelight", -.2, -.33, .455, 0, 0, 180);
+          //57, 42.25, 66, 36.75
+          LimelightHelpers.setCameraPose_RobotSpace("limelight", -.2025, -.2925, .4225, 0, 0, 180);
     }
 
     @Override
