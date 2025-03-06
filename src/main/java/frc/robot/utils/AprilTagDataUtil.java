@@ -6,6 +6,11 @@ import java.nio.file.Path;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.Filesystem;
 
+// This class is a Singleton.
+// That means that it can only be instantiated once,
+// and that there is easy access to that instance.
+//
+// Usage: AprilTagDataUtil.get().getFieldLayout();
 public class AprilTagDataUtil {
     // TODO: Add "Fudge Factors" i.e., if Tag 3 is off by 15mm at Belleville, we adjust that in the layout.
 

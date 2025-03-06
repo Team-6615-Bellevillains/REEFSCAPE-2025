@@ -102,6 +102,15 @@ public class AutoAlignUtil {
             });
     }
 
+    // This command is structured with a Supplier and Proxy
+    // because Commands are generated when the code is first ran,
+    // but we want to be able to generate the alignment command
+    // using the current pose.
+    //
+    // If we weren't using PathPlanner generated commands,
+    // it would probably be better to have a regular Command
+    // and then pass the "starting robot pose" in with a 
+    // Supplier<Pose2d>
     public static Command autoAlign(SwerveSubsystem swerveSubsystem, CoralScoreDirection coralScoreDirection) {
         Supplier<Command> autoAlignSupplier = () -> buildAutoAlign(swerveSubsystem.getPose(), coralScoreDirection);
         return Commands.deferredProxy(autoAlignSupplier);
