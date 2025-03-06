@@ -11,6 +11,9 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,8 +36,11 @@ public class SwerveSubsystem extends SubsystemBase {
     //private LimelightPoseEstimator limelightPoseEstimator;
     private Pigeon2 gyro = new Pigeon2(0);
     private final Field2d field = new Field2d();
+    private final CommandXboxController driverController;
 
-    public SwerveSubsystem(){
+    public SwerveSubsystem(CommandXboxController driverController){
+        this.driverController = driverController;
+
         try {
            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
            swerveDrive.setChassisDiscretization(true, 0.02);
@@ -144,6 +150,14 @@ public class SwerveSubsystem extends SubsystemBase {
     return this.runOnce(()->{
       swerveDrive.zeroGyro();
     });
+  }
+
+  // Used to retake control from AutoAlign
+  public boolean isBeingControlledByHuman() {
+    double leftStickPower = Math.abs(new Translation2d(driverController.getLeftX(), driverController.getLeftY()).getNorm());
+    double rightStickPower = Math.abs(new Translation2d(driverController.getRightX(), driverController.getRightY()).getNorm());
+
+    return leftStickPower > 0.05 || rightStickPower > 0.05;
   }
 
 }

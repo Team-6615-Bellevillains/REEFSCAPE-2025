@@ -10,16 +10,18 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.Position;
+import frc.robot.utils.AutoAlignUtil;
+import frc.robot.utils.AutoAlignUtil.CoralScoreDirection;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
-    
-    private SwerveSubsystem swerve = new SwerveSubsystem();
+    private CommandXboxController driverController = new CommandXboxController(0);
+    private CommandXboxController operatorController = new CommandXboxController(1);
+
+    private SwerveSubsystem swerve = new SwerveSubsystem(driverController);
     private AlgaeGrabberSubsystem algae = new AlgaeGrabberSubsystem();
     private ElevatorSubsystem elevator = new ElevatorSubsystem();
     private PivotArmSubsystem pivot = new PivotArmSubsystem();
-    private CommandXboxController driverController = new CommandXboxController(0);
-    private CommandXboxController operatorController = new CommandXboxController(1);
     
     // from the YAGSL example project, hence the diabolical formatting
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerve.getSwerveDrive(),
@@ -49,6 +51,9 @@ public class RobotContainer {
         driverController.x().onTrue(algae.resetAlgaeState());
         driverController.leftBumper().whileTrue(algae.spitAlgae());
         driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
+
+        driverController.povLeft().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
+        driverController.povRight().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.RIGHT));
 
         operatorController.a().whileTrue(pivot.spitCoral());
         operatorController.b().onTrue(pivot.invertInOut());
