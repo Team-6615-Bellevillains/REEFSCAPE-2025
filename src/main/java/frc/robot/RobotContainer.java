@@ -10,6 +10,8 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.Position;
+import frc.robot.utils.AutoAlignUtil;
+import frc.robot.utils.AutoAlignUtil.CoralScoreDirection;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
@@ -49,6 +51,9 @@ public class RobotContainer {
         driverController.x().onTrue(algae.resetAlgaeState());
         driverController.leftBumper().onTrue(algae.spitAlgae());
         driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
+
+        driverController.povLeft().whileTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
+        driverController.povRight().whileTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.RIGHT));
 
         operatorController.a().whileTrue(pivot.spitCoral());
         operatorController.b().onTrue(pivot.invertInOut());
