@@ -28,7 +28,7 @@ public class GrabAlgaeCommand extends Command{
         delayTicks = 30;
         spinupTimer.restart();
         algaeGrabProgress = AlgaeGrabProgress.WAITING;
-        subsystem.setGrabberCurrentLimit(40);
+        subsystem.setGrabberCurrentLimit(35);
     }
 
     @Override

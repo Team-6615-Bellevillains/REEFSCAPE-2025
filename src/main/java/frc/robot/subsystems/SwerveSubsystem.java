@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import java.io.File;
-import java.util.Optional;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -12,11 +11,8 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -85,7 +81,6 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() {
       
 
-      boolean useVision = Math.abs(gyro.getAngularVelocityZWorld().getValueAsDouble())<=720;
 
 
       field.setRobotPose(getPose());

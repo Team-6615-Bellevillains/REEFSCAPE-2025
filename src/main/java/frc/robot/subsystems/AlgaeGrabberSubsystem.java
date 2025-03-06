@@ -60,8 +60,13 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     }
 
     public Command spitAlgae(){
-        return this.runOnce(()->{
-                
+        return this.runEnd(()->{
+            grabberMotor.set(1);
+            setGrabberCurrentLimit(40);
+        },
+        ()->{
+            grabberMotor.stopMotor();
+            setGrabberCurrentLimit(10);
         });
     }
 
