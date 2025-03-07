@@ -42,14 +42,14 @@ public class PivotArmSubsystem extends SubsystemBase {
         config2.idleMode(IdleMode.kBrake);
         conveyorMotor.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        out = false;
+        setArmPosition(false);
     }
 
     @Override
     public void periodic() {
      //System.out.println((armMotor.getEncoder().getPosition()/9)*360);
 
-     SmartDashboard.putNumber("grabber rpm", grabberMotor.getEncoder().getVelocity());
+     SmartDashboard.putNumber("arm current", armMotor.getOutputCurrent());
     }
 
     public boolean positionOut(){
@@ -61,8 +61,8 @@ public class PivotArmSubsystem extends SubsystemBase {
             armController.setReference(degreesToRotations(30), ControlType.kPosition);
             SharedUtils.setCurrentLimit(armMotor, 40);
         } else {
-            SharedUtils.setCurrentLimit(armMotor, 10);
-            armMotor.set(-1);
+            SharedUtils.setCurrentLimit(armMotor, 20);
+            armMotor.set(1);
         }
     }
 
@@ -97,6 +97,11 @@ public class PivotArmSubsystem extends SubsystemBase {
         grabberMotor.stopMotor();
         conveyorMotor.stopMotor();
     };
+
+    public void setGrabberCurrentLimit(int currentLimit) {
+        SharedUtils.setCurrentLimit(grabberMotor, currentLimit);
+    }
+
     public Command spitCoral(){
         return this.runEnd(() -> {
             grabberMotor.set(0.3);

@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -13,10 +17,12 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
@@ -85,7 +91,8 @@ public class SwerveSubsystem extends SubsystemBase {
           this);
           SmartDashboard.putData("field", field);
           //57, 42.25, 66, 36.75
-          LimelightHelpers.setCameraPose_RobotSpace("limelight", -.2025, -.2925, .4225, 0, 0, 180);
+          //58.5, 9, 42.25 
+          LimelightHelpers.setCameraPose_RobotSpace("limelight", -.2175, -.2775, .4225, 3, 0, 180);
     }
 
     @Override
@@ -189,8 +196,24 @@ public class SwerveSubsystem extends SubsystemBase {
 
     SmartDashboard.putBoolean(
       "Aligned",
-      Math.abs(poseDifference.getRotation().getDegrees()) < 5 && Math.abs(poseDifference.getTranslation().getNorm()) < 1
+      Math.abs(poseDifference.getRotation().getDegrees()) < 5
+      && Math.abs(poseDifference.getTranslation().getX()) < Inches.of(1).in(Meters)
+      && Math.abs(poseDifference.getTranslation().getY()) < Inches.of(1).in(Meters)
     );
+  }
+
+  public ChassisSpeeds getFieldVelocity(){
+    return swerveDrive.getFieldVelocity();
+  }
+
+  public LinearVelocity getVelocityMagnitude() {
+    ChassisSpeeds cs = getFieldVelocity();
+    return MetersPerSecond.of(new Translation2d(cs.vxMetersPerSecond, cs.vyMetersPerSecond).getNorm());
+  }
+
+  public Rotation2d getHeading()
+  {
+    return swerveDrive.getYaw();
   }
 
 }

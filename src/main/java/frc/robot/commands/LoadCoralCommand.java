@@ -37,8 +37,9 @@ public class LoadCoralCommand extends Command{
         coralMotorRpm_hpFilter.reset();
         SharedState.get().setLoaded(false);
        // coralMotorRpm = subsystem.grabberMotorRpm();
-    
-    
+
+        subsystem.setGrabberCurrentLimit(2);
+
     }
     
     @Override
@@ -72,6 +73,7 @@ public class LoadCoralCommand extends Command{
             SharedState.get().setLoaded(true);
         }
         subsystem.stopMotors();
+        subsystem.setGrabberCurrentLimit(40);
     }
 
     private double rotationsSinceTrigger(){

@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -7,12 +9,17 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -96,6 +103,41 @@ public class AutoAlignUtil {
         return finalPose;
     }
 
+    private static Rotation2d getPathVelocityHeading(ChassisSpeeds cs, Pose2d target, SwerveSubsystem swerveSubsystem) {
+        if (swerveSubsystem.getVelocityMagnitude().in(MetersPerSecond) < 0.25) {
+            var diff = target.minus(swerveSubsystem.getPose()).getTranslation();
+            return (diff.getNorm() < 0.01) ? target.getRotation() : diff.getAngle();// .rotateBy(Rotation2d.k180deg);
+        }
+        return new Rotation2d(cs.vxMetersPerSecond, cs.vyMetersPerSecond);
+    }
+
+    private static Command goToTargetPoseOrcaMethod(Pose2d targetPose, SwerveSubsystem swerveSubsystem) {
+        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+            new Pose2d(swerveSubsystem.getPose().getTranslation(), getPathVelocityHeading(swerveSubsystem.getFieldVelocity(), targetPose, swerveSubsystem)),
+            targetPose
+        );
+
+        if (waypoints.get(0).anchor().getDistance(waypoints.get(1).anchor()) < 0.01) {
+            return Commands.print("Auto alignment too close to desired position to continue");
+        }
+
+        PathPlannerPath path = new PathPlannerPath(
+            waypoints, 
+            new PathConstraints(
+                Units.FeetPerSecond.of(2), 
+                Units.FeetPerSecondPerSecond.of(4), 
+                Units.RotationsPerSecond.of(100), 
+                Units.RotationsPerSecondPerSecond.of(720)
+            ),
+            new IdealStartingState(swerveSubsystem.getVelocityMagnitude(), swerveSubsystem.getHeading()), 
+            new GoalEndState(0.0, targetPose.getRotation())
+        );
+
+        path.preventFlipping = true;
+
+        return AutoBuilder.followPath(path);
+    }
+
     private static Command buildAutoAlign(SwerveSubsystem swerveSubsystem, CoralScoreDirection coralScoreDirection) {
         Pose2d targetPose = calculateTargetPose(swerveSubsystem.getPose(), coralScoreDirection);
         if (targetPose == null) {
@@ -110,15 +152,16 @@ public class AutoAlignUtil {
                 SmartDashboard.putBoolean("Auto Align Status", false);
             }))
             .alongWith(
-                AutoBuilder.pathfindToPose(
-                    targetPose, 
-                    new PathConstraints(
-                        Units.FeetPerSecond.of(1), 
-                        Units.FeetPerSecondPerSecond.of(4), 
-                        Units.RotationsPerSecond.of(360), 
-                        Units.RotationsPerSecondPerSecond.of(300)
-                    )
-                )
+                // AutoBuilder.pathfindToPose(
+                //     targetPose, 
+                //     new PathConstraints(
+                //         Units.FeetPerSecond.of(1), 
+                //         Units.FeetPerSecondPerSecond.of(4), 
+                //         Units.RotationsPerSecond.of(360), 
+                //         Units.RotationsPerSecondPerSecond.of(300)
+                //     )
+                // )
+                goToTargetPoseOrcaMethod(targetPose, swerveSubsystem)
                 // Cancel pathfinding if Driver wants to take over
                 .until(swerveSubsystem::isBeingControlledByHuman) 
             )
