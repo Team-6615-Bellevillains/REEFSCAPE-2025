@@ -58,8 +58,14 @@ public class PivotArmSubsystem extends SubsystemBase {
     public void setArmPosition(boolean out){
         if(out){
             armController.setReference(degreesToRotations(30), ControlType.kPosition);
+            SparkFlexConfig config = new SparkFlexConfig();
+            config.smartCurrentLimit(40);
+            grabberMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         } else {
-            armController.setReference(0, ControlType.kPosition);
+            SparkFlexConfig config = new SparkFlexConfig();
+            config.smartCurrentLimit(10);
+            grabberMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            grabberMotor.set(-1);
         }
     }
 
