@@ -20,8 +20,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static final double elevatorHeight = 57;
     private static final double rotationLimit = 46.125;
     private Position position;
-    private static final double l2Inches = 11;
-    private static final double l3Inches = 26.5;
+    private static final double l2Inches = 10.25;
+    private static final double l3Inches = 25.75;
     private static final double l4Inches = elevatorHeight;
 
     public ElevatorSubsystem(){

@@ -4,27 +4,38 @@ package frc.robot.commands;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.SharedState;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem.Position;
 
 public class LoadCoralCommand extends Command{
     private final PivotArmSubsystem subsystem;
+    private final ElevatorSubsystem elevatorSubsystem;
     private int sawTrigger;
     private double startingRotations;
     private LinearFilter coralMotorRpm_hpFilter;
     
     
-    public LoadCoralCommand(PivotArmSubsystem subsystem ){
+    public LoadCoralCommand(PivotArmSubsystem subsystem, ElevatorSubsystem elevatorSubsystem){
         this.subsystem = subsystem;
-        addRequirements(subsystem);
+        this.elevatorSubsystem = elevatorSubsystem;
+        addRequirements(subsystem, elevatorSubsystem);
         coralMotorRpm_hpFilter = LinearFilter.highPass(0.1, 0.02);
     }
 
     @Override
     public void initialize() {
+        if (elevatorSubsystem.getPosition() != Position.L1) {
+            this.end(true);
+            return;
+        }
+
         System.out.println("Initializing LoadCoral");
         sawTrigger = 0;
         subsystem.loadCoral();
         coralMotorRpm_hpFilter.reset();
+        SharedState.get().setLoaded(false);
        // coralMotorRpm = subsystem.grabberMotorRpm();
     
     
@@ -57,6 +68,9 @@ public class LoadCoralCommand extends Command{
             
     @Override
     public void end(boolean cancelled) {
+        if (!cancelled) {
+            SharedState.get().setLoaded(true);
+        }
         subsystem.stopMotors();
     }
 

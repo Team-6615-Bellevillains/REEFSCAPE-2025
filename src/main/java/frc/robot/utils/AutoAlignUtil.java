@@ -63,7 +63,7 @@ public class AutoAlignUtil {
         // ------------------------ Bottom of Field
 
         Pose2d poseAdjustment = new Pose2d(
-            Units.Centimeters.of(73.5/2 + 8.5 + 1), 
+            Units.Centimeters.of(73.5/2 + 8.5 + 1 + 2), 
             CORAL_SCORE_OFFSET, 
             new Rotation2d()
         );
@@ -105,7 +105,7 @@ public class AutoAlignUtil {
                 AutoBuilder.pathfindToPose(
                     targetPose, 
                     new PathConstraints(
-                        Units.FeetPerSecond.of(3), 
+                        Units.FeetPerSecond.of(1), 
                         Units.FeetPerSecondPerSecond.of(4), 
                         Units.RotationsPerSecond.of(360), 
                         Units.RotationsPerSecondPerSecond.of(300)

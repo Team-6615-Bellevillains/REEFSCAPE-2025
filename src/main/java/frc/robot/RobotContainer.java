@@ -52,17 +52,17 @@ public class RobotContainer {
         driverController.leftBumper().whileTrue(algae.spitAlgae());
         driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
 
-        driverController.povLeft().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
+        // driverController.povLeft().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
         driverController.povRight().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.RIGHT));
 
         operatorController.a().whileTrue(pivot.spitCoral());
         operatorController.b().onTrue(pivot.invertInOut());
         operatorController.x().whileTrue(pivot.reverseCoral());
-        operatorController.povUp().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
-        operatorController.povRight().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
-        operatorController.povLeft().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
-        operatorController.povDown().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
-        operatorController.rightBumper().onTrue(new LoadCoralCommand(pivot));
+        operatorController.povUp().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
+        operatorController.povRight().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
+        operatorController.povLeft().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
+        operatorController.povDown().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
+        operatorController.rightBumper().onTrue(new LoadCoralCommand(pivot, elevator));
     }
 
     public Command getAutonomousCommand(){

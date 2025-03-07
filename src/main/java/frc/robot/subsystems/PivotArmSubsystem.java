@@ -14,6 +14,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.SharedState;
 
 public class PivotArmSubsystem extends SubsystemBase {
     
@@ -97,6 +98,7 @@ public class PivotArmSubsystem extends SubsystemBase {
         return this.runEnd(() -> {
             grabberMotor.set(0.3);
             conveyorMotor.set(-0.1);
+            SharedState.get().setLoaded(true);
         }, () -> {
             grabberMotor.stopMotor();
             conveyorMotor.stopMotor();
