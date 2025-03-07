@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SharedState;
+import frc.robot.utils.SharedUtils;
 
 public class PivotArmSubsystem extends SubsystemBase {
     
@@ -58,14 +59,10 @@ public class PivotArmSubsystem extends SubsystemBase {
     public void setArmPosition(boolean out){
         if(out){
             armController.setReference(degreesToRotations(30), ControlType.kPosition);
-            SparkFlexConfig config = new SparkFlexConfig();
-            config.smartCurrentLimit(40);
-            grabberMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            SharedUtils.setCurrentLimit(armMotor, 40);
         } else {
-            SparkFlexConfig config = new SparkFlexConfig();
-            config.smartCurrentLimit(10);
-            grabberMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-            grabberMotor.set(-1);
+            SharedUtils.setCurrentLimit(armMotor, 10);
+            armMotor.set(-1);
         }
     }
 

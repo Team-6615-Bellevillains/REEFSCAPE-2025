@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utils.SharedUtils;
 
 public class AlgaeGrabberSubsystem extends SubsystemBase {
     private final SparkFlex angleMotor = new SparkFlex(30, MotorType.kBrushless);
@@ -42,9 +43,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     }
 
     public void setGrabberCurrentLimit(int currentLimit){
-        SparkFlexConfig config = new SparkFlexConfig();
-        config.smartCurrentLimit(currentLimit);
-        grabberMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        SharedUtils.setCurrentLimit(grabberMotor, currentLimit);
     }
 
     public double getPositionDegrees(){
