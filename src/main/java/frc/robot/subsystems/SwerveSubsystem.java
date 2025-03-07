@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -194,12 +195,32 @@ public class SwerveSubsystem extends SubsystemBase {
 
     Pose2d poseDifference = robotPose.relativeTo(robotPose.nearest(targetPoses));
 
-    SmartDashboard.putBoolean(
-      "Aligned",
-      Math.abs(poseDifference.getRotation().getDegrees()) < 5
-      && Math.abs(poseDifference.getTranslation().getX()) < Inches.of(1).in(Meters)
-      && Math.abs(poseDifference.getTranslation().getY()) < Inches.of(1).in(Meters)
-    );
+    // Need to ignore rotation because we want to have the 
+    // left/right error relative to the AprilTag instead of
+    // relative to the field
+    Translation2d translationDifferenceIgnoringRotation = 
+      poseDifference
+        .rotateBy(closestAprilTagPose.getRotation().unaryMinus())
+        .getTranslation();
+    double frontBackErrorRelativeToAprilTag = translationDifferenceIgnoringRotation.getX();
+    double leftRightErrorRelativeToAprilTag = translationDifferenceIgnoringRotation.getY();
+
+    boolean rotationAligned = Math.abs(poseDifference.getRotation().getDegrees()) < 10;
+    boolean frontBackAligned = 
+      Math.abs(frontBackErrorRelativeToAprilTag) < Inches.of(2.5).in(Meters);
+    boolean leftRightAligned = 
+      Math.abs(leftRightErrorRelativeToAprilTag) < Inches.of(1.5).in(Meters);
+
+    // BEGIN DEBUG
+    SmartDashboard.putNumber("Rotation Error (Degrees)", poseDifference.getRotation().getDegrees());
+    SmartDashboard.putNumber("Front-Back Error (Inches)", Meters.of(frontBackErrorRelativeToAprilTag).in(Inches));
+    SmartDashboard.putNumber("Left-Right Error (Inches)", Meters.of(leftRightErrorRelativeToAprilTag).in(Inches));
+    SmartDashboard.putBoolean("Rotation Aligned", rotationAligned);
+    SmartDashboard.putBoolean("Front-Back Aligned", frontBackAligned);
+    SmartDashboard.putBoolean("Left-Right Aligned", leftRightAligned);
+    // END DEBUG
+    
+    SmartDashboard.putBoolean("Aligned", rotationAligned && frontBackAligned && leftRightAligned);
   }
 
   public ChassisSpeeds getFieldVelocity(){
