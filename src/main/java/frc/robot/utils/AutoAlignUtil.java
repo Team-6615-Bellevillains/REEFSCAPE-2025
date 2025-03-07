@@ -60,16 +60,14 @@ public class AutoAlignUtil {
         // 
         // ------------------------ Bottom of Field
 
+        // Left is the opposite direction or Right
+        Distance directionalOffset = coralScoreDirection == CoralScoreDirection.LEFT ? CORAL_SCORE_OFFSET.times(-1) : CORAL_SCORE_OFFSET;
+
         Pose2d poseAdjustment = new Pose2d(
             Units.Centimeters.of(73.5/2 + 8.5 + 1 + 2), 
-            CORAL_SCORE_OFFSET, 
+            directionalOffset,
             new Rotation2d()
         );
-
-        // Left is the opposite direction or Right
-        if (coralScoreDirection == CoralScoreDirection.LEFT) {
-            poseAdjustment = poseAdjustment.times(-1);
-        }
 
         // Account for AprilTag Angle
         poseAdjustment = poseAdjustment.rotateBy(aprilTagPose.getRotation());
