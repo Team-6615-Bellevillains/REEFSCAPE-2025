@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -14,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -25,40 +27,22 @@ public class AutoAlignUtil {
     }
 
     private static Distance CORAL_SCORE_OFFSET = Units.Inches.of(6);
-    private static Set<Integer> CORAL_APRIL_TAG_IDS = new HashSet<>(){{
-        // Red Reef
-        for (int id = 6; id <= 11; id++) {
-            add(id);
-        }
-
-        // Blue Reef
-        for (int id = 17; id <= 22; id++) {
-            add(id);
-        }
-    }};
 
     // To aid in visualizing how the field, AprilTags, and AutoAlignment work, we have a website:
     // https://team-6615-bellevillains.github.io/AprilTagVisualizer/
     // It does not work on mobile.
     private static Pose2d calculateTargetPose(Pose2d robotPose, CoralScoreDirection coralScoreDirection) {
-        List<AprilTag> aprilTags = AprilTagDataUtil.get().getAprilTags();
-        if (aprilTags.size() == 0) {
+        Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+        
+        List<Pose2d> coralAprilTagPoses = AprilTagDataUtil.get().getCoralAprilTagPoses(
+            alliance.isPresent() ? alliance.get() : DriverStation.Alliance.Blue
+        );
+
+        if (coralAprilTagPoses.size() == 0) {
             return null;
         }
 
-        // 1. Get a list of all the AprilTags on the field
-        // 2. Filter out the non-Coral AprilTags
-        // 2. Get the poses of each AprilTag
-        // 3. Out of all of the poses, find the closest one to the current robot pose.
-        Pose2d poseOfTargettedTag = robotPose
-                        .nearest(
-                            aprilTags
-                                .stream()
-                                .filter((aprilTag) -> CORAL_APRIL_TAG_IDS.contains(aprilTag.ID))
-                                .map((aprilTag) -> aprilTag.pose.toPose2d())
-                                .toList()
-                        );
-
+        Pose2d poseOfTargettedTag = robotPose.nearest(coralAprilTagPoses);
         System.out.println(poseOfTargettedTag);
         
         // An AprilTag with 0 rotation faces the Red alliance wall.
