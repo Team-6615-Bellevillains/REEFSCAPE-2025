@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -18,12 +19,15 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.LimelightHelpers;
+import frc.robot.utils.AutoAlignUtil;
+import frc.robot.utils.AutoAlignUtil.CoralScoreDirection;
 import swervelib.SwerveDrive;
 import swervelib.SwerveInputStream;
 import swervelib.parser.SwerveParser;
@@ -37,6 +41,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private Pigeon2 gyro = new Pigeon2(0);
     private final Field2d field = new Field2d();
     private final CommandXboxController driverController;
+    private int ticks = 0;
 
     public SwerveSubsystem(CommandXboxController driverController){
         this.driverController = driverController;
@@ -96,6 +101,12 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1
           , 9999999));
         swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+      }
+
+      // Every 12 ticks / appx. quarter second
+      ticks = (ticks + 1) % 12;
+      if (ticks == 0) {
+        updateIsAligned();
       }
       
 
@@ -158,6 +169,28 @@ public class SwerveSubsystem extends SubsystemBase {
     double rightStickPower = Math.abs(new Translation2d(driverController.getRightX(), driverController.getRightY()).getNorm());
 
     return leftStickPower > 0.05 || rightStickPower > 0.05;
+  }
+
+  private void updateIsAligned() {
+    Pose2d robotPose = getPose();
+
+    Pose2d closestAprilTagPose = AutoAlignUtil.getClosestAprilTagPose(robotPose);
+
+    if (closestAprilTagPose == null) {
+      return;
+    }
+
+    ArrayList<Pose2d> targetPoses = new ArrayList<>(){{
+      add(AutoAlignUtil.offsetAprilTagPose(closestAprilTagPose, CoralScoreDirection.LEFT));
+      add(AutoAlignUtil.offsetAprilTagPose(closestAprilTagPose, CoralScoreDirection.RIGHT));
+    }};
+
+    Pose2d poseDifference = robotPose.relativeTo(robotPose.nearest(targetPoses));
+
+    SmartDashboard.putBoolean(
+      "Aligned",
+      Math.abs(poseDifference.getRotation().getDegrees()) < 5 && Math.abs(poseDifference.getTranslation().getNorm()) < 1
+    );
   }
 
 }

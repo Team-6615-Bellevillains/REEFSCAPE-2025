@@ -28,10 +28,7 @@ public class AutoAlignUtil {
 
     private static Distance CORAL_SCORE_OFFSET = Units.Inches.of(6);
 
-    // To aid in visualizing how the field, AprilTags, and AutoAlignment work, we have a website:
-    // https://team-6615-bellevillains.github.io/AprilTagVisualizer/
-    // It does not work on mobile.
-    private static Pose2d calculateTargetPose(Pose2d robotPose, CoralScoreDirection coralScoreDirection) {
+    public static Pose2d getClosestAprilTagPose(Pose2d robotPose) {
         Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
         
         List<Pose2d> coralAprilTagPoses = AprilTagDataUtil.get().getCoralAprilTagPoses(
@@ -42,9 +39,10 @@ public class AutoAlignUtil {
             return null;
         }
 
-        Pose2d poseOfTargettedTag = robotPose.nearest(coralAprilTagPoses);
-        System.out.println(poseOfTargettedTag);
-        
+        return robotPose.nearest(coralAprilTagPoses);
+    }
+
+    public static Pose2d offsetAprilTagPose(Pose2d aprilTagPose, CoralScoreDirection coralScoreDirection) {
         // An AprilTag with 0 rotation faces the Red alliance wall.
         // This means that scoring "Right" is actually "Up", relative to the field.
 
@@ -74,14 +72,26 @@ public class AutoAlignUtil {
         }
 
         // Account for AprilTag Angle
-        poseAdjustment = poseAdjustment.rotateBy(poseOfTargettedTag.getRotation());
+        poseAdjustment = poseAdjustment.rotateBy(aprilTagPose.getRotation());
 
-        System.out.println(poseAdjustment);
-
-        Pose2d finalPose = new Pose2d(
-            poseOfTargettedTag.getTranslation().plus(poseAdjustment.getTranslation()), 
-            poseOfTargettedTag.getRotation()
+        return new Pose2d(
+            aprilTagPose.getTranslation().plus(poseAdjustment.getTranslation()), 
+            aprilTagPose.getRotation()
         );
+    }
+
+    // To aid in visualizing how the field, AprilTags, and AutoAlignment work, we have a website:
+    // https://team-6615-bellevillains.github.io/AprilTagVisualizer/
+    // It does not work on mobile.
+    public static Pose2d calculateTargetPose(Pose2d robotPose, CoralScoreDirection coralScoreDirection) {
+        Pose2d poseOfTargettedTag = getClosestAprilTagPose(robotPose);
+
+        if (poseOfTargettedTag == null) {
+            return null;
+        }
+        System.out.println(poseOfTargettedTag);
+        
+        Pose2d finalPose = offsetAprilTagPose(poseOfTargettedTag, coralScoreDirection);
 
         System.out.println(finalPose);
 
