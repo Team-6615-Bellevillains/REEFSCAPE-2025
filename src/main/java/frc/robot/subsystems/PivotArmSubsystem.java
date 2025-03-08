@@ -25,6 +25,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
     private boolean out = false;
     private static final double GEAR_RATIO = 9;
+    public int intake;
 
 
     public PivotArmSubsystem(){
@@ -47,9 +48,11 @@ public class PivotArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-     //System.out.println((armMotor.getEncoder().getPosition()/9)*360);
-
-     SmartDashboard.putNumber("arm current", armMotor.getOutputCurrent());
+        System.out.println((armMotor.getEncoder().getPosition()/9)*360);
+        System.out.println("periodic section is executing");
+        SmartDashboard.putNumber("Grabber Motor Current:", grabberMotorCurrent());
+        SmartDashboard.putNumber("grabber motor rpm:", grabberMotorRpm());
+        SmartDashboard.putNumber("arm current", armMotor.getOutputCurrent());
     }
 
     public boolean positionOut(){
@@ -88,11 +91,15 @@ public class PivotArmSubsystem extends SubsystemBase {
         return grabberMotor.getEncoder().getPosition();
     }
 
-    public void loadCoral(){
-            grabberMotor.set(0.1);
-            conveyorMotor.set(-0.1);
-        }
-    
+    public void loadCoral(){  
+        grabberMotor.set(0.1);
+        conveyorMotor.set(-0.1);
+        };
+
+    public void reverse(){  
+        grabberMotor.set(-0.1);
+        conveyorMotor.set(0.1);
+        };
     public void stopMotors(){
         grabberMotor.stopMotor();
         conveyorMotor.stopMotor();
