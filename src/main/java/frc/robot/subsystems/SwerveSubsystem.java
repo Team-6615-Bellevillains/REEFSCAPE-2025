@@ -101,9 +101,10 @@ public class SwerveSubsystem extends SubsystemBase {
       
 
 
-
-      field.setRobotPose(getPose());
-      LimelightHelpers.SetRobotOrientation("limelight", swerveDrive.getYaw().getDegrees(), 0, 0, 0, 0, 0);
+      Pose2d currentRobotPose = getPose();
+      field.setRobotPose(currentRobotPose);
+      SmartDashboard.putNumber("rotation fed to limelight", currentRobotPose.getRotation().getDegrees());
+      LimelightHelpers.SetRobotOrientation("limelight", currentRobotPose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
       LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
       if( !(Math.abs(gyro.getAngularVelocityYWorld().getValueAsDouble())>360 || mt2.tagCount == 0)){
         swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1
@@ -127,8 +128,8 @@ public class SwerveSubsystem extends SubsystemBase {
       // }
     }
 
-    public Command getAutonomousCommand(){
-      return new PathPlannerAuto("Blue Middle Score Middle");
+    public PathPlannerAuto getAutonomousCommand(){
+      return new PathPlannerAuto("Blue Middle Score Middle Non-AutoAlign");
     }
 
 

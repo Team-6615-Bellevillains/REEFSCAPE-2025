@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -64,7 +63,6 @@ public class RobotContainer {
 
         // Fixes certain PathPlanner operations being slow when first ran by simulating a path
         // Does **not** move the robot
-        FollowPathCommand.warmupCommand().schedule();
 
         configureBindings();
     }
