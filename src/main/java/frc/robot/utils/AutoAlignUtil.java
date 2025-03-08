@@ -34,6 +34,10 @@ public class AutoAlignUtil {
     }
 
     private static Distance CORAL_SCORE_OFFSET = Units.Inches.of(6);
+    
+    private static Distance ROBOT_WIDTH = Units.Centimeters.of(73.5);
+    private static Distance BUMPER_THICKNESS = Units.Centimeters.of(8.5);
+    private static Distance FUDGE_FACTOR = Units.Centimeters.of(3);
 
     public static Pose2d getClosestAprilTagPose(Pose2d robotPose) {
         Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
@@ -71,7 +75,7 @@ public class AutoAlignUtil {
         Distance directionalOffset = coralScoreDirection == CoralScoreDirection.LEFT ? CORAL_SCORE_OFFSET.times(-1) : CORAL_SCORE_OFFSET;
 
         Pose2d poseAdjustment = new Pose2d(
-            Units.Centimeters.of(73.5/2 + 8.5 + 1 + 2), 
+            ROBOT_WIDTH.div(2).plus(BUMPER_THICKNESS).plus(FUDGE_FACTOR), 
             directionalOffset,
             new Rotation2d()
         );
