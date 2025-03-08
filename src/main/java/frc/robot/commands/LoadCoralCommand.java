@@ -59,7 +59,11 @@ public class LoadCoralCommand extends Command{
             sawTrigger++;
             if(sawTrigger == 1)
                 startingRotations = subsystem.grabberMotorRotations();
-            }
+        } 
+        // Coral probably just tapped the wheels, reset detection
+        // else if (coralMotorRpm_Filter > 50) {
+        //     sawTrigger = 0;
+        // }
     }
 
     @Override
