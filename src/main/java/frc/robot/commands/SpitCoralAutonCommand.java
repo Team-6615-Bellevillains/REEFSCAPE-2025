@@ -8,7 +8,7 @@ import frc.robot.subsystems.PivotArmSubsystem;
 public class SpitCoralAutonCommand extends Command{
     
     private double startingRotations;
-    private static final double endRotations = Centimeters.of(30).div(Centimeters.of(6).times(Math.PI)).magnitude() + 2;
+    private static final double endRotations = Centimeters.of(30).div(Centimeters.of(6).times(Math.PI)).magnitude() + 8;
     private PivotArmSubsystem pivotArmSubsystem;
     
     public SpitCoralAutonCommand(PivotArmSubsystem subsystem){
