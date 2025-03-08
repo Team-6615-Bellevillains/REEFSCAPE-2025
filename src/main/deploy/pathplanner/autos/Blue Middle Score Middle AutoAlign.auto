@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Middle Score Middle Move to Score AutoAlign"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "elevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "autoAlignLeft"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "spitCoralAuto"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Middle Score Middle Backup"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "elevatorL1"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Middle",
+  "choreoAuto": false
+}
