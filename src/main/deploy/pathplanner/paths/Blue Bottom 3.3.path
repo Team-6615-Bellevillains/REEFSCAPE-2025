@@ -20,7 +20,7 @@
         "y": 4.025
       },
       "prevControl": {
-        "x": 2.889523256624508,
+        "x": 2.8895232566245075,
         "y": 4.170489637592656
       },
       "nextControl": null,
@@ -45,7 +45,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Blue Bottom 3",
+  "folder": "Bottom",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -126.0

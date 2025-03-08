@@ -26,6 +26,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Blue Bottom",
+  "folder": "Bottom",
   "choreoAuto": false
 }
