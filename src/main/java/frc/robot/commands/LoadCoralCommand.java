@@ -71,7 +71,7 @@ public class LoadCoralCommand extends Command{
         }
 
         // check for rpm disruption caused by loading of coral, if coral load detected, 
-        if ((coralMotorRpm_Filter < -10)&&(tryingToReverse == 0)) { 
+        if ((coralMotorRpm_Filter < -15)&&(tryingToReverse == 0)) { 
             sawTrigger++;
             if((sawTrigger == 1) && (tryingToReverse == 0)){
                 rotationsAtCapture = subsystem.grabberMotorRotations();
@@ -79,7 +79,7 @@ public class LoadCoralCommand extends Command{
         }
         else{
             System.out.println("checking if conveyor should be reversed");
-            if ((subsystem.grabberMotorRotations() - rotationsAtStart) >30){
+            if ((subsystem.grabberMotorRotations() - rotationsAtStart) >60){
                 tryingToReverse++;
                 subsystem.reverse();
                 rotationsAtReverse = subsystem.grabberMotorRotations();
