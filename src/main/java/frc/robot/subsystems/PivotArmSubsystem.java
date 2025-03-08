@@ -48,8 +48,8 @@ public class PivotArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println((armMotor.getEncoder().getPosition()/9)*360);
-        System.out.println("periodic section is executing");
+        // System.out.println((armMotor.getEncoder().getPosition()/9)*360);
+        // System.out.println("periodic section is executing");
         SmartDashboard.putNumber("Grabber Motor Current:", grabberMotorCurrent());
         SmartDashboard.putNumber("grabber motor rpm:", grabberMotorRpm());
         SmartDashboard.putNumber("arm current", armMotor.getOutputCurrent());
