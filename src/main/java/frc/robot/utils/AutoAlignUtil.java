@@ -103,6 +103,7 @@ public class AutoAlignUtil {
         return finalPose;
     }
 
+    // Credit to FRC3136 ORCA (Official Robot Constructors of Ashland)
     private static Rotation2d getPathVelocityHeading(ChassisSpeeds cs, Pose2d target, SwerveSubsystem swerveSubsystem) {
         if (swerveSubsystem.getVelocityMagnitude().in(MetersPerSecond) < 0.25) {
             var diff = target.minus(swerveSubsystem.getPose()).getTranslation();
@@ -111,6 +112,7 @@ public class AutoAlignUtil {
         return new Rotation2d(cs.vxMetersPerSecond, cs.vyMetersPerSecond);
     }
 
+    // Credit to FRC3136 ORCA (Official Robot Constructors of Ashland)
     private static Command goToTargetPoseOrcaMethod(Pose2d targetPose, SwerveSubsystem swerveSubsystem) {
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
             new Pose2d(swerveSubsystem.getPose().getTranslation(), getPathVelocityHeading(swerveSubsystem.getFieldVelocity(), targetPose, swerveSubsystem)),
