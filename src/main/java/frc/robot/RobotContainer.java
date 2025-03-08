@@ -1,7 +1,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.commands.GoToElevatorPositionCommand;
 import frc.robot.commands.GrabAlgaeCommand;
 import frc.robot.commands.LoadCoralCommand;
@@ -42,6 +44,9 @@ public class RobotContainer {
 
 
     public RobotContainer(){
+        // Robot is always loaded at start of Autonomous
+        RobotModeTriggers.autonomous().onTrue(Commands.runOnce(() -> SharedState.get().setLoaded(true)));
+
         configureBindings();
     }
 
