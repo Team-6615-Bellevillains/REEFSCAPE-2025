@@ -1,5 +1,8 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.FollowPathCommand;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -7,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.commands.GoToElevatorPositionCommand;
 import frc.robot.commands.GrabAlgaeCommand;
 import frc.robot.commands.LoadCoralCommand;
+import frc.robot.commands.SpitCoralAutonCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
@@ -46,6 +50,21 @@ public class RobotContainer {
     public RobotContainer(){
         // Robot is always loaded at start of Autonomous
         RobotModeTriggers.autonomous().onTrue(Commands.runOnce(() -> SharedState.get().setLoaded(true)));
+
+        NamedCommands.registerCommand("elevatorL1", new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
+        NamedCommands.registerCommand("elevatorL2", new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
+        NamedCommands.registerCommand("elevatorL3", new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
+        NamedCommands.registerCommand("elevatorL4", new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
+
+        NamedCommands.registerCommand("autoAlignLeft", AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
+        NamedCommands.registerCommand("autoAlignRight", AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.RIGHT));
+        
+        NamedCommands.registerCommand("loadCoralAuto", new LoadCoralCommand(pivot, elevator));
+        NamedCommands.registerCommand("spitCoralAuto", new SpitCoralAutonCommand(pivot));
+
+        // Fixes certain PathPlanner operations being slow when first ran by simulating a path
+        // Does **not** move the robot
+        FollowPathCommand.warmupCommand().schedule();
 
         configureBindings();
     }

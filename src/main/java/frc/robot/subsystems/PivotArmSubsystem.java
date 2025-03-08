@@ -102,6 +102,10 @@ public class PivotArmSubsystem extends SubsystemBase {
         SharedUtils.setCurrentLimit(grabberMotor, currentLimit);
     }
 
+    public void setGrabberMotor(double percentage) {
+        grabberMotor.set(percentage);
+    }
+
     public Command spitCoral(){
         return this.runEnd(() -> {
             grabberMotor.set(0.3);

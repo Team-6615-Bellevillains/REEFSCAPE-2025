@@ -128,7 +128,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Command getAutonomousCommand(){
-      return new PathPlannerAuto("New Auto");
+      return new PathPlannerAuto("Blue Middle Score Middle");
     }
 
 
