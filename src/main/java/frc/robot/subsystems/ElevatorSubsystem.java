@@ -22,7 +22,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private Position position;
     private static final double l2Inches = 11;
     private static final double l3Inches = 26.5;
-    private static final double l4Inches = elevatorHeight;
+    private static final double l4Inches = elevatorHeight+1.5;
 
     public ElevatorSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
