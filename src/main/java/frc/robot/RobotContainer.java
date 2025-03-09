@@ -1,7 +1,10 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,6 +30,8 @@ public class RobotContainer {
     private AlgaeGrabberSubsystem algae = new AlgaeGrabberSubsystem();
     private ElevatorSubsystem elevator = new ElevatorSubsystem();
     private PivotArmSubsystem pivot = new PivotArmSubsystem();
+
+    private SendableChooser<Command> autoChooser;    
     
     // from the YAGSL example project, hence the diabolical formatting
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerve.getSwerveDrive(),
@@ -61,6 +66,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("loadCoralAuto", new LoadCoralCommand(pivot, elevator));
         NamedCommands.registerCommand("spitCoralAuto", new SpitCoralAutonCommand(pivot));
 
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+
         // Fixes certain PathPlanner operations being slow when first ran by simulating a path
         // Does **not** move the robot
 
@@ -88,6 +96,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand(){
-        return swerve.getAutonomousCommand();
+        return autoChooser.getSelected();
     }
 }
