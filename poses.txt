@@ -1,0 +1,6 @@
+Tag 17 Left Position: Pose2d(Translation2d(X: 3.71, Y: 2.98), Rotation2d(Rads: -2.09, Deg: -120.00)), Right Position: Pose2d(Translation2d(X: 3.97, Y: 2.83), Rotation2d(Rads: -2.09, Deg: -120.00))
+Tag 18 Left Position: Pose2d(Translation2d(X: 3.20, Y: 4.18), Rotation2d(Rads: 3.14, Deg: 180.00)), Right Position: Pose2d(Translation2d(X: 3.20, Y: 3.87), Rotation2d(Rads: 3.14, Deg: 180.00))
+Tag 19 Left Position: Pose2d(Translation2d(X: 3.97, Y: 5.22), Rotation2d(Rads: 2.09, Deg: 120.00)), Right Position: Pose2d(Translation2d(X: 3.71, Y: 5.07), Rotation2d(Rads: 2.09, Deg: 120.00))
+Tag 20 Left Position: Pose2d(Translation2d(X: 5.27, Y: 5.07), Rotation2d(Rads: 1.05, Deg: 60.00)), Right Position: Pose2d(Translation2d(X: 5.00, Y: 5.22), Rotation2d(Rads: 1.05, Deg: 60.00))
+Tag 21 Left Position: Pose2d(Translation2d(X: 5.78, Y: 3.87), Rotation2d(Rads: 0.00, Deg: 0.00)), Right Position: Pose2d(Translation2d(X: 5.78, Y: 4.18), Rotation2d(Rads: 0.00, Deg: 0.00))
+Tag 22 Left Position: Pose2d(Translation2d(X: 5.00, Y: 2.83), Rotation2d(Rads: -1.05, Deg: -60.00)), Right Position: Pose2d(Translation2d(X: 5.27, Y: 2.98), Rotation2d(Rads: -1.05, Deg: -60.00))
