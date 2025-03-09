@@ -64,7 +64,7 @@ public class PivotArmSubsystem extends SubsystemBase {
             armController.setReference(degreesToRotations(30), ControlType.kPosition);
             SharedUtils.setCurrentLimit(armMotor, 40);
         } else {
-            SharedUtils.setCurrentLimit(armMotor, 40);
+            SharedUtils.setCurrentLimit(armMotor, 1);
             armMotor.set(1);
         }
     }
