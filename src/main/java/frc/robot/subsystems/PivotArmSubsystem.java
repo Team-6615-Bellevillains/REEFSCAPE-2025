@@ -24,7 +24,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     private SparkMax grabberMotor = new SparkMax(33, MotorType.kBrushless);
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
     private boolean out = false;
-    private static final double GEAR_RATIO = 9;
+    private static final double GEAR_RATIO = 81;
     public int intake;
 
 
