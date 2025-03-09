@@ -93,7 +93,7 @@ public class PivotArmSubsystem extends SubsystemBase {
 
     public void loadCoral(){  
         grabberMotor.set(0.15);
-        conveyorMotor.set(-0.15);
+        conveyorMotor.set(-0.10);
         };
 
     public void reverse(){  
