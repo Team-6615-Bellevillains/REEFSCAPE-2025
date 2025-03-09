@@ -37,7 +37,7 @@ public class AutoAlignUtil {
     
     private static Distance ROBOT_WIDTH = Units.Centimeters.of(73.5);
     private static Distance BUMPER_THICKNESS = Units.Centimeters.of(8.5);
-    private static Distance FUDGE_FACTOR = Units.Centimeters.of(3);
+    private static Distance FUDGE_FACTOR = Units.Centimeters.of(1);
 
     public static Pose2d getClosestAprilTagPose(Pose2d robotPose) {
         Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();

@@ -1,8 +1,12 @@
 package frc.robot;
 
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,6 +22,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.Position;
+import frc.robot.utils.AprilTagDataUtil;
 import frc.robot.utils.AutoAlignUtil;
 import frc.robot.utils.AutoAlignUtil.CoralScoreDirection;
 import swervelib.SwerveInputStream;
@@ -73,6 +78,14 @@ public class RobotContainer {
         // Does **not** move the robot
 
         configureBindings();
+
+        List<Pose2d> coralTagPoses = AprilTagDataUtil.get().getCoralAprilTagPoses(DriverStation.Alliance.Blue);
+        for (int i = 0; i < 6; ++i) {
+            Pose2d leftBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.LEFT);
+            Pose2d rightBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.RIGHT);
+
+            System.out.printf("Tag %d Left Position: %s, Right Position: %s\n", i+17, leftBranchPose, rightBranchPose);
+        }
     }
 
     private void configureBindings(){
