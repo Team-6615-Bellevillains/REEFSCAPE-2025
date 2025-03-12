@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.commands.GoToElevatorPositionCommand;
 import frc.robot.commands.GrabAlgaeCommand;
 import frc.robot.commands.LoadCoralCommand;
+import frc.robot.commands.LoadCoralLaserCANCommand;
 import frc.robot.commands.SpitCoralAutonCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -94,7 +95,7 @@ public class RobotContainer {
         operatorController.povRight().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
         operatorController.povLeft().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
         operatorController.povDown().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
-        operatorController.rightBumper().onTrue(new LoadCoralCommand(pivot, elevator));
+        operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivot));
         operatorController.y().whileTrue(pivot.L1Shot());
     }
 

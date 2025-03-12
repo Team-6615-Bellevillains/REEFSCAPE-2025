@@ -57,10 +57,7 @@ public class PivotArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Grabber Motor Current:", grabberMotorCurrent());
         SmartDashboard.putNumber("grabber motor rpm:", grabberMotorRpm());
         SmartDashboard.putNumber("arm current", armMotor.getOutputCurrent());
-        Measurement measurement = laserCan.getMeasurement();
-        if(measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 300){
-            SharedState.get().setCoralInWay(true);
-        } else SharedState.get().setCoralInWay(false);
+        SharedState.get().setCoralInWay(measureCoralInWay());
     }
 
     public boolean positionOut(){
@@ -158,6 +155,13 @@ public class PivotArmSubsystem extends SubsystemBase {
             out = !out;
             setArmPosition(out);
         });
+    }
+    public boolean measureCoralInWay(){
+        Measurement measurement = laserCan.getMeasurement();
+        if(measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 350){
+            SharedState.get().setLaserCanDistance(measurement.distance_mm);
+            return true;
+        } else return false;
     }
 }
 
