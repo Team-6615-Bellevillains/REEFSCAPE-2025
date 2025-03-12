@@ -15,14 +15,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax rightMotor = new SparkMax(36, MotorType.kBrushless);
     private SparkClosedLoopController leftController = leftMotor.getClosedLoopController();
     private SparkClosedLoopController rightController = rightMotor.getClosedLoopController();
-    private static final double downLimit = 0.3;
+    private static final double downLimit = 0.4;
     private static final double upLimit = 0.35; 
     private static final double elevatorHeight = 57;
     private static final double rotationLimit = 46.125;
     private Position position;
-    private static final double l2Inches = 10.25;
-    private static final double l3Inches = 25.75;
-    private static final double l4Inches = elevatorHeight;
+    private static final double l2Inches = 10.25+5;
+    private static final double l3Inches = 25.75+5;
+    private static final double l4Inches = elevatorHeight+0.5;
 
     public ElevatorSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
@@ -37,6 +37,19 @@ public class ElevatorSubsystem extends SubsystemBase {
         config.closedLoop.outputRange(-downLimit, upLimit);
         leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         position = Position.L1;
+    }
+
+    @Override
+    public void periodic() {
+        // if(Math.abs(leftMotor.getEncoder().getVelocity()) <= 1 && !atPosition()){
+        //     if (this.getCurrentCommand() != null) this.getCurrentCommand().cancel();
+        //     if(position == Position.L4 || position == Position.L3){
+        //         setPosition(Position.L1);
+        //     } else {
+        //         setPosition(Position.L1);
+        //     }
+        //     System.err.println("Elevator stuck!");
+        // }
     }
 
     private double inchesToRotations(double inches){

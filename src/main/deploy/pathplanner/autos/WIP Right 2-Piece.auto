@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left Score"
+                  "pathName": "Right Score"
                 }
               },
               {
@@ -55,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left Move to Pickup"
+                  "pathName": "Right Move to Pickup"
                 }
               }
             ]
@@ -70,13 +70,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Move Back to Score"
+            "pathName": "Move Back to Score Right"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Left",
+  "folder": "Right",
   "choreoAuto": false
 }

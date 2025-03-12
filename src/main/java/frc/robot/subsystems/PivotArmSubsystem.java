@@ -123,6 +123,14 @@ public class PivotArmSubsystem extends SubsystemBase {
             conveyorMotor.stopMotor();
         });
     }
+
+    public Command L1Shot(){
+        return this.runEnd(() -> {
+            grabberMotor.set(0.6);
+        }, () -> {
+            grabberMotor.stopMotor();
+        });
+    }
     
     public Command reverseCoral(){
         return this.runEnd(() -> {

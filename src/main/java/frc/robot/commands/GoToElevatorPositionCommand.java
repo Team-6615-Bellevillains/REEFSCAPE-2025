@@ -22,7 +22,7 @@ public class GoToElevatorPositionCommand extends Command{
     public void initialize() {
         System.out.println("setting elevator");
         if(elevator.getPosition() != position){
-            if (elevator.getPosition() == Position.L4 || position == Position.L4){
+            if (true/*elevator.getPosition() == Position.L4 || position == Position.L4*/){
                 pivot.setArmPosition(true);
             }
             elevator.setPosition(position);
@@ -37,7 +37,7 @@ public class GoToElevatorPositionCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         if (!interrupted){
-            if (position == Position.L4){
+            if (position != Position.L1){
                 pivot.setArmPosition(true);
             } else pivot.setArmPosition(false);
         }

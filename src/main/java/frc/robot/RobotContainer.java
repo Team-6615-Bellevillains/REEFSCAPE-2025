@@ -93,6 +93,7 @@ public class RobotContainer {
         operatorController.povLeft().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
         operatorController.povDown().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
         operatorController.rightBumper().onTrue(new LoadCoralCommand(pivot, elevator));
+        operatorController.y().whileTrue(pivot.L1Shot());
     }
 
     public Command getAutonomousCommand(){

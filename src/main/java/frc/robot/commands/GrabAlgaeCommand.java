@@ -15,7 +15,6 @@ public class GrabAlgaeCommand extends Command{
     public GrabAlgaeCommand(AlgaeGrabberSubsystem subsystem ){
         this.subsystem = subsystem;
         addRequirements(subsystem);
-        delayTicks = 30;
         algaeGrabProgress = AlgaeGrabProgress.WAITING;
     }
 
@@ -25,10 +24,10 @@ public class GrabAlgaeCommand extends Command{
         subsystem.setPositionDegrees(65);
         subsystem.setGrabberSpeed(-1);
         stopped = false;
-        delayTicks = 30;
+        delayTicks = 50;
         spinupTimer.restart();
         algaeGrabProgress = AlgaeGrabProgress.WAITING;
-        subsystem.setGrabberCurrentLimit(35);
+        subsystem.setGrabberCurrentLimit(30);
     }
 
     @Override
