@@ -6,6 +6,7 @@ public class SharedState {
     private boolean loaded;
     private boolean aligned;
     private boolean coralInWay;
+    private double laserCanDistance;
 
     private static SharedState instance = null;
 
@@ -41,5 +42,13 @@ public class SharedState {
 
     public boolean getCoralInWay(){
         return coralInWay;
+    }
+
+    public void setLaserCanDistance(double laserCanDistance) {
+        this.laserCanDistance = laserCanDistance;
+    }
+
+    public double getLaserCanDistance(){
+        return laserCanDistance;
     }
 }

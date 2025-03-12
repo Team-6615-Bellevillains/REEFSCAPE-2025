@@ -8,7 +8,9 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.SharedState;
 
 public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax leftMotor = new SparkMax(34, MotorType.kBrushless);
@@ -41,15 +43,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // if(Math.abs(leftMotor.getEncoder().getVelocity()) <= 1 && !atPosition()){
-        //     if (this.getCurrentCommand() != null) this.getCurrentCommand().cancel();
-        //     if(position == Position.L4 || position == Position.L3){
-        //         setPosition(Position.L1);
-        //     } else {
-        //         setPosition(Position.L1);
-        //     }
-        //     System.err.println("Elevator stuck!");
-        // }
+        if (SharedState.get().getLaserCanDistance() < 50){
+            Command currentCommand = this.getCurrentCommand();
+            if (currentCommand != null){
+                currentCommand.cancel();
+            }
+            this.setPosition(Position.L1);
+        }
     }
 
     private double inchesToRotations(double inches){
