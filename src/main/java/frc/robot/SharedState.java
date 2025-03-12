@@ -1,7 +1,11 @@
 package frc.robot;
 
+
+
 public class SharedState {
     private boolean loaded;
+    private boolean aligned;
+    private boolean coralInWay;
 
     private static SharedState instance = null;
 
@@ -22,5 +26,20 @@ public class SharedState {
     public boolean isLoaded() {
         return loaded;
     }
-    
+
+    public void setAligned(boolean aligned){
+        this.aligned = aligned;
+    }    
+
+    public boolean getAligned(){
+        return this.aligned;
+    }
+
+    public void setCoralInWay(boolean input){
+        coralInWay = input;
+    }
+
+    public boolean getCoralInWay(){
+        return coralInWay;
+    }
 }

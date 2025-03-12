@@ -15,6 +15,7 @@ import frc.robot.commands.LoadCoralCommand;
 import frc.robot.commands.SpitCoralAutonCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.Position;
@@ -30,6 +31,7 @@ public class RobotContainer {
     private AlgaeGrabberSubsystem algae = new AlgaeGrabberSubsystem();
     private ElevatorSubsystem elevator = new ElevatorSubsystem();
     private PivotArmSubsystem pivot = new PivotArmSubsystem();
+    private LEDSubsystem ledSubsystem = new LEDSubsystem();
 
     private SendableChooser<Command> autoChooser;    
     
