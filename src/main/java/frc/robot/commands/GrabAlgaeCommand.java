@@ -32,9 +32,9 @@ public class GrabAlgaeCommand extends Command{
 
     @Override
     public void execute() {
-        SmartDashboard.putNumber("algae grabber rpm", subsystem.checkGrabberRPM());
-        SmartDashboard.putNumber("algae angle", subsystem.getPositionDegrees());
-        SmartDashboard.putNumber("algaeGrabProgress", algaeGrabProgress.ordinal());
+        // SmartDashboard.putNumber("algae grabber rpm", subsystem.checkGrabberRPM());
+        // SmartDashboard.putNumber("algae angle", subsystem.getPositionDegrees());
+        // SmartDashboard.putNumber("algaeGrabProgress", algaeGrabProgress.ordinal());
         switch (algaeGrabProgress){
             case WAITING:
                 

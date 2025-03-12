@@ -54,15 +54,15 @@ public class LoadCoralCommand extends Command{
          
         double coralMotorRpm_Filter = coralMotorRpm_hpFilter.calculate(subsystem.grabberMotorRpm()); 
         
-        SmartDashboard.putNumber("high pass filtered rpm:", coralMotorRpm_Filter);
-        SmartDashboard.putNumber("rotations since trigger:", rotationsSinceTrigger());
-        SmartDashboard.putNumber("rotations when load button is pressed:", rotationsAtStart);
-        SmartDashboard.putNumber("rotations when coral captured by shooter:", rotationsAtCapture);
-        SmartDashboard.putNumber("total rotations:", subsystem.grabberMotorRotations());
-        SmartDashboard.putNumber("trying to reverse:", tryingToReverse);
-        SmartDashboard.putNumber("rotations when reversed:", rotationsAtReverse);
-        SmartDashboard.putNumber("saw trigger:", sawTrigger);
-        SmartDashboard.putNumber("rotations when reversed:", rotationsAtReverse);
+        // SmartDashboard.putNumber("high pass filtered rpm:", coralMotorRpm_Filter);
+        // SmartDashboard.putNumber("rotations since trigger:", rotationsSinceTrigger());
+        // SmartDashboard.putNumber("rotations when load button is pressed:", rotationsAtStart);
+        // SmartDashboard.putNumber("rotations when coral captured by shooter:", rotationsAtCapture);
+        // SmartDashboard.putNumber("total rotations:", subsystem.grabberMotorRotations());
+        // SmartDashboard.putNumber("trying to reverse:", tryingToReverse);
+        // SmartDashboard.putNumber("rotations when reversed:", rotationsAtReverse);
+        // SmartDashboard.putNumber("saw trigger:", sawTrigger);
+        // SmartDashboard.putNumber("rotations when reversed:", rotationsAtReverse);
     
         // check to see if we've backed up enough
         if ((tryingToReverse != 0) && (rotationsAtReverse - subsystem.grabberMotorRotations() > 20)){
@@ -78,7 +78,7 @@ public class LoadCoralCommand extends Command{
             }
         }
         else{
-            System.out.println("checking if conveyor should be reversed");
+            //System.out.println("checking if conveyor should be reversed");
             if ((subsystem.grabberMotorRotations() - rotationsAtStart) >60){
                 tryingToReverse++;
                 subsystem.reverse();
