@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.led.LarsonAnimation;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
@@ -11,6 +12,9 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.interfaces.LaserCanInterface;
+import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,7 +29,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
     private boolean out = false;
     private static final double GEAR_RATIO = 81;
-    public int intake;
+    private LaserCan laserCan = new LaserCan(0);
 
 
     public PivotArmSubsystem(){
@@ -53,6 +57,10 @@ public class PivotArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Grabber Motor Current:", grabberMotorCurrent());
         SmartDashboard.putNumber("grabber motor rpm:", grabberMotorRpm());
         SmartDashboard.putNumber("arm current", armMotor.getOutputCurrent());
+        Measurement measurement = laserCan.getMeasurement();
+        if(measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 300){
+            SharedState.get().setCoralInWay(true);
+        } else SharedState.get().setCoralInWay(false);
     }
 
     public boolean positionOut(){

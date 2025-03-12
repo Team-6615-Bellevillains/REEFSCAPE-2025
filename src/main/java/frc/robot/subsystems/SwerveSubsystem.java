@@ -213,15 +213,16 @@ public class SwerveSubsystem extends SubsystemBase {
       Math.abs(leftRightErrorRelativeToAprilTag) < Inches.of(1.5).in(Meters);
 
     // BEGIN DEBUG
-    SmartDashboard.putNumber("Rotation Error (Degrees)", poseDifference.getRotation().getDegrees());
-    SmartDashboard.putNumber("Front-Back Error (Inches)", Meters.of(frontBackErrorRelativeToAprilTag).in(Inches));
-    SmartDashboard.putNumber("Left-Right Error (Inches)", Meters.of(leftRightErrorRelativeToAprilTag).in(Inches));
-    SmartDashboard.putBoolean("Rotation Aligned", rotationAligned);
-    SmartDashboard.putBoolean("Front-Back Aligned", frontBackAligned);
-    SmartDashboard.putBoolean("Left-Right Aligned", leftRightAligned);
+    // SmartDashboard.putNumber("Rotation Error (Degrees)", poseDifference.getRotation().getDegrees());
+    // SmartDashboard.putNumber("Front-Back Error (Inches)", Meters.of(frontBackErrorRelativeToAprilTag).in(Inches));
+    // SmartDashboard.putNumber("Left-Right Error (Inches)", Meters.of(leftRightErrorRelativeToAprilTag).in(Inches));
+    // SmartDashboard.putBoolean("Rotation Aligned", rotationAligned);
+    // SmartDashboard.putBoolean("Front-Back Aligned", frontBackAligned);
+    // SmartDashboard.putBoolean("Left-Right Aligned", leftRightAligned);
     // END DEBUG
     
     SmartDashboard.putBoolean("Aligned", rotationAligned && frontBackAligned && leftRightAligned);
+    
   }
 
   public ChassisSpeeds getFieldVelocity(){
