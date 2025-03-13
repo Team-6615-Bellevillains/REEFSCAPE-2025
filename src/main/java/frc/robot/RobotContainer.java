@@ -91,10 +91,10 @@ public class RobotContainer {
         operatorController.a().whileTrue(pivot.spitCoral());
         operatorController.b().onTrue(pivot.invertInOut());
         operatorController.x().whileTrue(pivot.reverseCoral());
-        operatorController.povUp().and(() -> !SharedState.get().getCoralInWay()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
-        operatorController.povRight().and(() -> !SharedState.get().getCoralInWay()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
-        operatorController.povLeft().and(() -> !SharedState.get().getCoralInWay()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
-        operatorController.povDown().and(() -> !SharedState.get().getCoralInWay()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
+        operatorController.povUp().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
+        operatorController.povRight().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
+        operatorController.povLeft().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
+        operatorController.povDown().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
         operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivot));
         operatorController.y().whileTrue(pivot.L1Shot());
     }
