@@ -13,12 +13,6 @@
                 "data": {
                   "pathName": "Right Score"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "elevatorL4"
-                }
               }
             ]
           }
@@ -71,6 +65,12 @@
           "type": "path",
           "data": {
             "pathName": "Move Back to Score Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "spitCoralAuto"
           }
         }
       ]

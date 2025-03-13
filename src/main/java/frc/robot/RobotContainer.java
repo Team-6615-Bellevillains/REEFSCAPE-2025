@@ -66,7 +66,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("autoAlignLeft", AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
         NamedCommands.registerCommand("autoAlignRight", AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.RIGHT));
         
-        NamedCommands.registerCommand("loadCoralAuto", new LoadCoralCommand(pivot, elevator));
+        NamedCommands.registerCommand("loadCoralAuto", new LoadCoralLaserCANCommand(pivot));
         NamedCommands.registerCommand("spitCoralAuto", new SpitCoralAutonCommand(pivot));
 
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -91,10 +91,10 @@ public class RobotContainer {
         operatorController.a().whileTrue(pivot.spitCoral());
         operatorController.b().onTrue(pivot.invertInOut());
         operatorController.x().whileTrue(pivot.reverseCoral());
-        operatorController.povUp().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
-        operatorController.povRight().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
-        operatorController.povLeft().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
-        operatorController.povDown().and(() -> SharedState.get().isLoaded()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
+        operatorController.povUp().and(() -> !SharedState.get().getCoralInWay()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
+        operatorController.povRight().and(() -> !SharedState.get().getCoralInWay()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
+        operatorController.povLeft().and(() -> !SharedState.get().getCoralInWay()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
+        operatorController.povDown().and(() -> !SharedState.get().getCoralInWay()).onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
         operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivot));
         operatorController.y().whileTrue(pivot.L1Shot());
     }
