@@ -55,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left Move to Pickup"
+                  "pathName": "Left Backup"
                 }
               }
             ]
