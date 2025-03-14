@@ -47,12 +47,13 @@ public class PivotArmSubsystem extends SubsystemBase {
         config2.idleMode(IdleMode.kBrake);
         conveyorMotor.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        setArmPosition(false);
+        setArmPosition(0);
     }
 
     @Override
     public void periodic() {
         // System.out.println((armMotor.getEncoder().getPosition()/9)*360);
+        // SmartDashboard.putNumber("Arm Coral ROtation", getPivotAngle());
         // System.out.println("periodic section is executing");
         SmartDashboard.putNumber("Grabber Motor Current:", grabberMotorCurrent());
         SmartDashboard.putNumber("grabber motor rpm:", grabberMotorRpm());
@@ -64,11 +65,15 @@ public class PivotArmSubsystem extends SubsystemBase {
         return out;
     }
 
-    public void setArmPosition(boolean out){
-        if(out){
+    public void setArmPosition(int pos){
+        if(pos == 2){
             armController.setReference(degreesToRotations(30), ControlType.kPosition);
             SharedUtils.setCurrentLimit(armMotor, 40);
-        } else {
+        } else if(pos == 1) {
+            armController.setReference(degreesToRotations(20), ControlType.kPosition);
+            SharedUtils.setCurrentLimit(armMotor, 40);
+        }
+        else if (pos == 0) {
             SharedUtils.setCurrentLimit(armMotor, 1);
             armMotor.set(1);
         }
@@ -82,8 +87,8 @@ public class PivotArmSubsystem extends SubsystemBase {
         return -(degrees/360)*GEAR_RATIO;
     }
 
-    public Command setArmPositionCommand(boolean out){
-        return this.runOnce(()->setArmPosition(out));
+    public Command setArmPositionCommand(int pos){
+        return this.runOnce(()->setArmPosition(pos));
     }
     
     public double grabberMotorCurrent(){
@@ -153,7 +158,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     public Command invertInOut(){
         return this.runOnce(()->{
             out = !out;
-            setArmPosition(out);
+            setArmPosition(out ? 2 : 0);
         });
     }
     public boolean measureCoralInWay(){
