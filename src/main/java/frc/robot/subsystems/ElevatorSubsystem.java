@@ -17,8 +17,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax rightMotor = new SparkMax(36, MotorType.kBrushless);
     private SparkClosedLoopController leftController = leftMotor.getClosedLoopController();
     private SparkClosedLoopController rightController = rightMotor.getClosedLoopController();
-    private static final double downLimit = 0.4;
-    private static final double upLimit = 0.35; 
+    private static final double downLimit = 0.45;
+    private static final double upLimit = 0.4; 
     private static final double elevatorHeight = 57;
     private static final double rotationLimit = 46.125;
     private Position position;
