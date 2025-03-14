@@ -60,18 +60,6 @@
               }
             ]
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "loadCoralAuto"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left Move Back to Score"
-          }
         }
       ]
     }

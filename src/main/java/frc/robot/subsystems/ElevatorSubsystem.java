@@ -48,6 +48,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             if (currentCommand != null){
                 currentCommand.cancel();
             }
+            System.out.println("Can distance <50 (" + SharedState.get().getLaserCanDistance() + ")");
             this.setPosition(Position.L1);
         }
     }

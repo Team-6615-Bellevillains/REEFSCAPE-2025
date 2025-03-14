@@ -33,7 +33,7 @@ public class AutoAlignUtil {
         LEFT, RIGHT;
     }
 
-    private static Distance CORAL_SCORE_OFFSET = Units.Inches.of(6);
+    private static Distance CORAL_SCORE_OFFSET = Units.Inches.of(6.5);
     
     private static Distance ROBOT_WIDTH = Units.Centimeters.of(73.5);
     private static Distance BUMPER_THICKNESS = Units.Centimeters.of(8.5);

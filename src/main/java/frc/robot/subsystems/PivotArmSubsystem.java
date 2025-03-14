@@ -158,8 +158,10 @@ public class PivotArmSubsystem extends SubsystemBase {
     }
     public boolean measureCoralInWay(){
         Measurement measurement = laserCan.getMeasurement();
-        if(measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 350){
+        if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
             SharedState.get().setLaserCanDistance(measurement.distance_mm);
+        }
+        if(measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 350){
             return true;
         } else return false;
     }

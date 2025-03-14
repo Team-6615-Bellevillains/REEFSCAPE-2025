@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotation;
 
 import java.io.File;
@@ -91,9 +92,9 @@ public class SwerveSubsystem extends SubsystemBase {
           }, 
           this);
           SmartDashboard.putData("field", field);
-          // 54.25, 39.35, 5.5, 36.75
-          //
-          LimelightHelpers.setCameraPose_RobotSpace("limelight", -0.175, -.3125, .3935, 0, 0, 180);
+          // 54, 5.25, 
+          //36.75
+          LimelightHelpers.setCameraPose_RobotSpace("limelight", -0.1725, -.315, .3975, 0, 0, 180);
     }
 
     @Override
@@ -169,6 +170,13 @@ public class SwerveSubsystem extends SubsystemBase {
   public Command resetHeading(){
     return this.runOnce(()->{
       swerveDrive.zeroGyro();
+    });
+  }
+
+  public Command angleNegative60(){
+    return this.runOnce(()->{
+      swerveDrive.zeroGyro();
+      swerveDrive.setGyro(new Rotation3d(Rotation2d.fromDegrees(-60)));
     });
   }
 

@@ -13,6 +13,25 @@
                 "data": {
                   "pathName": "Right Score"
                 }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "elevatorL4"
+                      }
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -62,15 +81,60 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Move Back to Score Right"
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "elevatorL4"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Move Back to Score Right"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "spitCoralAuto"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "elevatorL1"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "slight backup"
+                }
+              }
+            ]
           }
         }
       ]
