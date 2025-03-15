@@ -53,7 +53,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // System.out.println((armMotor.getEncoder().getPosition()/9)*360);
-        // SmartDashboard.putNumber("Arm Coral ROtation", getPivotAngle());
+        SmartDashboard.putNumber("Arm Coral ROtation", getPivotAngle());
         // System.out.println("periodic section is executing");
         SmartDashboard.putNumber("Grabber Motor Current:", grabberMotorCurrent());
         SmartDashboard.putNumber("grabber motor rpm:", grabberMotorRpm());
@@ -67,10 +67,10 @@ public class PivotArmSubsystem extends SubsystemBase {
 
     public void setArmPosition(int pos){
         if(pos == 2){
-            armController.setReference(degreesToRotations(30), ControlType.kPosition);
+            armController.setReference(degreesToRotations(26), ControlType.kPosition);
             SharedUtils.setCurrentLimit(armMotor, 40);
         } else if(pos == 1) {
-            armController.setReference(degreesToRotations(20), ControlType.kPosition);
+            armController.setReference(degreesToRotations(10), ControlType.kPosition);
             SharedUtils.setCurrentLimit(armMotor, 40);
         }
         else if (pos == 0) {
