@@ -75,9 +75,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "loadCoralAuto"
+            "waitTime": 0.5
           }
         },
         {
@@ -89,9 +89,9 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 1.0
+                        "name": "loadCoralAuto"
                       }
                     },
                     {
