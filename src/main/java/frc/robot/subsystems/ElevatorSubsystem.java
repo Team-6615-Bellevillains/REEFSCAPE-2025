@@ -85,6 +85,14 @@ public class ElevatorSubsystem extends SubsystemBase {
                 moveElevator(l4Inches);  
                 position = Position.L4;
                 break;
+            case A1:
+                moveElevator(0);
+                position = Position.A1;
+                break;
+            case A2:
+                moveElevator(0);
+                position = Position.A2;
+                break;
         }
     }
 
@@ -122,9 +130,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     //}
 
     public enum Position{
+        // coral positions
         L1,
         L2,
         L3,
-        L4
+        L4,
+        // algae positions
+        A1,
+        A2,
     }
 }

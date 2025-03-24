@@ -161,6 +161,14 @@ public class PivotArmSubsystem extends SubsystemBase {
             setArmPosition(out ? 2 : 0);
         });
     }
+
+    public Command grabAlgaeBargeShotCommand(){
+        return this.runOnce(()->{
+            grabberMotor.set(-0.1);
+        });
+    }
+
+
     public boolean measureCoralInWay(){
         Measurement measurement = laserCan.getMeasurement();
         if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
