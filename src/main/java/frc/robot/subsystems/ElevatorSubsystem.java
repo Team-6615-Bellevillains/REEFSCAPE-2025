@@ -17,14 +17,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax rightMotor = new SparkMax(36, MotorType.kBrushless);
     private SparkClosedLoopController leftController = leftMotor.getClosedLoopController();
     private SparkClosedLoopController rightController = rightMotor.getClosedLoopController();
-    private static final double downLimit = 0.45;
-    private static final double upLimit = 0.55; 
+    private static final double downLimit = 0.1;  //0.45;
+    private static final double upLimit =  0.2; //0.55; 
     private static final double elevatorHeight = 57;
     private static final double rotationLimit = 46.125;
     private Position position;
-    private static final double l2Inches = 10.25+5;
-    private static final double l3Inches = 25.75+5;
+    private static final double l2Inches = 15.25;
+    private static final double l3Inches = 30.75;
     private static final double l4Inches = elevatorHeight+0.5;
+    private static final double a1Inches = l2Inches-6;
+    private static final double a2Inches = l3Inches-6;
 
     public ElevatorSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
@@ -57,7 +59,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         return (rotationLimit/elevatorHeight)*inches;
     }
 
-    private double getPositionInches(){
+    public double getPositionInches(){
         return (leftMotor.getEncoder().getPosition())/(rotationLimit/elevatorHeight);
     }
 
@@ -86,11 +88,11 @@ public class ElevatorSubsystem extends SubsystemBase {
                 position = Position.L4;
                 break;
             case A1:
-                moveElevator(0);
+                moveElevator(a1Inches);
                 position = Position.A1;
                 break;
             case A2:
-                moveElevator(0);
+                moveElevator(a2Inches);
                 position = Position.A2;
                 break;
         }

@@ -164,7 +164,7 @@ public class PivotArmSubsystem extends SubsystemBase {
 
     public Command grabAlgaeBargeShotCommand(){
         return this.runOnce(()->{
-            grabberMotor.set(-0.1);
+            grabberMotor.set(0.2);
         });
     }
 

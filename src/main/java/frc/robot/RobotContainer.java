@@ -111,6 +111,9 @@ public class RobotContainer {
         operatorController.povDown().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
         operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivot));
         operatorController.y().whileTrue(pivot.L1Shot());
+        operatorController.leftBumper().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A1));
+        operatorController.leftTrigger().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A2));
+        operatorController.rightTrigger().onTrue(pivot.grabAlgaeBargeShotCommand());
     }
 
     public Command getAutonomousCommand(){
