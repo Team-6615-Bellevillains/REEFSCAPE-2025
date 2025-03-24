@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SharedState;
@@ -17,8 +18,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax rightMotor = new SparkMax(36, MotorType.kBrushless);
     private SparkClosedLoopController leftController = leftMotor.getClosedLoopController();
     private SparkClosedLoopController rightController = rightMotor.getClosedLoopController();
-    private static final double downLimit = 0.1;  //0.45;
-    private static final double upLimit =  0.2; //0.55; 
+    private static final double downLimit = 0.45;
+    private static final double upLimit =  0.55; 
     private static final double elevatorHeight = 57;
     private static final double rotationLimit = 46.125;
     private Position position;
@@ -45,22 +46,28 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (SharedState.get().getLaserCanDistance() < 50){
-            Command currentCommand = this.getCurrentCommand();
-            if (currentCommand != null){
-                currentCommand.cancel();
-            }
-            System.out.println("Can distance <50 (" + SharedState.get().getLaserCanDistance() + ")");
-            this.setPosition(Position.L1);
-        }
+        // if (SharedState.get().getLaserCanDistance() < 50){
+        //     Command currentCommand = this.getCurrentCommand();
+        //     if (currentCommand != null){
+        //         currentCommand.cancel();
+        //     }
+        //     System.out.println("Can distance <50 (" + SharedState.get().getLaserCanDistance() + ")");
+        //     this.setPosition(Position.L1);
+        // }
+
+        SmartDashboard.putNumber("Elevator Inches", getPositionInches());
     }
 
-    private double inchesToRotations(double inches){
+    public static double inchesToRotations(double inches){
         return (rotationLimit/elevatorHeight)*inches;
     }
 
     public double getPositionInches(){
         return (leftMotor.getEncoder().getPosition())/(rotationLimit/elevatorHeight);
+    }
+
+    public double getEncoderPosition(){
+        return leftMotor.getEncoder().getPosition();
     }
 
     private void moveElevator(double inches){

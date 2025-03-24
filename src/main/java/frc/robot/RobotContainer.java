@@ -17,6 +17,7 @@ import frc.robot.commands.GoToElevatorPositionCommand;
 import frc.robot.commands.GrabAlgaeCommand;
 import frc.robot.commands.LoadCoralCommand;
 import frc.robot.commands.LoadCoralLaserCANCommand;
+import frc.robot.commands.ShootBargeCommand;
 import frc.robot.commands.SpitCoralAutonCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -110,7 +111,7 @@ public class RobotContainer {
         operatorController.povLeft().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
         operatorController.povDown().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
         operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivot));
-        operatorController.y().whileTrue(pivot.L1Shot());
+        operatorController.y().onTrue(new ShootBargeCommand(elevator, pivot));
         operatorController.leftBumper().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A1));
         operatorController.leftTrigger().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A2));
         operatorController.rightTrigger().onTrue(pivot.grabAlgaeBargeShotCommand());

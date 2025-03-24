@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
@@ -24,18 +23,9 @@ public class ShootBargeCommand extends Command {
 
     @Override
     public void execute() {
-        if(elevator.getPositionInches() >= 30.75){
-            pivot.reverse();
+        if(elevator.getPositionInches() > 53.5){
+            pivot.throwBall();
         }
-    }
-
-    @Override
-    public boolean isFinished() {
-        return elevator.atPosition();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        pivot.stopMotors();
+        System.out.println(elevator.getPositionInches());
     }
 }

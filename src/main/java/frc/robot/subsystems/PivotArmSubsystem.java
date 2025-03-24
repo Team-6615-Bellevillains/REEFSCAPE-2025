@@ -123,6 +123,10 @@ public class PivotArmSubsystem extends SubsystemBase {
         grabberMotor.set(percentage);
     }
 
+    public void throwBall(){
+        grabberMotor.set(-1);
+    }
+
     public Command spitCoral(){
         return this.runEnd(() -> {
             grabberMotor.set(0.3);
