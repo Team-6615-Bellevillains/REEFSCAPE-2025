@@ -92,9 +92,17 @@ public class SwerveSubsystem extends SubsystemBase {
           }, 
           this);
           SmartDashboard.putData("field", field);
-          // 54, 5.25, 
-          //36.75
-          LimelightHelpers.setCameraPose_RobotSpace("limelight", -0.1725, -.315, .3975, 0, 0, 180);
+
+
+      // 54, 5.25, 
+      //36.75
+      LimelightHelpers.setCameraPose_RobotSpace("limelight", -0.1725, -.315, .3975, 0, 0, 180);
+      
+      // Use only reef tags for pose estimation
+      LimelightHelpers.SetFiducialIDFiltersOverride("limelight", new int[]{
+         6,  7,  8,  9, 10, 11, // Red Reef Tags
+        17, 18, 19, 20, 21, 22  // Blue Reef Tags
+      });
     }
 
     @Override
