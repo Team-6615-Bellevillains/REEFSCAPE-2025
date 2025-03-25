@@ -51,6 +51,8 @@ public class SwerveSubsystem extends SubsystemBase {
     private final CommandXboxController driverController;
     private int ticks = 0;
 
+    private boolean hasRobotBeenEnabledAtLeastOnce = false;
+
     public SwerveSubsystem(CommandXboxController driverController){
         this.driverController = driverController;
 
@@ -107,40 +109,81 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-      
+      field.setRobotPose(getPose());
 
+      // Seed gyro rotation with MegaTag1 while robot is sitting disabled before the start of the match, 
+      // comment out to disable
+      trySeedRotationWithMegaTag1();
 
-      Pose2d currentRobotPose = getPose();
-      field.setRobotPose(currentRobotPose);
-      SmartDashboard.putNumber("rotation fed to limelight", currentRobotPose.getRotation().getDegrees());
-      LimelightHelpers.SetRobotOrientation("limelight", currentRobotPose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-      if(mt2 != null && !(Math.abs(gyro.getAngularVelocityYWorld().getValueAsDouble())>360 || mt2.tagCount == 0)){
-        swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1
-          , 9999999));
-        swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-      }
+      // Actual pose estimation via MegaTag2
+      updatePoseWithMegaTag2();
 
       // Every 12 ticks / appx. quarter second
       ticks = (ticks + 1) % 12;
       if (ticks == 0) {
         updateIsAligned();
       }
-      
-
-      // if ((mt1.tagCount != 0) && useVision &&
-      // !(mt1.tagCount == 1 && mt1.rawFiducials.length == 1 && (mt1.rawFiducials[0].ambiguity > 0.5 || mt1.rawFiducials[0].distToCamera > 3))
-      // && mt1.pose.relativeTo(getPose()).getTranslation().getNorm() < 10){
-      //     swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1
-      //     , 9999999));
-      //     swerveDrive.addVisionMeasurement(mt1.pose, mt1.timestampSeconds);
-      // }
     }
 
     public PathPlannerAuto getAutonomousCommand(){
       return new PathPlannerAuto("Blue Middle Score Middle Non-AutoAlign");
     }
 
+  // If the robot is disabled before the start of the match,
+  // Use the rotation reading from the limelight to "seed" the robot rotation
+  public void trySeedRotationWithMegaTag1() {
+    if (hasRobotBeenEnabledAtLeastOnce) {
+      return;
+    }
+
+    if (DriverStation.isEnabled()) {
+      hasRobotBeenEnabledAtLeastOnce = true;
+      return;
+    }
+
+    LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+  
+    // Limelight not yet initialized
+    if (mt1 == null) {
+      return;
+    }
+
+    // Limelight cannot see any tags
+    if(mt1.tagCount == 0) {
+      return;
+    }
+
+    // Limelight can only see one tag and that tag is ambiguous or far away
+    if
+    (
+      mt1.tagCount == 1 && mt1.rawFiducials.length == 1
+      && (mt1.rawFiducials[0].ambiguity > .7 || mt1.rawFiducials[0].distToCamera > 3)
+    ) {
+      return;
+    }
+
+    swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(9999999,9999999, 1));
+    swerveDrive.addVisionMeasurement(mt1.pose, mt1.timestampSeconds);
+  }
+
+  public void updatePoseWithMegaTag2() {
+    Pose2d currentRobotPose = getPose();
+    SmartDashboard.putNumber("rotation fed to limelight", currentRobotPose.getRotation().getDegrees());
+
+    LimelightHelpers.SetRobotOrientation("limelight", currentRobotPose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+    
+    if (
+      mt2 == null // Limelight is not initialized
+      || Math.abs(gyro.getAngularVelocityYWorld().getValueAsDouble())>360 // Robot is spinning to fast to be accurate
+      || mt2.tagCount == 0 // Limelight cannot see any tags
+    ) {
+      return;
+    }
+
+    swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1, 9999999));
+    swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+  }
 
   public Command driveCommand(SwerveInputStream velocity, SwerveInputStream slowedVelocity, CommandXboxController controller){
     return run(()->{
