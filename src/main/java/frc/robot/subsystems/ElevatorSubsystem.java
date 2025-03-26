@@ -26,8 +26,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static final double l2Inches = 15.25;
     private static final double l3Inches = 30.75;
     private static final double l4Inches = elevatorHeight+0.5;
-    private static final double a1Inches = l2Inches-6;
-    private static final double a2Inches = l3Inches-6;
+    private static final double a1Inches = l2Inches-8;
+    private static final double a2Inches = l3Inches-8;
+    private static final double abInches = elevatorHeight+1;
 
     public ElevatorSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
@@ -102,6 +103,10 @@ public class ElevatorSubsystem extends SubsystemBase {
                 moveElevator(a2Inches);
                 position = Position.A2;
                 break;
+            case AB:
+                moveElevator(abInches);
+                position = Position.AB;
+                break;
         }
     }
 
@@ -122,6 +127,18 @@ public class ElevatorSubsystem extends SubsystemBase {
                 } else return false;
             case L4:
                 if (getPositionInches()<(l4Inches+1) && getPositionInches()>(l4Inches-1)){
+                    return true;
+                } else return false;
+            case A1:
+                if (getPositionInches()<(a1Inches+1) && getPositionInches()>(a1Inches-1)){
+                    return true;
+                } else return false;
+            case A2:
+                if (getPositionInches()<(a1Inches+1) && getPositionInches()>(a2Inches-1)){
+                    return true;
+                } else return false;
+            case AB:
+                if (getPositionInches()<(abInches+1) && getPositionInches()>(abInches-1)){
                     return true;
                 } else return false;
             default:
@@ -147,5 +164,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         // algae positions
         A1,
         A2,
+        // algae barge
+        AB
     }
 }

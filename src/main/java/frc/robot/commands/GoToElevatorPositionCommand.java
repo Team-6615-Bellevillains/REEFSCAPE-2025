@@ -21,12 +21,10 @@ public class GoToElevatorPositionCommand extends Command{
     @Override
     public void initialize() {
         System.out.println("setting elevator");
+        elevator.setPosition(position);
+        pivot.setArmPosition(2);
         if(elevator.getPosition() != position){
-            if (elevator.getPosition() == Position.L2 || elevator.getPosition() == Position.L3) {
-                pivot.setArmPosition(2);
-            } else {
-                pivot.setArmPosition(2);
-            }
+            pivot.setArmPosition(2);
             elevator.setPosition(position);
         }
     }

@@ -115,6 +115,7 @@ public class RobotContainer {
         operatorController.leftBumper().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A1));
         operatorController.leftTrigger().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A2));
         operatorController.rightTrigger().onTrue(pivot.grabAlgaeBargeShotCommand());
+        operatorController.start().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.AB));
     }
 
     public Command getAutonomousCommand(){

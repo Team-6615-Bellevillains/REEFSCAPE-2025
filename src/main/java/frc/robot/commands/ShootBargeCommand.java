@@ -23,9 +23,19 @@ public class ShootBargeCommand extends Command {
 
     @Override
     public void execute() {
-        if(elevator.getPositionInches() > 53.5){
+        if(elevator.getPositionInches() > 56){
             pivot.throwBall();
         }
         System.out.println(elevator.getPositionInches());
+    }
+    
+    @Override
+    public boolean isFinished() {
+        return elevator.atPosition();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        pivot.stopMotors();
     }
 }

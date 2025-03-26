@@ -67,7 +67,7 @@ public class PivotArmSubsystem extends SubsystemBase {
 
     public void setArmPosition(int pos){
         if(pos == 2){
-            armController.setReference(degreesToRotations(26), ControlType.kPosition);
+            armController.setReference(degreesToRotations(30), ControlType.kPosition);
             SharedUtils.setCurrentLimit(armMotor, 40);
         } else if(pos == 1) {
             armController.setReference(degreesToRotations(10), ControlType.kPosition);
