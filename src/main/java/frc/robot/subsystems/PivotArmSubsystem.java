@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.led.LarsonAnimation;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
@@ -13,7 +12,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import au.grapplerobotics.LaserCan;
-import au.grapplerobotics.interfaces.LaserCanInterface;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,7 +26,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     private SparkMax grabberMotor = new SparkMax(33, MotorType.kBrushless);
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
     private boolean out = false;
-    private static final double GEAR_RATIO = 81;
+    private static final double GEAR_RATIO = 75;
     private LaserCan laserCan = new LaserCan(0);
 
 
@@ -125,6 +123,14 @@ public class PivotArmSubsystem extends SubsystemBase {
 
     public void throwBall(){
         grabberMotor.set(-1);
+    }
+
+    public Command throwBallCommand(){
+        return this.runEnd(()->{
+            throwBall();
+        }, ()->{
+            stopMotors();
+        });
     }
 
     public Command spitCoral(){

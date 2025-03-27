@@ -9,6 +9,8 @@ import static edu.wpi.first.units.Units.Rotation;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.dyn4j.geometry.Vector2;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -126,7 +128,10 @@ public class SwerveSubsystem extends SubsystemBase {
       if (ticks == 0) {
         updateIsAligned();
       }
-      
+
+      SmartDashboard.putNumber("Pose X", swerveDrive.getPose().getX());
+      SmartDashboard.putNumber("Pose Y", swerveDrive.getPose().getY());
+
 
       // if ((mt1.tagCount != 0) && useVision &&
       // !(mt1.tagCount == 1 && mt1.rawFiducials.length == 1 && (mt1.rawFiducials[0].ambiguity > 0.5 || mt1.rawFiducials[0].distToCamera > 3))
@@ -135,10 +140,6 @@ public class SwerveSubsystem extends SubsystemBase {
       //     , 9999999));
       //     swerveDrive.addVisionMeasurement(mt1.pose, mt1.timestampSeconds);
       // }
-    }
-
-    public PathPlannerAuto getAutonomousCommand(){
-      return new PathPlannerAuto("Blue Middle Score Middle Non-AutoAlign");
     }
 
 

@@ -21,10 +21,10 @@ public class GoToElevatorPositionCommand extends Command{
     @Override
     public void initialize() {
         System.out.println("setting elevator");
-        elevator.setPosition(position);
-        pivot.setArmPosition(2);
         if(elevator.getPosition() != position){
-            pivot.setArmPosition(2);
+            if(position == Position.AB){
+                pivot.setArmPosition(0);
+            } else pivot.setArmPosition(2);
             elevator.setPosition(position);
         }
     }
@@ -36,20 +36,28 @@ public class GoToElevatorPositionCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        if (!interrupted){
-            switch (position) {
-                case L1:
-                    pivot.setArmPosition(0);
-                    break;
+        switch (position) {
+            case L1:
+                pivot.setArmPosition(0);
+                break;
 
-                case L4:
-                    pivot.setArmPosition(2);
-                    break;
+            case A1:
+                pivot.setArmPosition(2);
+                pivot.setGrabberMotor(0.2);
+                break;
 
-                default:
-                    pivot.setArmPosition(2);
-                    break;
-            }
+            case A2:
+                pivot.setArmPosition(2);
+                pivot.setGrabberMotor(0.2);
+                break;
+
+            case AB:
+                pivot.setArmPosition(0);
+                break;
+
+            default:
+                pivot.setArmPosition(2);
+                break;
         }
     }
 }

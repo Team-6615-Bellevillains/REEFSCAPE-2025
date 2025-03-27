@@ -55,10 +55,48 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left Backup"
+                  "pathName": "Left Move to Pickup"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Move Back to Score"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "loadCoralAuto"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "elevatorL4"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "spitCoralAuto"
           }
         }
       ]

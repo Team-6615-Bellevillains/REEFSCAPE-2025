@@ -28,7 +28,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static final double l4Inches = elevatorHeight+0.5;
     private static final double a1Inches = l2Inches-8;
     private static final double a2Inches = l3Inches-8;
-    private static final double abInches = elevatorHeight+1;
+    private static final double abInches = elevatorHeight+1+1;
 
     public ElevatorSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
@@ -134,7 +134,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                     return true;
                 } else return false;
             case A2:
-                if (getPositionInches()<(a1Inches+1) && getPositionInches()>(a2Inches-1)){
+                if (getPositionInches()<(a2Inches+1) && getPositionInches()>(a2Inches-1)){
                     return true;
                 } else return false;
             case AB:

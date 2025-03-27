@@ -99,6 +99,7 @@ public class RobotContainer {
         driverController.x().onTrue(algae.resetAlgaeState());
         driverController.leftBumper().whileTrue(algae.spitAlgae());
         driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
+        driverController.start().onTrue(Commands.print(swerve.getPose().toString()));
 
         driverController.povLeft().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
         driverController.povRight().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.RIGHT));
@@ -115,7 +116,8 @@ public class RobotContainer {
         operatorController.leftBumper().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A1));
         operatorController.leftTrigger().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A2));
         operatorController.rightTrigger().onTrue(pivot.grabAlgaeBargeShotCommand());
-        operatorController.start().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.AB));
+        operatorController.back().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.AB));
+        operatorController.start().whileTrue(pivot.throwBallCommand());
     }
 
     public Command getAutonomousCommand(){
