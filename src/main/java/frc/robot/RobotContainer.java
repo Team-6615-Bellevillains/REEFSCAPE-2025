@@ -83,14 +83,14 @@ public class RobotContainer {
 
         configureBindings();
 
-        // List<Pose2d> coralTagPoses = AprilTagDataUtil.get().getCoralAprilTagPoses(DriverStation.Alliance.Blue);
-        // for (int i = 0; i < 6; ++i) {
-        //     Pose2d leftBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.LEFT);
-        //     Pose2d rightBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.RIGHT);
+        List<Pose2d> coralTagPoses = AprilTagDataUtil.get().getCoralAprilTagPoses(DriverStation.Alliance.Blue);
+        for (int i = 0; i < 6; ++i) {
+            Pose2d leftBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.LEFT);
+            Pose2d rightBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.RIGHT);
 
-        //     System.out.printf("Tag %d Left Position: %s, Right Position: %s\n", i + 17, leftBranchPose,
-        //             rightBranchPose);
-        // }
+            System.out.printf("Tag %d Left Position: %s\nRight Position: %s\n", i + 17, leftBranchPose,
+                    rightBranchPose);
+        }
     }
 
     private void configureBindings(){
@@ -112,7 +112,7 @@ public class RobotContainer {
         operatorController.povLeft().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
         operatorController.povDown().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
         operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivot));
-        operatorController.y().onTrue(new ShootBargeCommand(elevator, pivot));
+        operatorController.y().onTrue(pivot.resetCoralAngleCommand());
         operatorController.leftBumper().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A1));
         operatorController.leftTrigger().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A2));
         operatorController.rightTrigger().onTrue(pivot.grabAlgaeBargeShotCommand());

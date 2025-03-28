@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Red Right Score"
+                  "pathName": "Right Score"
                 }
               },
               {
@@ -75,12 +75,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -106,7 +100,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Red Move Back to Score Right"
+                  "pathName": "Move Back to Score Right"
                 }
               }
             ]
@@ -122,12 +116,6 @@
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "slight backup"
-                }
-              },
               {
                 "type": "sequential",
                 "data": {
@@ -146,8 +134,58 @@
                     }
                   ]
                 }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Back to Load 2"
+                }
               }
             ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Score Again 2"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "loadCoralAuto"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "elevatorL4"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "spitCoralAuto"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Go Back 3"
           }
         }
       ]

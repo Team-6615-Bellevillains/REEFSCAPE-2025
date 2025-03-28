@@ -179,6 +179,13 @@ public class PivotArmSubsystem extends SubsystemBase {
     }
 
 
+    public Command resetCoralAngleCommand(){
+        return this.runOnce(()->{
+            armMotor.getEncoder().setPosition(0);
+        });
+    }
+
+
     public boolean measureCoralInWay(){
         Measurement measurement = laserCan.getMeasurement();
         if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
