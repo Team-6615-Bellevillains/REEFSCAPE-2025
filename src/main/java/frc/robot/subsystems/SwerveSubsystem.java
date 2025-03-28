@@ -62,7 +62,7 @@ public class SwerveSubsystem extends SubsystemBase {
            swerveDrive.setCosineCompensator(true);
            swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
         } catch (Exception e) {
-            throw new RuntimeException("swerve drive config files missing");
+            e.printStackTrace();
         }
        
          
