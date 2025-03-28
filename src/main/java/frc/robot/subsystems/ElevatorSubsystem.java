@@ -80,7 +80,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void setPosition(Position newPosition){
         switch(newPosition){
             case L1:
-                moveElevator(0);
+                moveElevator(0.5);
                 position = Position.L1;
                 break;
             case L2:
