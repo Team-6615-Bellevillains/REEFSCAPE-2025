@@ -9,8 +9,6 @@ import static edu.wpi.first.units.Units.Rotation;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.dyn4j.geometry.Vector2;
-
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -65,7 +63,7 @@ public class SwerveSubsystem extends SubsystemBase {
             e.printStackTrace();
         }
        
-         
+        
         RobotConfig config;
         try {
           config = RobotConfig.fromGUISettings();
