@@ -7,6 +7,7 @@ import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
 // This class is a Singleton.
@@ -61,6 +62,29 @@ public class AprilTagDataUtil {
             default:
                 return new ArrayList<>();
         }
+    }
+
+    public Translation2d getReefCenter(DriverStation.Alliance alliance) {
+        int tagIDA, tagIDB;
+
+        switch (alliance) {
+            case Red:
+                tagIDA = 6;
+                tagIDB = 9;
+            case Blue:
+            default:
+                tagIDA = 17;
+                tagIDB = 20;
+        }
+
+        return aprilTagFieldLayout.getTagPose(tagIDA).get()
+                .plus(
+                    aprilTagFieldLayout.getTagPose(tagIDB).get()
+                        .minus(aprilTagFieldLayout.getTagPose(tagIDA).get())
+                        .div(2)
+                )
+                .getTranslation()
+                .toTranslation2d();
     }
 
     private DriverStation.Alliance getSide(Pose2d pose) {
