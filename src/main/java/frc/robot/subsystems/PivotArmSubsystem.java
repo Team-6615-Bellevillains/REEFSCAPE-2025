@@ -26,7 +26,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     private SparkMax grabberMotor = new SparkMax(33, MotorType.kBrushless);
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
     private boolean out = false;
-    private static final double GEAR_RATIO = 75;
+    private static final double GEAR_RATIO = 25;
     private LaserCan laserCan = new LaserCan(0);
 
 
@@ -65,14 +65,14 @@ public class PivotArmSubsystem extends SubsystemBase {
 
     public void setArmPosition(int pos){
         if(pos == 2){
-            armController.setReference(degreesToRotations(33), ControlType.kPosition);
-            SharedUtils.setCurrentLimit(armMotor, 40);
+            SharedUtils.setCurrentLimit(armMotor, 2);
+            armMotor.set(-1);
         } else if(pos == 1) {
             armController.setReference(degreesToRotations(10), ControlType.kPosition);
             SharedUtils.setCurrentLimit(armMotor, 40);
         }
         else if (pos == 0) {
-            SharedUtils.setCurrentLimit(armMotor, 1);
+            SharedUtils.setCurrentLimit(armMotor, 8);
             armMotor.set(1);
         }
     }
