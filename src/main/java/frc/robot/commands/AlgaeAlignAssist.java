@@ -87,7 +87,7 @@ public class AlgaeAlignAssist extends Command {
         Pose2d normalizedRobotPose = normalizeFromReef(robotPose, targetAlgaePose);
         Pose2d normalizedTargetPose = normalizeFromReef(targetAlgaePose, targetAlgaePose);
 
-        double leftRightVelocity = leftRightController.calculate(normalizedRobotPose.getY() + Meters.convertFrom(offsetInches, Inches), normalizedTargetPose.getY() + Meters.convertFrom(offsetInches, Inches));
+        double leftRightVelocity = leftRightController.calculate(normalizedRobotPose.getY(), normalizedTargetPose.getY() + Meters.convertFrom(offsetInches, Inches));
         double thetaVelocity = thetaController.calculate(robotPose.getRotation().getRadians(), targetAlgaePose.getRotation().getRadians());
 
         DriverStation.Alliance alliance = 
