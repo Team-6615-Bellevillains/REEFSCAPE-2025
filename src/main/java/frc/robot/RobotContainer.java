@@ -108,6 +108,7 @@ public class RobotContainer {
         driverController.leftBumper().whileTrue(algae.spitAlgae());
         driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
         driverController.start().onTrue(Commands.print(swerve.getPose().toString()));
+        driverController.leftTrigger().whileTrue(new AlgaeAlignAssist(swerve, ()->{return driverController.getLeftX();}, ()->{ return driverController.getLeftY();}, false));
 
         driverController.povLeft().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
         driverController.povRight().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.RIGHT));

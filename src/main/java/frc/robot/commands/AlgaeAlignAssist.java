@@ -43,6 +43,7 @@ public class AlgaeAlignAssist extends Command {
     private final Supplier<Double> joystickY;
 
     private final boolean shouldFinishWhenAtSetpoint;
+    private final double offsetInches = 4.25;
 
     private final Distance LEFT_RIGHT_POSITION_TOLERANCE = Inches.of(0.25);
     private final Angle ROTATION_TOLERANCE = Degrees.of(1);
@@ -86,7 +87,7 @@ public class AlgaeAlignAssist extends Command {
         Pose2d normalizedRobotPose = normalizeFromReef(robotPose, targetAlgaePose);
         Pose2d normalizedTargetPose = normalizeFromReef(targetAlgaePose, targetAlgaePose);
 
-        double leftRightVelocity = leftRightController.calculate(normalizedRobotPose.getY(), normalizedTargetPose.getY());
+        double leftRightVelocity = leftRightController.calculate(normalizedRobotPose.getY() + Meters.convertFrom(offsetInches, Inches), normalizedTargetPose.getY() + Meters.convertFrom(offsetInches, Inches));
         double thetaVelocity = thetaController.calculate(robotPose.getRotation().getRadians(), targetAlgaePose.getRotation().getRadians());
 
         DriverStation.Alliance alliance = 
@@ -98,10 +99,7 @@ public class AlgaeAlignAssist extends Command {
                 robotPose.getRotation() : 
                 robotPose.getRotation().rotateBy(Rotation2d.k180deg);
 
-        double forwardsBackwardsVelocity = 
-            new Translation2d(joystickX.get(), joystickY.get())
-                .rotateBy(sideBiasedFieldOrientedRotation.unaryMinus())
-                .getX();
+        double forwardsBackwardsVelocity = joystickX.get();
 
         swerveSubsystem.getSwerveDrive().drive(new ChassisSpeeds(
             forwardsBackwardsVelocity,
