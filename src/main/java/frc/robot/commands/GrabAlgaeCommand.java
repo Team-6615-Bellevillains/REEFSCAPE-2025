@@ -65,7 +65,7 @@ public class GrabAlgaeCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         System.out.println("GrabAlgaeCommand finished");
-        subsystem.setGrabberCurrentLimit(10);
+        subsystem.setGrabberCurrentLimit(30);
         if (interrupted){
             subsystem.setPositionDegrees(5);
             subsystem.setGrabberSpeed(0);

@@ -67,7 +67,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
         },
         ()->{
             grabberMotor.stopMotor();
-            setGrabberCurrentLimit(10);
+            setGrabberCurrentLimit(30);
         });
     }
 
