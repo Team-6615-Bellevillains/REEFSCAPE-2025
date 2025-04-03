@@ -167,4 +167,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         // algae barge
         AB
     }
+
+    public Command zeroElevatorCommand(){
+        return this.runOnce(()->{
+            leftMotor.getEncoder().setPosition(0);
+            rightMotor.getEncoder().setPosition(0);
+        });
+    }
 }
