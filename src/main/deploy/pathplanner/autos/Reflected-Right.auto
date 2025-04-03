@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reflected-Red Score"
+                  "pathName": "Reflected-Right Score"
                 }
               },
               {
@@ -55,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reflected-Red Move to Pickup"
+                  "pathName": "Reflected-Right Move to Pickup"
                 }
               }
             ]
@@ -68,7 +68,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reflected-Red Move Back to Score No1"
+                  "pathName": "Reflected-Right Move Back to Score No1"
                 }
               },
               {
@@ -96,7 +96,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reflected-Red Move Back to Score No2"
+            "pathName": "Reflected-Right Move Back to Score No2"
           }
         },
         {
@@ -147,13 +147,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Reflected-Red Left Back to Load 2 Side-Load"
+                        "pathName": "Reflected-Right Left Back to Load 2 Side-Load"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Reflected-Red Score Again 2 No1"
+                        "pathName": "Reflected-Right Score Again 2 No1"
                       }
                     }
                   ]
@@ -165,7 +165,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reflected-Red Score Again 2 No2"
+            "pathName": "Reflected-Right Score Again 2 No2"
           }
         },
         {
