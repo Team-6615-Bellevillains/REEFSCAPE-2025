@@ -68,7 +68,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": " Right Move to Pickup Side-Load"
+                  "pathName": "Side-Load Right Move to Pickup"
                 }
               }
             ]
@@ -100,16 +100,10 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Move Back to Score Right No1"
+                  "pathName": "Side-Load Move Back to Score Right"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Move Back to Score Right No2"
           }
         },
         {
@@ -144,7 +138,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Back to Load 2 Side-Load"
+                  "pathName": "Side-Load Back to Load 2"
                 }
               }
             ]
@@ -157,7 +151,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Score Again 2"
+                  "pathName": "Side-Load Score Again 2"
                 }
               },
               {
