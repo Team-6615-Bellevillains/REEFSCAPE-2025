@@ -78,6 +78,8 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
+        SmartDashboard.putNumber("upd", 123);
+
         // Fixes certain PathPlanner operations being slow when first ran by simulating a path
         // Does **not** move the robot
 
