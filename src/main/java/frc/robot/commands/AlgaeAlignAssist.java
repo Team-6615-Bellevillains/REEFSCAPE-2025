@@ -43,7 +43,7 @@ public class AlgaeAlignAssist extends Command {
     private final Supplier<Double> joystickY;
 
     private final boolean shouldFinishWhenAtSetpoint;
-    private final double offsetInches = 4.25;
+    private final double offsetInches = 4.25-3;
 
     private final Distance LEFT_RIGHT_POSITION_TOLERANCE = Inches.of(0.25);
     private final Angle ROTATION_TOLERANCE = Degrees.of(1);
