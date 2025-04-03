@@ -3,6 +3,7 @@ package frc.robot.commands;
 import static edu.wpi.first.units.Units.Centimeters;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.SharedState;
 import frc.robot.subsystems.PivotArmSubsystem;
 
 public class SpitCoralAutonCommand extends Command{
@@ -30,6 +31,7 @@ public class SpitCoralAutonCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         pivotArmSubsystem.stopMotors();
+        SharedState.get().setLoaded(false);
     }
 
 

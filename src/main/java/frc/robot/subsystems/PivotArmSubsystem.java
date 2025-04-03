@@ -137,7 +137,7 @@ public class PivotArmSubsystem extends SubsystemBase {
         return this.runEnd(() -> {
             grabberMotor.set(0.3);
             conveyorMotor.set(-0.1);
-            SharedState.get().setLoaded(true);
+            SharedState.get().setLoaded(false);
         }, () -> {
             grabberMotor.stopMotor();
             conveyorMotor.stopMotor();

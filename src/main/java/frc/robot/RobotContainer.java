@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.commands.AlgaeAlignAssist;
 import frc.robot.commands.GoToElevatorPositionCommand;
 import frc.robot.commands.GrabAlgaeCommand;
-import frc.robot.commands.LoadCoralCommand;
 import frc.robot.commands.LoadCoralLaserCANCommand;
 import frc.robot.commands.ShootBargeCommand;
 import frc.robot.commands.SpitCoralAutonCommand;

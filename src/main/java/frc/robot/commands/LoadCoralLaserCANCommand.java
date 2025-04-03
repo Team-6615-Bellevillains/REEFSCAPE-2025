@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.SharedState;
 import frc.robot.subsystems.PivotArmSubsystem;
 
 public class LoadCoralLaserCANCommand extends Command{
@@ -38,5 +39,8 @@ public class LoadCoralLaserCANCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         pivot.stopMotors();
+        if (!interrupted) {
+            SharedState.get().setLoaded(true);
+        }
     }
 }
