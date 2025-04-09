@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Centimeters;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.SharedState;
 import frc.robot.subsystems.PivotArmSubsystem;
@@ -9,7 +7,7 @@ import frc.robot.subsystems.PivotArmSubsystem;
 public class SpitCoralAutonCommand extends Command{
     
     private double startingRotations;
-    private static final double endRotations = Centimeters.of(30).div(Centimeters.of(6).times(Math.PI)).magnitude() + 10;
+    private static final double endRotations = 16;
     private PivotArmSubsystem pivotArmSubsystem;
     
     public SpitCoralAutonCommand(PivotArmSubsystem subsystem){
@@ -30,7 +28,6 @@ public class SpitCoralAutonCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        pivotArmSubsystem.stopMotors();
         SharedState.get().setLoaded(false);
     }
 
