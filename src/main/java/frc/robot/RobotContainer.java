@@ -5,6 +5,7 @@ import java.util.List;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -30,6 +31,7 @@ import frc.robot.utils.AutoAlignUtil;
 import frc.robot.utils.AutoAlignUtil.CoralScoreDirection;
 import swervelib.SwerveInputStream;
 
+@Logged
 public class RobotContainer {
     private CommandXboxController driverController = new CommandXboxController(0);
     private CommandXboxController operatorController = new CommandXboxController(1);

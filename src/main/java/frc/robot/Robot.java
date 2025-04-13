@@ -5,11 +5,14 @@
 package frc.robot;
 
 import au.grapplerobotics.CanBridge;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.epilogue.*;
 
+@Logged
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
@@ -19,6 +22,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     CanBridge.runTCP();
     DataLogManager.start();
+    // not actually an error, it compiles fine. I think VS Code doesn't like that it is in the generated code.
+    Epilogue.bind(this);
   }
 
   @Override

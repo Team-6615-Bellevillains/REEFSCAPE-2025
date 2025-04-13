@@ -13,12 +13,14 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SharedState;
 import frc.robot.utils.SharedUtils;
 
+@Logged
 public class PivotArmSubsystem extends SubsystemBase {
     
     public SparkMax armMotor = new SparkMax(35, MotorType.kBrushless);

@@ -11,6 +11,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecondPerSecond;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -27,6 +28,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utils.AprilTagDataUtil;
 import frc.robot.utils.AutoAlignUtil;
 
+@Logged
 public class AlgaeAlignAssist extends Command {
 
     private final PIDController leftRightController = new PIDController(5.0, 0, 0);

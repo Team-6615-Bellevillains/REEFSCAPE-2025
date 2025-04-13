@@ -11,9 +11,11 @@ import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.SingleFadeAnimation;
 import com.ctre.phoenix.led.TwinkleAnimation;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SharedState;
 
+@Logged
 public class LEDSubsystem extends SubsystemBase {
     
     private CANdle candle = new CANdle(0);

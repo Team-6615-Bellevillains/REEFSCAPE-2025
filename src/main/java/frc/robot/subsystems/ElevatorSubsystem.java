@@ -8,11 +8,13 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SharedState;
 
+@Logged
 public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax leftMotor = new SparkMax(34, MotorType.kBrushless);
     private SparkMax rightMotor = new SparkMax(36, MotorType.kBrushless);

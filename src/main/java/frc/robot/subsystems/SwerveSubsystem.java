@@ -17,6 +17,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -42,6 +43,7 @@ import swervelib.SwerveDrive;
 import swervelib.SwerveInputStream;
 import swervelib.parser.SwerveParser;
 
+@Logged
 public class SwerveSubsystem extends SubsystemBase {
     private double maximumSpeed = Units.feetToMeters(10);
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");

@@ -1,7 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.epilogue.Logged;
 
-
+@Logged
 public class SharedState {
     private boolean loaded;
     private boolean aligned;
