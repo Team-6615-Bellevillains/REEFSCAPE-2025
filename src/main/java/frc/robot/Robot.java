@@ -22,7 +22,6 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     CanBridge.runTCP();
     DataLogManager.start();
-    // not actually an error, it compiles fine. I think VS Code doesn't like that it is in the generated code.
     Epilogue.bind(this);
   }
 
