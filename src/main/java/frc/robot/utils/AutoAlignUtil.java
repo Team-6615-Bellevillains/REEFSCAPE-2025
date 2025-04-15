@@ -1,5 +1,6 @@
 package frc.robot.utils;
 
+import static edu.wpi.first.units.Units.Meter;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import java.util.HashSet;
@@ -53,7 +54,7 @@ public class AutoAlignUtil {
         return robotPose.nearest(coralAprilTagPoses);
     }
 
-    public static Pose2d offsetAprilTagPose(Pose2d aprilTagPose, CoralScoreDirection coralScoreDirection) {
+    public static Pose2d offsetAprilTagPose(Pose2d aprilTagPose, CoralScoreDirection coralScoreDirection, double backwardsOffset) {
         // An AprilTag with 0 rotation faces the Red alliance wall.
         // This means that scoring "Right" is actually "Up", relative to the field.
 
@@ -75,7 +76,7 @@ public class AutoAlignUtil {
         Distance directionalOffset = coralScoreDirection == CoralScoreDirection.LEFT ? CORAL_SCORE_OFFSET.times(-1) : CORAL_SCORE_OFFSET;
 
         Pose2d poseAdjustment = new Pose2d(
-            ROBOT_WIDTH.div(2).plus(BUMPER_THICKNESS).plus(FUDGE_FACTOR), 
+            ROBOT_WIDTH.div(2).plus(BUMPER_THICKNESS).plus(FUDGE_FACTOR).plus(Meter.of(backwardsOffset)), 
             directionalOffset,
             new Rotation2d()
         );
@@ -92,7 +93,7 @@ public class AutoAlignUtil {
     // To aid in visualizing how the field, AprilTags, and AutoAlignment work, we have a website:
     // https://team-6615-bellevillains.github.io/AprilTagVisualizer/
     // It does not work on mobile.
-    public static Pose2d calculateTargetPose(Pose2d robotPose, CoralScoreDirection coralScoreDirection) {
+    public static Pose2d calculateTargetPose(Pose2d robotPose, CoralScoreDirection coralScoreDirection, double backwardsOffset) {
         Pose2d poseOfTargettedTag = getClosestAprilTagPose(robotPose);
 
         if (poseOfTargettedTag == null) {
@@ -100,7 +101,7 @@ public class AutoAlignUtil {
         }
         System.out.println(poseOfTargettedTag);
         
-        Pose2d finalPose = offsetAprilTagPose(poseOfTargettedTag, coralScoreDirection);
+        Pose2d finalPose = offsetAprilTagPose(poseOfTargettedTag, coralScoreDirection, backwardsOffset);
 
         System.out.println(finalPose);
 
@@ -117,7 +118,7 @@ public class AutoAlignUtil {
     }
 
     // Credit to FRC3136 ORCA (Official Robot Constructors of Ashland)
-    private static Command goToTargetPoseOrcaMethod(Pose2d targetPose, SwerveSubsystem swerveSubsystem) {
+    private static Command goToTargetPoseOrcaMethod(Pose2d targetPose, SwerveSubsystem swerveSubsystem, double maxVelocityMeters) {
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
             new Pose2d(swerveSubsystem.getPose().getTranslation(), getPathVelocityHeading(swerveSubsystem.getFieldVelocity(), targetPose, swerveSubsystem)),
             targetPose
@@ -130,8 +131,8 @@ public class AutoAlignUtil {
         PathPlannerPath path = new PathPlannerPath(
             waypoints, 
             new PathConstraints(
-                Units.FeetPerSecond.of(2), 
-                Units.FeetPerSecondPerSecond.of(4), 
+                Units.MetersPerSecond.of(maxVelocityMeters), 
+                Units.MetersPerSecondPerSecond.of(3), 
                 Units.RotationsPerSecond.of(100), 
                 Units.RotationsPerSecondPerSecond.of(720)
             ),
@@ -145,29 +146,40 @@ public class AutoAlignUtil {
     }
 
     private static Command buildAutoAlign(SwerveSubsystem swerveSubsystem, CoralScoreDirection coralScoreDirection) {
-        Pose2d targetPose = calculateTargetPose(swerveSubsystem.getPose(), coralScoreDirection);
+        Pose2d targetPose = calculateTargetPose(swerveSubsystem.getPose(), coralScoreDirection, 0);
         if (targetPose == null) {
             return Commands.print("Failed to load field data when calculating target pose!");
         }
-
-        // return Commands.print("NOOP");
-        //8.5
         
         return Commands.print("Auto Aligning to " + targetPose)
             .andThen(Commands.runOnce(() -> {
                 SmartDashboard.putBoolean("Auto Align Status", false);
             }))
             .alongWith(
-                // AutoBuilder.pathfindToPose(
-                //     targetPose, 
-                //     new PathConstraints(
-                //         Units.FeetPerSecond.of(1), 
-                //         Units.FeetPerSecondPerSecond.of(4), 
-                //         Units.RotationsPerSecond.of(360), 
-                //         Units.RotationsPerSecondPerSecond.of(300)
-                //     )
-                // )
-                goToTargetPoseOrcaMethod(targetPose, swerveSubsystem)
+                goToTargetPoseOrcaMethod(targetPose, swerveSubsystem, 1.0)
+                // Cancel pathfinding if Driver wants to take over
+                .until(swerveSubsystem::isBeingControlledByHuman) 
+            )
+            .finallyDo((interrupted) -> {
+                SmartDashboard.putBoolean("Auto Align Status", !interrupted);
+            });
+    }
+
+    private static Command buildAutoAlignXavier(SwerveSubsystem swerveSubsystem, CoralScoreDirection coralScoreDirection){
+        Pose2d targetPose1 = calculateTargetPose(swerveSubsystem.getPose(), coralScoreDirection, 0.3);
+        Pose2d targetPose2 = calculateTargetPose(swerveSubsystem.getPose(), coralScoreDirection, 0);
+
+        if (targetPose1 == null) {
+            return Commands.print("Failed to load field data when calculating target pose!");
+        }
+
+        return Commands.print("Auto Aligning to " + targetPose2)
+            .andThen(Commands.runOnce(() -> {
+                SmartDashboard.putBoolean("Auto Align Status", false);
+            }))
+            .alongWith(
+                goToTargetPoseOrcaMethod(targetPose1, swerveSubsystem, 3.0)
+                .andThen(goToTargetPoseOrcaMethod(targetPose2, swerveSubsystem, 1.0))
                 // Cancel pathfinding if Driver wants to take over
                 .until(swerveSubsystem::isBeingControlledByHuman) 
             )
@@ -187,6 +199,11 @@ public class AutoAlignUtil {
     // Supplier<Pose2d>
     public static Command autoAlign(SwerveSubsystem swerveSubsystem, CoralScoreDirection coralScoreDirection) {
         Supplier<Command> autoAlignSupplier = () -> buildAutoAlign(swerveSubsystem, coralScoreDirection);
+        return Commands.deferredProxy(autoAlignSupplier);
+    }
+
+    public static Command autoAlignXavier(SwerveSubsystem swerveSubsystem, CoralScoreDirection coralScoreDirection) {
+        Supplier<Command> autoAlignSupplier = () -> buildAutoAlignXavier(swerveSubsystem, coralScoreDirection);
         return Commands.deferredProxy(autoAlignSupplier);
     }
     
