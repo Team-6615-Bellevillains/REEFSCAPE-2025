@@ -209,8 +209,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     ArrayList<Pose2d> targetPoses = new ArrayList<>(){{
-      add(AutoAlignUtil.offsetAprilTagPose(closestAprilTagPose, CoralScoreDirection.LEFT));
-      add(AutoAlignUtil.offsetAprilTagPose(closestAprilTagPose, CoralScoreDirection.RIGHT));
+      add(AutoAlignUtil.offsetAprilTagPose(closestAprilTagPose, CoralScoreDirection.LEFT, 0));
+      add(AutoAlignUtil.offsetAprilTagPose(closestAprilTagPose, CoralScoreDirection.RIGHT, 0));
     }};
 
     Pose2d poseDifference = robotPose.relativeTo(robotPose.nearest(targetPoses));

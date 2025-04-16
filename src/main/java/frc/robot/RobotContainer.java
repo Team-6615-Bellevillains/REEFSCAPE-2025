@@ -89,8 +89,8 @@ public class RobotContainer {
 
         List<Pose2d> coralTagPoses = AprilTagDataUtil.get().getCoralAprilTagPoses(DriverStation.Alliance.Blue);
         for (int i = 0; i < 6; ++i) {
-            Pose2d leftBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.LEFT);
-            Pose2d rightBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.RIGHT);
+            Pose2d leftBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.LEFT, 0);
+            Pose2d rightBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.RIGHT, 0);
 
             System.out.printf("Tag %d Left Position: %s\nRight Position: %s\n", i + 17, leftBranchPose,
                     rightBranchPose);
