@@ -45,7 +45,7 @@ import swervelib.parser.SwerveParser;
 
 @Logged
 public class SwerveSubsystem extends SubsystemBase {
-    private double maximumSpeed = Units.feetToMeters(10);
+    private double maximumSpeed = Units.feetToMeters(15);
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     private SwerveDrive swerveDrive;
     //private Limelight limelight;
