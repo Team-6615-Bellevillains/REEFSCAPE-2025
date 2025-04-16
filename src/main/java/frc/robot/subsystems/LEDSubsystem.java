@@ -12,6 +12,7 @@ import com.ctre.phoenix.led.SingleFadeAnimation;
 import com.ctre.phoenix.led.TwinkleAnimation;
 
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SharedState;
 
@@ -19,8 +20,8 @@ import frc.robot.SharedState;
 public class LEDSubsystem extends SubsystemBase {
     
     private CANdle candle = new CANdle(0);
-    // private int LEDCycles = 0;
-    // private boolean LEDState = false;
+     private Timer LEDTimer= new Timer();
+     private boolean LEDState = false;
 
     public LEDSubsystem(){
         CANdleConfiguration config = new CANdleConfiguration();
@@ -29,9 +30,10 @@ public class LEDSubsystem extends SubsystemBase {
         candle.configAllSettings(config);
         candle.clearAnimation(0);
         candle.setLEDs(0, 0, 0);
-        setAllSwerve(255, 255, 255); // set the CANdle LEDs to white
-        SingleFadeAnimation animation = new SingleFadeAnimation(255, 255, 255, 0, 0.5, 103, 8);
-        candle.animate(animation);
+        //setAllSwerve(255, 255, 255); // set the CANdle LEDs to white
+        //SingleFadeAnimation animation = new SingleFadeAnimation(255, 255, 255, 0, 0.5, 103, 8);
+        //candle.animate(animation);
+        LEDTimer.start();
 
     }    
     
@@ -42,6 +44,18 @@ public class LEDSubsystem extends SubsystemBase {
         } else {
             candle.setLEDs(0, 255, 0, 0, 0, 8);
         }
+
+        if (LEDTimer.get() >= 0.5){
+            if (LEDState){
+                setAllSwerve(255, 255, 255);
+            } else {
+                setAllSwerve(0, 0, 0);
+            }
+            LEDState = !LEDState;
+            LEDTimer.reset();
+            LEDTimer.start();
+        }
+        
 
     }
 
