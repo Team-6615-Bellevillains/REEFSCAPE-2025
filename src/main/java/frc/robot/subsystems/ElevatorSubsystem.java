@@ -12,6 +12,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.SharedState;
 
 @Logged
@@ -113,6 +114,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public boolean atPosition(){
+        if (Robot.isSimulation()) {
+            return true;
+        }
+
         switch (position) {
             case L1:
                 if (getPositionInches()<1.0){

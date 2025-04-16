@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.SharedState;
 import frc.robot.subsystems.PivotArmSubsystem;
 
@@ -23,6 +24,10 @@ public class SpitCoralAutonCommand extends Command{
 
     @Override
     public boolean isFinished() {
+        if (Robot.isSimulation()) {
+            return true;
+        }
+        
         return pivotArmSubsystem.grabberMotorRotations() - startingRotations >= endRotations;
     }
 
