@@ -32,6 +32,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static final double a1Inches = l2Inches-8;
     private static final double a2Inches = l3Inches-8;
     private static final double abInches = elevatorHeight+1+1;
+    private double elevatorSetPoint = 0;
 
     public ElevatorSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
@@ -76,6 +77,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void moveElevator(double inches){
         System.out.println("Moving elevator to "+inches);
+        elevatorSetPoint = inches;
         rightController.setReference(-inchesToRotations(inches), ControlType.kPosition);
         leftController.setReference(inchesToRotations(inches), ControlType.kPosition);
     }
