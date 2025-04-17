@@ -65,9 +65,22 @@
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "elevatorAB"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.2
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "elevatorAB"
+                      }
+                    }
+                  ]
                 }
               }
             ]
