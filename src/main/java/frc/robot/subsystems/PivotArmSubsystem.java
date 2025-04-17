@@ -127,6 +127,14 @@ public class PivotArmSubsystem extends SubsystemBase {
         grabberMotor.set(-1);
     }
 
+    public Command l1Shot(){
+        return this.runEnd(()->{
+            grabberMotor.set(1);
+        }, ()->{
+            grabberMotor.stopMotor();
+        });
+    }
+
     public Command throwBallCommand(){
         return this.runEnd(()->{
             throwBall();
