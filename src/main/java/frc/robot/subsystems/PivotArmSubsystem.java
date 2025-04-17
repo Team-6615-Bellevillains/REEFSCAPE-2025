@@ -124,7 +124,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     }
 
     public void throwBall(){
-        grabberMotor.set(-1);
+        grabberMotor.set(-0.75);
     }
 
     public Command l1Shot(){
