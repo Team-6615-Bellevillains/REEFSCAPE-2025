@@ -258,4 +258,13 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.getYaw();
   }
 
+  public Command resetGyroToPlayground() {
+    return this.runOnce(() -> {
+      resetOdometry(new Pose2d(
+        new Translation2d(),
+        Rotation2d.fromDegrees(-60 + 180)
+      ));
+    });
+  }
+
 }

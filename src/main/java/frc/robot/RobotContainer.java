@@ -121,6 +121,7 @@ public class RobotContainer {
 
         driverController.povLeft().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
         driverController.povRight().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.RIGHT));
+        // driverController.rightTrigger().onTrue(swerve.resetGyroToPlayground());
 
         operatorController.a().whileTrue(pivot.spitCoral());
         operatorController.b().onTrue(pivot.invertInOut());
