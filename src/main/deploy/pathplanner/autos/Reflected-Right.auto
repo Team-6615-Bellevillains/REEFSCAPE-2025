@@ -173,6 +173,12 @@
           "data": {
             "name": "spitCoralAuto"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reflected-Right Final Backup"
+          }
         }
       ]
     }
