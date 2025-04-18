@@ -36,6 +36,7 @@ public class ThrowBallAutonCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         SharedState.get().setLoaded(false);
+        pivotArmSubsystem.setGrabberMotor(0);
     }
 
 
