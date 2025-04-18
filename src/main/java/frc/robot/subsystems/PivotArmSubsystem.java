@@ -74,7 +74,7 @@ public class PivotArmSubsystem extends SubsystemBase {
             SharedUtils.setCurrentLimit(armMotor, 40);
         }
         else if (pos == 0) {
-            SharedUtils.setCurrentLimit(armMotor, 12);
+            SharedUtils.setCurrentLimit(armMotor, 8);
             armMotor.set(1);
         }
     }
