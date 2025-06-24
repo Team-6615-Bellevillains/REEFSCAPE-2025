@@ -21,6 +21,7 @@ import frc.robot.commands.LoadCoralLaserCANCommand;
 import frc.robot.commands.ShootBargeCommand;
 import frc.robot.commands.SpitCoralAutonCommand;
 import frc.robot.commands.ThrowBallAutonCommand;
+import frc.robot.commands.AlgaeAlignAssist.Target;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -110,17 +111,18 @@ public class RobotContainer {
                 swerve, 
                 () -> driverController.getLeftY() * -1,
                 () -> driverController.getLeftX() * -1, 
-                false
+                false,
+                Target.ALGAE
             ));
         driverController.x().onTrue(algae.resetAlgaeState());
         driverController.leftBumper().whileTrue(algae.spitAlgae());
         driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
         //driverController.start().onTrue(Commands.print(swerve.getPose().toString()));
         driverController.start().onTrue(elevator.zeroElevatorCommand());
-        driverController.leftTrigger().whileTrue(new AlgaeAlignAssist(swerve, ()->{return driverController.getLeftX();}, ()->{ return driverController.getLeftY();}, false));
+        driverController.leftTrigger().whileTrue(new AlgaeAlignAssist(swerve, ()->{return driverController.getLeftX();}, ()->{ return driverController.getLeftY();}, false, Target.ALGAE));
 
-        driverController.povLeft().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
-        driverController.povRight().onTrue(AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.RIGHT));
+        driverController.povLeft().onTrue(new AlgaeAlignAssist(swerve, ()->{return driverController.getLeftX();}, ()->{ return driverController.getLeftY();}, false, Target.LEFT));
+        driverController.povRight().onTrue(new AlgaeAlignAssist(swerve, ()->{return driverController.getLeftX();}, ()->{ return driverController.getLeftY();}, false, Target.RIGHT));
         // driverController.rightTrigger().onTrue(swerve.resetGyroToPlayground());
 
         operatorController.a().whileTrue(pivot.spitCoral());
