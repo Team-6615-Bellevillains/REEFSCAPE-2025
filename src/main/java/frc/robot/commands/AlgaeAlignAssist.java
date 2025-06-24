@@ -45,18 +45,32 @@ public class AlgaeAlignAssist extends Command {
     private final Supplier<Double> joystickY;
 
     private final boolean shouldFinishWhenAtSetpoint;
-    private final double offsetInches = 4.25-3+1;
+    private double offsetInches = 4.25-3+1;
 
     private final Distance LEFT_RIGHT_POSITION_TOLERANCE = Inches.of(0.25);
     private final Angle ROTATION_TOLERANCE = Degrees.of(1);
 
     private final SwerveSubsystem swerveSubsystem;
     
-    public AlgaeAlignAssist(SwerveSubsystem swerveSubsystem, Supplier<Double> joystickX, Supplier<Double> joystickY, boolean shouldFinishWhenAtSetpoint) {
+    public AlgaeAlignAssist(SwerveSubsystem swerveSubsystem, Supplier<Double> joystickX, Supplier<Double> joystickY, boolean shouldFinishWhenAtSetpoint, Target target) {
         this.joystickX = joystickX;
         this.joystickY = joystickY;
 
         this.shouldFinishWhenAtSetpoint = shouldFinishWhenAtSetpoint;
+
+        switch (target) {
+            case ALGAE:
+                offsetInches = 2.25; 
+                break;
+        
+            case LEFT:
+                offsetInches = 6.5;
+                break;
+
+            case RIGHT:
+                offsetInches = -6.5;
+                break;
+        }
 
         if (shouldFinishWhenAtSetpoint) {
             leftRightController.setTolerance(LEFT_RIGHT_POSITION_TOLERANCE.in(Meters));
@@ -122,4 +136,9 @@ public class AlgaeAlignAssist extends Command {
         return in.rotateAround(centerOfReef, tag.getRotation().unaryMinus());
     }
      
+    public enum Target{
+        ALGAE,
+        LEFT,
+        RIGHT
+    }
 }
