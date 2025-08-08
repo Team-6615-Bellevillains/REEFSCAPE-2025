@@ -116,7 +116,7 @@ public class AlgaeAlignAssist extends Command {
                 robotPose.getRotation() : 
                 robotPose.getRotation().rotateBy(Rotation2d.k180deg);
 
-        double forwardsBackwardsVelocity = joystickX.get() * velocityMultiplier;
+        double forwardsBackwardsVelocity = -joystickX.get() * velocityMultiplier;
 
         swerveSubsystem.getSwerveDrive().drive(new ChassisSpeeds(
             forwardsBackwardsVelocity,
