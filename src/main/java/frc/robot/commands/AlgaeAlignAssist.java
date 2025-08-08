@@ -45,7 +45,8 @@ public class AlgaeAlignAssist extends Command {
     private final Supplier<Double> joystickY;
 
     private final boolean shouldFinishWhenAtSetpoint;
-    private double offsetInches = 4.25-3+1;
+    private double offsetInches;
+    private final double velocityMultiplier = 2.5;
 
     private final Distance LEFT_RIGHT_POSITION_TOLERANCE = Inches.of(0.25);
     private final Angle ROTATION_TOLERANCE = Degrees.of(1);
@@ -115,7 +116,7 @@ public class AlgaeAlignAssist extends Command {
                 robotPose.getRotation() : 
                 robotPose.getRotation().rotateBy(Rotation2d.k180deg);
 
-        double forwardsBackwardsVelocity = joystickX.get();
+        double forwardsBackwardsVelocity = joystickX.get() * velocityMultiplier;
 
         swerveSubsystem.getSwerveDrive().drive(new ChassisSpeeds(
             forwardsBackwardsVelocity,

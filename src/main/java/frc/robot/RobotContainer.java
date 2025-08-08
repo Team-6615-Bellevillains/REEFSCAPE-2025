@@ -106,14 +106,14 @@ public class RobotContainer {
     private void configureBindings(){
         swerve.setDefaultCommand(swerve.driveCommand(driveAngularVelocity, driveAngularVelocitySlow, driverController));
         driverController.a().onTrue(swerve.resetHeading());
-        // driverController.b().whileTrue(
-        //     new AlgaeAlignAssist(
-        //         swerve, 
-        //         () -> driverController.getLeftY() * -1,
-        //         () -> driverController.getLeftX() * -1, 
-        //         false,
-        //         Target.ALGAE
-        //     ));
+         driverController.b().whileTrue(
+             new AlgaeAlignAssist(
+                 swerve, 
+                 () -> driverController.getLeftY() * -1,
+                 () -> driverController.getLeftX() * -1, 
+                 false,
+                 Target.ALGAE
+             ));
         driverController.x().onTrue(algae.resetAlgaeState());
         driverController.leftBumper().whileTrue(algae.spitAlgae());
         driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
