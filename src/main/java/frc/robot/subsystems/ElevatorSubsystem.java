@@ -36,8 +36,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public ElevatorSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
+        SparkMaxConfig followerConfig = new SparkMaxConfig();
+        followerConfig.follow(rightMotor, true);
         rightMotor.getEncoder().setPosition(0);
-        leftMotor.getEncoder().setPosition(0);
         config.closedLoop
         .p(0.2)
         .i(0)
@@ -45,7 +46,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         .outputRange(-upLimit, downLimit);
         rightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         config.closedLoop.outputRange(-downLimit, upLimit);
-        leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        leftMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         position = Position.L1;
     }
 
@@ -61,6 +63,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         // }
 
         SmartDashboard.putNumber("Elevator Inches", getPositionInches());
+
+        SmartDashboard.putNumber("Left Elevator Output Current", leftMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Right Elevator Output Current", rightMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Left Elevator Applied Output", leftMotor.getAppliedOutput());
+        SmartDashboard.putNumber("Right Elevator Applied Output", rightMotor.getAppliedOutput());
+        SmartDashboard.putNumber("Left Elevator Temperature", leftMotor.getMotorTemperature());
+        SmartDashboard.putNumber("Right Elevator Temperature", rightMotor.getMotorTemperature());
     }
 
     public static double inchesToRotations(double inches){
@@ -68,18 +77,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public double getPositionInches(){
-        return (leftMotor.getEncoder().getPosition())/(rotationLimit/elevatorHeight);
-    }
-
-    public double getEncoderPosition(){
-        return leftMotor.getEncoder().getPosition();
+        return (-leftMotor.getEncoder().getPosition())/(rotationLimit/elevatorHeight);
     }
 
     private void moveElevator(double inches){
         System.out.println("Moving elevator to "+inches);
         elevatorSetPoint = inches;
         rightController.setReference(-inchesToRotations(inches), ControlType.kPosition);
-        leftController.setReference(inchesToRotations(inches), ControlType.kPosition);
+        //leftController.setReference(inchesToRotations(inches), ControlType.kPosition);
     }
 
     public void setPosition(Position newPosition){
@@ -179,7 +184,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public Command zeroElevatorCommand(){
         return this.runOnce(()->{
-            leftMotor.getEncoder().setPosition(0);
+            //leftMotor.getEncoder().setPosition(0);
             rightMotor.getEncoder().setPosition(0);
         });
     }
