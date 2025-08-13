@@ -3,6 +3,10 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
+
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -14,6 +18,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,18 +34,18 @@ public class PivotArmSubsystem extends SubsystemBase {
     private SparkMax grabberMotor = new SparkMax(33, MotorType.kBrushless);
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
 
-    private boolean out = false;
-    private static final double GEAR_RATIO = 25;
+    private Position position = Position.IN;
+    private static final Dimensionless CONVERSION_FACTOR = Rotations.of(25).div(Degrees.of(360));
     private LaserCan laserCan = new LaserCan(0);
 
 
     public PivotArmSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
         config.closedLoop
-        .p(1)
-        .i(0)
-        .d(0)
-        .outputRange(-0.80, 0.5);
+            .p(1)
+            .i(0)
+            .d(0)
+            .outputRange(-0.80, 0.5);
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         armMotor.getEncoder().setPosition(0);
         armController.setReference( 0, ControlType.kPosition);
@@ -48,46 +54,38 @@ public class PivotArmSubsystem extends SubsystemBase {
         config2.idleMode(IdleMode.kBrake);
         conveyorMotor.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        setArmPosition(0);
+        setArmPosition(Position.IN);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm Coral ROtation", getPivotAngle());
+        SmartDashboard.putNumber("Arm Coral ROtation", getPivotAngle().in(Degrees));
         SmartDashboard.putNumber("Grabber Motor Current:", grabberMotorCurrent());
         SmartDashboard.putNumber("grabber motor rpm:", grabberMotorRpm());
         SmartDashboard.putNumber("arm current", armMotor.getOutputCurrent());
         SharedState.get().setCoralInWay(measureCoralInWay());
     }
 
-    public boolean positionOut(){
-        return out;
-    }
-
-    public void setArmPosition(int pos){
-        if(pos == 2){
-            SharedUtils.setCurrentLimit(armMotor, 2);
-            armMotor.set(-1);
-        } else if(pos == 1) {
-            armController.setReference(degreesToRotations(10), ControlType.kPosition);
-            SharedUtils.setCurrentLimit(armMotor, 40);
-        }
-        else if (pos == 0) {
-            SharedUtils.setCurrentLimit(armMotor, 8);
-            armMotor.set(1);
+    public void setArmPosition(Position position){
+        switch (position) {
+            case IN:
+                SharedUtils.setCurrentLimit(armMotor, 8);
+                armMotor.set(1);
+                break;
+            case OUT:
+                SharedUtils.setCurrentLimit(armMotor, 2);
+                armMotor.set(-1);
+                break;
         }
     }
 
-    public double getPivotAngle(){
-        return armMotor.getEncoder().getPosition()/(-GEAR_RATIO)*360;
+    public Angle getPivotAngle(){
+        return Rotations.of(armMotor.getEncoder().getPosition())
+                        .div(CONVERSION_FACTOR);
     }
 
-    public double degreesToRotations(double degrees){
-        return -(degrees/360)*GEAR_RATIO;
-    }
-
-    public Command setArmPositionCommand(int pos){
-        return this.runOnce(()->setArmPosition(pos));
+    public Command setArmPositionCommand(Position position){
+        return this.runOnce(()->setArmPosition(position));
     }
     
     public double grabberMotorCurrent(){
@@ -176,8 +174,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     */
     public Command invertInOut(){
         return this.runOnce(()->{
-            out = !out;
-            setArmPosition(out ? 2 : 0);
+            setArmPosition(position == Position.IN ? Position.OUT : Position.IN);
         });
     }
 
@@ -204,5 +201,11 @@ public class PivotArmSubsystem extends SubsystemBase {
             return true;
         } else return false;
     }
+    
+    public enum Position {
+        IN,
+        OUT
+    }
+
 }
 

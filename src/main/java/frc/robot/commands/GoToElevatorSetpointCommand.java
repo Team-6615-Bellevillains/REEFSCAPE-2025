@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.SetpointID;
+import frc.robot.subsystems.PivotArmSubsystem.Position;
 
 public class GoToElevatorSetpointCommand extends Command{
     ElevatorSubsystem elevator;
@@ -26,7 +27,7 @@ public class GoToElevatorSetpointCommand extends Command{
         }
 
         elevator.setReference(setpointID);
-        pivot.setArmPosition(setpointID == SetpointID.AB ? 0 : 2);
+        pivot.setArmPosition(setpointID == SetpointID.AB ? Position.IN : Position.OUT);
     }
 
     @Override
@@ -40,15 +41,15 @@ public class GoToElevatorSetpointCommand extends Command{
         switch (setpointID) {
             case L1:
             case AB:
-                pivot.setArmPosition(0);
+                pivot.setArmPosition(Position.IN);
                 break;
             case A1:
             case A2:
-                pivot.setArmPosition(2);
+                pivot.setArmPosition(Position.OUT);
                 pivot.setGrabberMotor(0.2);
                 break;
             default:
-                pivot.setArmPosition(2);
+                pivot.setArmPosition(Position.OUT);
                 break;
         }
     }
