@@ -135,10 +135,8 @@ public class SwerveSubsystem extends SubsystemBase {
     return run(()->{
       if (controller.leftTrigger().getAsBoolean()){
         swerveDrive.driveFieldOriented(slowedVelocity.get());
-        //System.out.println("slowing swerve drive");
       } else {
         swerveDrive.driveFieldOriented(velocity.get());
-        //System.out.println("not slow");
       }
     });
   }

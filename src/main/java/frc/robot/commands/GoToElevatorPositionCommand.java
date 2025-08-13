@@ -21,7 +21,6 @@ public class GoToElevatorPositionCommand extends Command{
     
     @Override
     public void initialize() {
-        System.out.println("setting elevator");
         if(elevator.getPosition() != position){
             if(position == Position.AB){
                 pivot.setArmPosition(0);

@@ -68,9 +68,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private void moveElevator(double inches){
-        System.out.println("Moving elevator to "+inches);
         rightController.setReference(-inchesToRotations(inches), ControlType.kPosition);
-        //leftController.setReference(inchesToRotations(inches), ControlType.kPosition);
     }
 
     public void setPosition(Position newPosition){

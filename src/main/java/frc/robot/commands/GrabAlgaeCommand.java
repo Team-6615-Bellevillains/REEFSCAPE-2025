@@ -19,7 +19,6 @@ public class GrabAlgaeCommand extends Command{
 
     @Override
     public void initialize() {
-        System.out.println("Initializing GrabAlgaeCommand");
         subsystem.setPositionDegrees(65);
         subsystem.setGrabberSpeed(-1);
         stopped = false;
@@ -60,7 +59,6 @@ public class GrabAlgaeCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("GrabAlgaeCommand finished");
         subsystem.setGrabberCurrentLimit(30);
         if (interrupted){
             subsystem.setPositionDegrees(5);
