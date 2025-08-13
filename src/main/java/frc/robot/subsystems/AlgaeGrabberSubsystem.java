@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkFlex;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Minute;
+import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -29,6 +30,8 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     private final SparkFlex grabberMotor = new SparkFlex(31, MotorType.kBrushless);
 
     private static final Dimensionless ANGLE_CONVERSION_FACTOR = Rotations.of(20.0).div(Degrees.of(360.0));
+    private static final Dimensionless OUTWARDS_OUTPUT_LIMIT = Percent.of(100);
+    private static final Dimensionless INWARDS_OUTPUT_LIMIT = Percent.of(-10); 
     
     public AlgaeGrabberSubsystem(){
         SparkFlexConfig angleMotorConfig = new SparkFlexConfig();
@@ -37,7 +40,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
             .p(1)
             .i(0)
             .d(0)
-            .outputRange(-0.1, 1);
+            .outputRange(INWARDS_OUTPUT_LIMIT.magnitude(), OUTWARDS_OUTPUT_LIMIT.magnitude());
         angleMotorConfig.idleMode(IdleMode.kBrake);
 
         angleMotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
