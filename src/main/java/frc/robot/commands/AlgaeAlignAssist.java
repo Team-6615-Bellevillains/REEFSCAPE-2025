@@ -29,7 +29,6 @@ import frc.robot.utils.AutoAlignUtil;
 
 @Logged
 public class AlgaeAlignAssist extends Command {
-
     private final PIDController leftRightController = new PIDController(5.0, 0, 0);
     private final ProfiledPIDController thetaController = new ProfiledPIDController(5.0, 0, 0, 
         new TrapezoidProfile.Constraints(
@@ -46,8 +45,8 @@ public class AlgaeAlignAssist extends Command {
     private double offsetInches;
     private final double velocityMultiplier = 2.5;
 
-    private final Distance LEFT_RIGHT_POSITION_TOLERANCE = Inches.of(0.25);
-    private final Angle ROTATION_TOLERANCE = Degrees.of(1);
+    private static final Distance LEFT_RIGHT_POSITION_TOLERANCE = Inches.of(0.25);
+    private static final Angle ROTATION_TOLERANCE = Degrees.of(1);
 
     private final SwerveSubsystem swerveSubsystem;
     
