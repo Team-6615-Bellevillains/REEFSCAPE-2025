@@ -18,13 +18,11 @@ import frc.robot.commands.AlgaeAlignAssist;
 import frc.robot.commands.GoToElevatorPositionCommand;
 import frc.robot.commands.GrabAlgaeCommand;
 import frc.robot.commands.LoadCoralLaserCANCommand;
-import frc.robot.commands.ShootBargeCommand;
 import frc.robot.commands.SpitCoralAutonCommand;
 import frc.robot.commands.ThrowBallAutonCommand;
 import frc.robot.commands.AlgaeAlignAssist.Target;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.Position;
@@ -42,7 +40,6 @@ public class RobotContainer {
     private AlgaeGrabberSubsystem algae = new AlgaeGrabberSubsystem();
     private ElevatorSubsystem elevator = new ElevatorSubsystem();
     private PivotArmSubsystem pivot = new PivotArmSubsystem();
-    private LEDSubsystem ledSubsystem = new LEDSubsystem();
 
     private SendableChooser<Command> autoChooser;    
     

@@ -13,13 +13,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.SharedState;
 
 @Logged
 public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax leftMotor = new SparkMax(34, MotorType.kBrushless);
     private SparkMax rightMotor = new SparkMax(36, MotorType.kBrushless);
-    private SparkClosedLoopController leftController = leftMotor.getClosedLoopController();
     private SparkClosedLoopController rightController = rightMotor.getClosedLoopController();
     private static final double downLimit = 0.45;
     private static final double upLimit =  0.55; 
@@ -32,8 +30,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static final double a1Inches = l2Inches-8;
     private static final double a2Inches = l3Inches-8;
     private static final double abInches = elevatorHeight+1+1;
-    private double elevatorSetPoint = 0;
-
     public ElevatorSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
         SparkMaxConfig followerConfig = new SparkMaxConfig();
@@ -82,7 +78,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void moveElevator(double inches){
         System.out.println("Moving elevator to "+inches);
-        elevatorSetPoint = inches;
         rightController.setReference(-inchesToRotations(inches), ControlType.kPosition);
         //leftController.setReference(inchesToRotations(inches), ControlType.kPosition);
     }

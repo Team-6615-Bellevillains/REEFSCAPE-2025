@@ -15,7 +15,6 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -42,7 +41,6 @@ public class AlgaeAlignAssist extends Command {
     private Pose2d targetAlgaePose;
 
     private final Supplier<Double> joystickX;
-    private final Supplier<Double> joystickY;
 
     private final boolean shouldFinishWhenAtSetpoint;
     private double offsetInches;
@@ -55,7 +53,6 @@ public class AlgaeAlignAssist extends Command {
     
     public AlgaeAlignAssist(SwerveSubsystem swerveSubsystem, Supplier<Double> joystickX, Supplier<Double> joystickY, boolean shouldFinishWhenAtSetpoint, Target target) {
         this.joystickX = joystickX;
-        this.joystickY = joystickY;
 
         this.shouldFinishWhenAtSetpoint = shouldFinishWhenAtSetpoint;
 
@@ -106,15 +103,6 @@ public class AlgaeAlignAssist extends Command {
 
         double leftRightVelocity = leftRightController.calculate(normalizedRobotPose.getY(), normalizedTargetPose.getY() + Meters.convertFrom(offsetInches, Inches));
         double thetaVelocity = thetaController.calculate(robotPose.getRotation().getRadians(), targetAlgaePose.getRotation().getRadians());
-
-        DriverStation.Alliance alliance = 
-            DriverStation.getAlliance()
-                         .orElse(DriverStation.Alliance.Blue);
-
-        Rotation2d sideBiasedFieldOrientedRotation =
-            alliance == DriverStation.Alliance.Blue ? 
-                robotPose.getRotation() : 
-                robotPose.getRotation().rotateBy(Rotation2d.k180deg);
 
         double forwardsBackwardsVelocity = -joystickX.get() * velocityMultiplier;
 
