@@ -21,31 +21,39 @@ public class GrabAlgaeCommand extends Command{
     public void initialize() {
         subsystem.setPositionDegrees(65);
         subsystem.setGrabberSpeed(-1);
+        subsystem.setGrabberCurrentLimit(30);
+
         stopped = false;
         delayTicks = 50;
         spinupTimer.restart();
         algaeGrabProgress = AlgaeGrabProgress.WAITING;
-        subsystem.setGrabberCurrentLimit(30);
     }
 
     @Override
     public void execute() {
         switch (algaeGrabProgress){
             case WAITING:
-                
-                if (spinupTimer.hasElapsed(0.4) && subsystem.checkGrabberRPM() > -30) algaeGrabProgress = AlgaeGrabProgress.SUCKING;
+                if (spinupTimer.hasElapsed(0.4) && subsystem.checkGrabberRPM() > -30) {
+                    algaeGrabProgress = AlgaeGrabProgress.SUCKING;
+                }
+
                 break;
-            
             case SUCKING:
                 delayTicks--;
-                if (delayTicks == 0) algaeGrabProgress = AlgaeGrabProgress.FINALISING;
+
+                if (delayTicks == 0) {
+                    algaeGrabProgress = AlgaeGrabProgress.FINALISING;
+                }
+
                 break;
-            
             case FINALISING:
                 subsystem.setPositionDegrees(15);
-                if (subsystem.getPositionDegrees() > 14 && subsystem.getPositionDegrees() < 16) algaeGrabProgress = AlgaeGrabProgress.END;
-                break;
 
+                if (subsystem.getPositionDegrees() > 14 && subsystem.getPositionDegrees() < 16) {
+                    algaeGrabProgress = AlgaeGrabProgress.END;
+                }
+
+                break;
             case END:
                 break;
 
@@ -60,6 +68,7 @@ public class GrabAlgaeCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         subsystem.setGrabberCurrentLimit(30);
+
         if (interrupted){
             subsystem.setPositionDegrees(5);
             subsystem.setGrabberSpeed(0);
