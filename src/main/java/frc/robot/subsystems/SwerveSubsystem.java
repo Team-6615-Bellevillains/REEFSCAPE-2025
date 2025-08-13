@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import java.io.File;
@@ -18,7 +19,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -35,11 +35,9 @@ import swervelib.parser.SwerveParser;
 
 @Logged
 public class SwerveSubsystem extends SubsystemBase {
-    private double maximumSpeed = Units.feetToMeters(15);
-    File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
+    private LinearVelocity maximumSpeed = FeetPerSecond.of(15);
+    File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
     private SwerveDrive swerveDrive;
-    //private Limelight limelight;
-    //private LimelightPoseEstimator limelightPoseEstimator;
     private Pigeon2 gyro = new Pigeon2(0);
     private final Field2d field = new Field2d();
     private final CommandXboxController driverController;
@@ -48,7 +46,7 @@ public class SwerveSubsystem extends SubsystemBase {
         this.driverController = driverController;
 
         try {
-           swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
+           swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed.in(MetersPerSecond));
            swerveDrive.setChassisDiscretization(true, 0.02);
            swerveDrive.setCosineCompensator(true);
            swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
@@ -87,8 +85,6 @@ public class SwerveSubsystem extends SubsystemBase {
           SmartDashboard.putData("field", field);
 
 
-      // 54, 5.25, 
-      //36.75
       LimelightHelpers.setCameraPose_RobotSpace("limelight", -0.1524, -.2794, .3683, 0, 0, 180);
       
       // Use only reef tags for pose estimation

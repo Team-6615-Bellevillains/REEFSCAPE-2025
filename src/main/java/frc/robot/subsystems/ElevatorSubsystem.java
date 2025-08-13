@@ -91,10 +91,6 @@ public class ElevatorSubsystem extends SubsystemBase {
                         .timesConversionFactor(ELEVATOR_HEIGHT.div(MOTOR_ROTATION_LIMIT));
     }
 
-    private void moveElevator(Distance desiredPosition){
-        rightController.setReference(positionToMotorRotations(desiredPosition).unaryMinus().magnitude(), ControlType.kPosition);
-    }
-
     private static Map<SetpointID, Distance> setpointIDToDistance = new HashMap<SetpointID, Distance>(){{
         put(SetpointID.L1, L1_POSITION);
         put(SetpointID.L2, L2_POSITION);
@@ -106,9 +102,14 @@ public class ElevatorSubsystem extends SubsystemBase {
         put(SetpointID.AB, AB_POSITION);
     }};
 
-    public void setCurrentSetpointID(SetpointID newSetpointID){
-        moveElevator(setpointIDToDistance.get(newSetpointID));
+    public void setReference(SetpointID newSetpointID){
         this.currentSetpointID = newSetpointID;
+        rightController.setReference(
+            positionToMotorRotations(setpointIDToDistance.get(newSetpointID))
+                .unaryMinus()
+                .magnitude(), 
+            ControlType.kPosition
+        );
     }
 
     public boolean atPosition(){

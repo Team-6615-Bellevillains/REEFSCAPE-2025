@@ -25,6 +25,7 @@ public class GoToElevatorSetpointCommand extends Command{
             return;
         }
 
+        elevator.setReference(setpointID);
         pivot.setArmPosition(setpointID == SetpointID.AB ? 0 : 2);
     }
 
