@@ -1,13 +1,9 @@
 package frc.robot;
 
-import java.util.List;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,9 +22,6 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.SetpointID;
-import frc.robot.utils.AprilTagDataUtil;
-import frc.robot.utils.AutoAlignUtil;
-import frc.robot.utils.AutoAlignUtil.CoralScoreDirection;
 import swervelib.SwerveInputStream;
 
 @Logged
@@ -45,11 +38,9 @@ public class RobotContainer {
     
     // from the YAGSL example project, hence the diabolical formatting
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerve.getSwerveDrive(),
-                                                                () -> driverController.getLeftY() * -1,
-                                                                () -> driverController.getLeftX() * -1)
-                                                            .withControllerRotationAxis(()->{
-                                                                return -driverController.getRightX();
-                                                            })
+                                                                () -> -driverController.getLeftY(),
+                                                                () -> -driverController.getLeftX())
+                                                            .withControllerRotationAxis(() -> -driverController.getRightX())
                                                             .allianceRelativeControl(true);
 
     SwerveInputStream driveAngularVelocitySlow = SwerveInputStream.of(swerve.getSwerveDrive(),
@@ -58,7 +49,9 @@ public class RobotContainer {
                                                             .withControllerRotationAxis(driverController::getRightX)
                                                             .deadband(0.05)
                                                             .scaleTranslation(0.8)
-                                                            .allianceRelativeControl(true).cubeRotationControllerAxis(true).cubeTranslationControllerAxis(true);
+                                                            .allianceRelativeControl(true)
+                                                            .cubeRotationControllerAxis(true)
+                                                            .cubeTranslationControllerAxis(true);
 
 
     public RobotContainer(){
@@ -80,53 +73,49 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        SmartDashboard.putNumber("upd", 123);
-
-        // Fixes certain PathPlanner operations being slow when first ran by simulating a path
-        // Does **not** move the robot
-
         configureBindings();
-
-        List<Pose2d> coralTagPoses = AprilTagDataUtil.get().getCoralAprilTagPoses(DriverStation.Alliance.Blue);
-        for (int i = 0; i < 6; ++i) {
-            Pose2d leftBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.LEFT, 0);
-            Pose2d rightBranchPose = AutoAlignUtil.offsetAprilTagPose(coralTagPoses.get(i), CoralScoreDirection.RIGHT, 0);
-
-            System.out.printf("Tag %d Left Position: %s\nRight Position: %s\n", i + 17, leftBranchPose,
-                    rightBranchPose);
-        }
     }
 
     private void configureBindings(){
+        // Swerve
         swerve.setDefaultCommand(swerve.driveCommand(driveAngularVelocity, driveAngularVelocitySlow, driverController));
         driverController.a().onTrue(swerve.resetHeading());
-         driverController.b().whileTrue(
-             new AlgaeAlignAssist(
-                 swerve, 
-                 () -> driverController.getLeftY() * -1,
-                 () -> driverController.getLeftX() * -1, 
-                 false,
-                 Target.ALGAE
-             ));
+        driverController.b().whileTrue(
+            new AlgaeAlignAssist(
+                swerve, 
+                () -> -driverController.getLeftY(),
+                () -> -driverController.getLeftX(), 
+                false,
+                Target.ALGAE
+            )
+        );
+        
+        // Algae Grabber
         driverController.x().onTrue(algae.resetAlgaeState());
         driverController.leftBumper().whileTrue(algae.spitAlgae());
         driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
+
+        // Elevator
         driverController.start().onTrue(elevator.zeroElevatorCommand());
 
+        operatorController.povDown().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L1));
+        operatorController.povLeft().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L2));
+        operatorController.povUp().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L3));
+        operatorController.povRight().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L4));
+        operatorController.leftBumper().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A1));
+        operatorController.leftTrigger().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A2));
+        operatorController.back().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.AB));
+
+        // Pivot
         operatorController.a().whileTrue(pivot.spitCoral());
         operatorController.b().onTrue(pivot.invertInOut());
         operatorController.x().whileTrue(pivot.reverseCoral());
-        operatorController.povUp().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L3));
-        operatorController.povRight().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L4));
-        operatorController.povLeft().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L2));
-        operatorController.povDown().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L1));
-        operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivot));
         operatorController.y().whileTrue(pivot.L1Shot());
-        operatorController.leftBumper().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A1));
-        operatorController.leftTrigger().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A2));
         operatorController.rightTrigger().onTrue(pivot.grabAlgaeBargeShotCommand());
-        operatorController.back().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.AB));
         operatorController.start().whileTrue(pivot.throwBallCommand());
+
+        // Misc.
+        operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivot));
     }
 
     public Command getAutonomousCommand(){
