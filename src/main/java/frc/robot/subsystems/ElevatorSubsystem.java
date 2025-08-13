@@ -56,7 +56,6 @@ public class ElevatorSubsystem extends SubsystemBase {
             .i(0)
             .d(0.15)
             .outputRange(UPWARDS_OUTPUT_LIMIT.unaryMinus().magnitude(), DOWNWARDS_OUTPUT_LIMIT.magnitude());
-        leaderConfig.closedLoop.outputRange(DOWNWARDS_OUTPUT_LIMIT.unaryMinus().magnitude(), UPWARDS_OUTPUT_LIMIT.magnitude());
 
         rightMotor.getEncoder().setPosition(0);
         rightMotor.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
