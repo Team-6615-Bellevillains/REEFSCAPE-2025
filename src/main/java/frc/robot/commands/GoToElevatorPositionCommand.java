@@ -21,17 +21,16 @@ public class GoToElevatorPositionCommand extends Command{
     
     @Override
     public void initialize() {
-        if(elevator.getPosition() != position){
-            if(position == Position.AB){
-                pivot.setArmPosition(0);
-            } else pivot.setArmPosition(2);
-            elevator.setPosition(position);
+        if(elevator.getPosition() == position){
+            return;
         }
+
+        pivot.setArmPosition(position == Position.AB ? 0 : 2);
     }
 
     @Override
     public boolean isFinished() {
-        SmartDashboard.putBoolean("elevatgor.isFinished", elevator.atPosition());
+        SmartDashboard.putBoolean("GoToElevatorPositionCommand.isFinished()", elevator.atPosition());
         return elevator.atPosition();
     }
 
@@ -39,23 +38,14 @@ public class GoToElevatorPositionCommand extends Command{
     public void end(boolean interrupted) {
         switch (position) {
             case L1:
+            case AB:
                 pivot.setArmPosition(0);
                 break;
-
             case A1:
-                pivot.setArmPosition(2);
-                pivot.setGrabberMotor(0.2);
-                break;
-
             case A2:
                 pivot.setArmPosition(2);
                 pivot.setGrabberMotor(0.2);
                 break;
-
-            case AB:
-                pivot.setArmPosition(0);
-                break;
-
             default:
                 pivot.setArmPosition(2);
                 break;
