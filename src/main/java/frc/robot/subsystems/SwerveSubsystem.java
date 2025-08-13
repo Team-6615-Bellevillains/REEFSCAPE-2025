@@ -128,15 +128,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
       SmartDashboard.putNumber("Pose X", swerveDrive.getPose().getX());
       SmartDashboard.putNumber("Pose Y", swerveDrive.getPose().getY());
-
-
-      // if ((mt1.tagCount != 0) && useVision &&
-      // !(mt1.tagCount == 1 && mt1.rawFiducials.length == 1 && (mt1.rawFiducials[0].ambiguity > 0.5 || mt1.rawFiducials[0].distToCamera > 3))
-      // && mt1.pose.relativeTo(getPose()).getTranslation().getNorm() < 10){
-      //     swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1
-      //     , 9999999));
-      //     swerveDrive.addVisionMeasurement(mt1.pose, mt1.timestampSeconds);
-      // }
     }
 
 
@@ -226,15 +217,6 @@ public class SwerveSubsystem extends SubsystemBase {
     boolean leftRightAligned = 
       Math.abs(leftRightErrorRelativeToAprilTag) < Inches.of(1.5).in(Meters);
 
-    // BEGIN DEBUG
-    // SmartDashboard.putNumber("Rotation Error (Degrees)", poseDifference.getRotation().getDegrees());
-    // SmartDashboard.putNumber("Front-Back Error (Inches)", Meters.of(frontBackErrorRelativeToAprilTag).in(Inches));
-    // SmartDashboard.putNumber("Left-Right Error (Inches)", Meters.of(leftRightErrorRelativeToAprilTag).in(Inches));
-    // SmartDashboard.putBoolean("Rotation Aligned", rotationAligned);
-    // SmartDashboard.putBoolean("Front-Back Aligned", frontBackAligned);
-    // SmartDashboard.putBoolean("Left-Right Aligned", leftRightAligned);
-    // END DEBUG
-    
     SmartDashboard.putBoolean("Aligned", rotationAligned && frontBackAligned && leftRightAligned);
     
   }

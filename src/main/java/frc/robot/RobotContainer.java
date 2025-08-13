@@ -114,13 +114,7 @@ public class RobotContainer {
         driverController.x().onTrue(algae.resetAlgaeState());
         driverController.leftBumper().whileTrue(algae.spitAlgae());
         driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
-        //driverController.start().onTrue(Commands.print(swerve.getPose().toString()));
         driverController.start().onTrue(elevator.zeroElevatorCommand());
-        // driverController.leftTrigger().whileTrue(new AlgaeAlignAssist(swerve, ()->{return driverController.getLeftX();}, ()->{ return driverController.getLeftY();}, false, Target.ALGAE));
-
-        // driverController.povLeft().onTrue(new AlgaeAlignAssist(swerve, ()->{return driverController.getLeftX();}, ()->{ return driverController.getLeftY();}, false, Target.LEFT));
-        // driverController.povRight().onTrue(new AlgaeAlignAssist(swerve, ()->{return driverController.getLeftX();}, ()->{ return driverController.getLeftY();}, false, Target.RIGHT));
-        // driverController.rightTrigger().onTrue(swerve.resetGyroToPlayground());
 
         operatorController.a().whileTrue(pivot.spitCoral());
         operatorController.b().onTrue(pivot.invertInOut());

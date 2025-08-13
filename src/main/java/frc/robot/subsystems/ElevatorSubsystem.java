@@ -49,15 +49,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // if (SharedState.get().getLaserCanDistance() < 50){
-        //     Command currentCommand = this.getCurrentCommand();
-        //     if (currentCommand != null){
-        //         currentCommand.cancel();
-        //     }
-        //     System.out.println("Can distance <50 (" + SharedState.get().getLaserCanDistance() + ")");
-        //     this.setPosition(Position.L1);
-        // }
-
         SmartDashboard.putNumber("Elevator Inches", getPositionInches());
 
         SmartDashboard.putNumber("Left Elevator Output Current", leftMotor.getOutputCurrent());
@@ -160,10 +151,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         return position;
     }
     
-    //public Command setPositionCommand(Position level){
-    //    return this.runOnce(() -> setPosition(level));
-    //}
-
     public enum Position{
         // coral positions
         L1,
