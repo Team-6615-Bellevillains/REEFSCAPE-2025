@@ -1,5 +1,13 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Rotations;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static edu.wpi.first.units.Units.Inches;
+
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -9,6 +17,9 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,37 +30,48 @@ public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax leftMotor = new SparkMax(34, MotorType.kBrushless);
     private SparkMax rightMotor = new SparkMax(36, MotorType.kBrushless);
     private SparkClosedLoopController rightController = rightMotor.getClosedLoopController();
-    private static final double downLimit = 0.45;
-    private static final double upLimit =  0.55; 
-    private static final double elevatorHeight = 57;
-    private static final double rotationLimit = 46.125;
-    private Position position;
-    private static final double l2Inches = 15.25;
-    private static final double l3Inches = 30.75;
-    private static final double l4Inches = elevatorHeight+0.5;
-    private static final double a1Inches = l2Inches-8;
-    private static final double a2Inches = l3Inches-8;
-    private static final double abInches = elevatorHeight+1+1;
+
+    private static final Dimensionless DOWNWARDS_OUTPUT_LIMIT = Percent.of(45);
+    private static final Dimensionless UPWARDS_OUTPUT_LIMIT = Percent.of(55); 
+    private static final Distance ELEVATOR_HEIGHT = Inches.of(57);
+    private static final Angle MOTOR_ROTATION_LIMIT = Rotations.of(46.125);
+
+    private static final Distance L1_POSITION = Inches.of(0.5);
+    private static final Distance L2_POSITION = Inches.of(15.25);
+    private static final Distance L3_POSITION = Inches.of(30.75);
+    private static final Distance L4_POSITION = ELEVATOR_HEIGHT.plus(Inches.of(0.5));
+    private static final Distance A1_POSITION = L2_POSITION.minus(Inches.of(8));
+    private static final Distance A2_POSITION = L3_POSITION.minus(Inches.of(8));
+    private static final Distance AB_POSITION = ELEVATOR_HEIGHT.plus(Inches.of(1)).plus(Inches.of(1));
+
+    private static final Distance POSITION_TOLERANCE = Inches.of(1);
+
+    private SetpointID currentSetpointID;
+
     public ElevatorSubsystem(){
-        SparkMaxConfig config = new SparkMaxConfig();
+        SparkMaxConfig leaderConfig = new SparkMaxConfig();
+
+        leaderConfig.closedLoop
+            .p(0.2)
+            .i(0)
+            .d(0.15)
+            .outputRange(UPWARDS_OUTPUT_LIMIT.unaryMinus().magnitude(), DOWNWARDS_OUTPUT_LIMIT.magnitude());
+        leaderConfig.closedLoop.outputRange(DOWNWARDS_OUTPUT_LIMIT.unaryMinus().magnitude(), UPWARDS_OUTPUT_LIMIT.magnitude());
+
+        rightMotor.getEncoder().setPosition(0);
+        rightMotor.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         SparkMaxConfig followerConfig = new SparkMaxConfig();
         followerConfig.follow(rightMotor, true);
-        rightMotor.getEncoder().setPosition(0);
-        config.closedLoop
-        .p(0.2)
-        .i(0)
-        .d(0.15)
-        .outputRange(-upLimit, downLimit);
-        rightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        config.closedLoop.outputRange(-downLimit, upLimit);
+
         leftMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        position = Position.L1;
+        currentSetpointID = SetpointID.L1;
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elevator Inches", getPositionInches());
+        SmartDashboard.putNumber("Elevator Inches", getPosition().in(Inches));
 
         SmartDashboard.putNumber("Left Elevator Output Current", leftMotor.getOutputCurrent());
         SmartDashboard.putNumber("Right Elevator Output Current", rightMotor.getOutputCurrent());
@@ -59,49 +81,34 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Right Elevator Temperature", rightMotor.getMotorTemperature());
     }
 
-    public static double inchesToRotations(double inches){
-        return (rotationLimit/elevatorHeight)*inches;
+    public static Angle positionToMotorRotations(Distance inches){
+        return inches.timesConversionFactor(MOTOR_ROTATION_LIMIT.div(ELEVATOR_HEIGHT));
     }
 
-    public double getPositionInches(){
-        return (-leftMotor.getEncoder().getPosition())/(rotationLimit/elevatorHeight);
+    public Distance getPosition(){
+        return Rotations.of(leftMotor.getEncoder().getPosition())
+                        .unaryMinus()
+                        .timesConversionFactor(ELEVATOR_HEIGHT.div(MOTOR_ROTATION_LIMIT));
     }
 
-    private void moveElevator(double inches){
-        rightController.setReference(-inchesToRotations(inches), ControlType.kPosition);
+    private void moveElevator(Distance desiredPosition){
+        rightController.setReference(positionToMotorRotations(desiredPosition).unaryMinus().magnitude(), ControlType.kPosition);
     }
 
-    public void setPosition(Position newPosition){
-        switch(newPosition){
-            case L1:
-                moveElevator(0.5);
-                position = Position.L1;
-                break;
-            case L2:
-                moveElevator(l2Inches);
-                position = Position.L2;
-                break;
-            case L3:
-                moveElevator(l3Inches);
-                position = Position.L3;
-                break;
-            case L4:
-                moveElevator(l4Inches);  
-                position = Position.L4;
-                break;
-            case A1:
-                moveElevator(a1Inches);
-                position = Position.A1;
-                break;
-            case A2:
-                moveElevator(a2Inches);
-                position = Position.A2;
-                break;
-            case AB:
-                moveElevator(abInches);
-                position = Position.AB;
-                break;
-        }
+    private static Map<SetpointID, Distance> setpointIDToDistance = new HashMap<SetpointID, Distance>(){{
+        put(SetpointID.L1, L1_POSITION);
+        put(SetpointID.L2, L2_POSITION);
+        put(SetpointID.L3, L3_POSITION);
+        put(SetpointID.L4, L4_POSITION);
+
+        put(SetpointID.A1, A1_POSITION);
+        put(SetpointID.A2, A2_POSITION);
+        put(SetpointID.AB, AB_POSITION);
+    }};
+
+    public void setCurrentSetpointID(SetpointID newSetpointID){
+        moveElevator(setpointIDToDistance.get(newSetpointID));
+        this.currentSetpointID = newSetpointID;
     }
 
     public boolean atPosition(){
@@ -109,47 +116,14 @@ public class ElevatorSubsystem extends SubsystemBase {
             return true;
         }
 
-        switch (position) {
-            case L1:
-                if (getPositionInches()<1.0){
-                    return true;
-                } else return false;
-            case L2:
-                if (getPositionInches()<(l2Inches+1) && getPositionInches()>(l2Inches-1)){
-                    return true;
-                } else return false;
-
-            case L3:
-                if (getPositionInches()<(l3Inches+1) && getPositionInches()>(l3Inches-1)){
-                    return true;
-                } else return false;
-            case L4:
-                if (getPositionInches()<(l4Inches+1) && getPositionInches()>(l4Inches-1)){
-                    return true;
-                } else return false;
-            case A1:
-                if (getPositionInches()<(a1Inches+1) && getPositionInches()>(a1Inches-1)){
-                    return true;
-                } else return false;
-            case A2:
-                if (getPositionInches()<(a2Inches+1) && getPositionInches()>(a2Inches-1)){
-                    return true;
-                } else return false;
-            case AB:
-                if (getPositionInches()<(abInches+1) && getPositionInches()>(abInches-1)){
-                    return true;
-                } else return false;
-            default:
-                return false;
-                
-        }
+        return getPosition().isNear(setpointIDToDistance.get(currentSetpointID), POSITION_TOLERANCE);
     }
 
-    public Position getPosition(){
-        return position;
+    public SetpointID getCurrentSetpointID(){
+        return currentSetpointID;
     }
     
-    public enum Position{
+    public enum SetpointID{
         // coral positions
         L1,
         L2,

@@ -11,18 +11,18 @@ import frc.robot.SharedState;
 import frc.robot.subsystems.PivotArmSubsystem;
 
 public class LoadCoralLaserCANCommand extends Command{
-
     private boolean finished;
     private boolean seenCoral;
 
-    private PivotArmSubsystem pivot;
+    private final PivotArmSubsystem pivot;
 
     private final Timer simulationTimer = new Timer();
     private double simulationTimeUntilLoad;
 
-    public LoadCoralLaserCANCommand(PivotArmSubsystem subsystem){
-        this.addRequirements(subsystem);
-        pivot = subsystem;
+    public LoadCoralLaserCANCommand(PivotArmSubsystem pivot){
+        this.addRequirements(pivot);
+
+        this.pivot = pivot;
     }
     
     @Override

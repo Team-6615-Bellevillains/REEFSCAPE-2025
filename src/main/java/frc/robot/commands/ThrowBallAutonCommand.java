@@ -7,10 +7,9 @@ import frc.robot.SharedState;
 import frc.robot.subsystems.PivotArmSubsystem;
 
 public class ThrowBallAutonCommand extends Command{
-    
     private double runTimeSeconds = 1.5;
     private final Timer runTimer = new Timer();
-    private PivotArmSubsystem pivotArmSubsystem;
+    private final PivotArmSubsystem pivotArmSubsystem;
     
     public ThrowBallAutonCommand(PivotArmSubsystem subsystem){
         this.pivotArmSubsystem = subsystem;
@@ -21,7 +20,6 @@ public class ThrowBallAutonCommand extends Command{
     public void initialize() {
         runTimer.restart();
         pivotArmSubsystem.throwBall();
-
     }
 
     @Override

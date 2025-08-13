@@ -4,28 +4,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem.Position;
+import frc.robot.subsystems.ElevatorSubsystem.SetpointID;
 
-public class GoToElevatorPositionCommand extends Command{
+public class GoToElevatorSetpointCommand extends Command{
     ElevatorSubsystem elevator;
     PivotArmSubsystem pivot;
-    ElevatorSubsystem.Position position;
+    ElevatorSubsystem.SetpointID setpointID;
 
-    public GoToElevatorPositionCommand(ElevatorSubsystem elevatorSubsystem, PivotArmSubsystem pivotArmSubsystem, ElevatorSubsystem.Position position){
+    public GoToElevatorSetpointCommand(ElevatorSubsystem elevatorSubsystem, PivotArmSubsystem pivotArmSubsystem, ElevatorSubsystem.SetpointID setpointID){
         this.addRequirements(elevatorSubsystem, pivotArmSubsystem);
 
         this.elevator = elevatorSubsystem;
         this.pivot = pivotArmSubsystem;
-        this.position = position;
+        this.setpointID = setpointID;
     }
     
     @Override
     public void initialize() {
-        if(elevator.getPosition() == position){
+        if(elevator.getCurrentSetpointID() == setpointID){
             return;
         }
 
-        pivot.setArmPosition(position == Position.AB ? 0 : 2);
+        pivot.setArmPosition(setpointID == SetpointID.AB ? 0 : 2);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class GoToElevatorPositionCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        switch (position) {
+        switch (setpointID) {
             case L1:
             case AB:
                 pivot.setArmPosition(0);

@@ -2,6 +2,11 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
+
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Minute;
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -10,6 +15,9 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.SharedUtils;
@@ -19,15 +27,19 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     private final SparkFlex angleMotor = new SparkFlex(30, MotorType.kBrushless);
     private final SparkClosedLoopController angleController = angleMotor.getClosedLoopController();
     private final SparkFlex grabberMotor = new SparkFlex(31, MotorType.kBrushless);
-    public static final double CONVERSION_FACTOR = 20.0/360.0;
+
+    private static final Dimensionless ANGLE_CONVERSION_FACTOR = Rotations.of(20.0).div(Degrees.of(360.0));
+    
     public AlgaeGrabberSubsystem(){
         SparkFlexConfig angleMotorConfig = new SparkFlexConfig();
+
         angleMotorConfig.closedLoop
-        .p(1)
-        .i(0)
-        .d(0)
-        .outputRange(-0.1, 1);
+            .p(1)
+            .i(0)
+            .d(0)
+            .outputRange(-0.1, 1);
         angleMotorConfig.idleMode(IdleMode.kBrake);
+
         angleMotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         angleMotor.getEncoder().setPosition(0);
@@ -38,28 +50,24 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
         grabberMotor.configure(grabberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     }
 
-    @Override
-    public void periodic() {
-    }
-
-    public void setPositionDegrees(double degrees){
-        angleController.setReference(((degrees)*20)/360, ControlType.kPosition);
+    public void setReference(Angle reference){
+        angleController.setReference(reference.times(ANGLE_CONVERSION_FACTOR).in(Rotations), ControlType.kPosition);
     }
 
     public void setGrabberCurrentLimit(int currentLimit){
         SharedUtils.setCurrentLimit(grabberMotor, currentLimit);
     }
 
-    public double getPositionDegrees(){
-        return angleMotor.getEncoder().getPosition()/CONVERSION_FACTOR;
+    public Angle getPosition(){
+        return Rotations.of(angleMotor.getEncoder().getPosition()).div(ANGLE_CONVERSION_FACTOR);
     }
 
-    public void setGrabberSpeed(double speed){
-        grabberMotor.set(speed);
+    public void setGrabberPower(Dimensionless power){
+        grabberMotor.set(power.magnitude());
     }
 
-    public double checkGrabberRPM(){
-        return grabberMotor.getEncoder().getVelocity();
+    public AngularVelocity getGrabberVelocity(){
+        return Rotations.per(Minute).of(grabberMotor.getEncoder().getVelocity());
     }
 
     public Command spitAlgae(){

@@ -51,6 +51,8 @@ public class AlgaeAlignAssist extends Command {
     private final SwerveSubsystem swerveSubsystem;
     
     public AlgaeAlignAssist(SwerveSubsystem swerveSubsystem, Supplier<Double> joystickX, Supplier<Double> joystickY, boolean shouldFinishWhenAtSetpoint, Target target) {
+        addRequirements(swerveSubsystem);
+
         this.joystickX = joystickX;
 
         this.shouldFinishWhenAtSetpoint = shouldFinishWhenAtSetpoint;
@@ -77,7 +79,6 @@ public class AlgaeAlignAssist extends Command {
         thetaController.enableContinuousInput(0, Units.degreesToRadians(360));
 
         this.swerveSubsystem = swerveSubsystem;
-        addRequirements(swerveSubsystem);
     }
 
     @Override

@@ -22,11 +22,12 @@ import frc.robot.utils.SharedUtils;
 
 @Logged
 public class PivotArmSubsystem extends SubsystemBase {
-    
     public SparkMax armMotor = new SparkMax(35, MotorType.kBrushless);
     public SparkClosedLoopController armController = armMotor.getClosedLoopController();
+
     private SparkMax grabberMotor = new SparkMax(33, MotorType.kBrushless);
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
+
     private boolean out = false;
     private static final double GEAR_RATIO = 25;
     private LaserCan laserCan = new LaserCan(0);

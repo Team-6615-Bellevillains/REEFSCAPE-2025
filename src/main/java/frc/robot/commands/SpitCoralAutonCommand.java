@@ -9,7 +9,7 @@ public class SpitCoralAutonCommand extends Command{
     
     private double startingRotations;
     private static final double endRotations = 16;
-    private PivotArmSubsystem pivotArmSubsystem;
+    private final PivotArmSubsystem pivotArmSubsystem;
     
     public SpitCoralAutonCommand(PivotArmSubsystem subsystem){
         this.pivotArmSubsystem = subsystem;

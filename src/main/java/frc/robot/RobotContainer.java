@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.commands.AlgaeAlignAssist;
-import frc.robot.commands.GoToElevatorPositionCommand;
+import frc.robot.commands.GoToElevatorSetpointCommand;
 import frc.robot.commands.GrabAlgaeCommand;
 import frc.robot.commands.LoadCoralLaserCANCommand;
 import frc.robot.commands.SpitCoralAutonCommand;
@@ -25,7 +25,7 @@ import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem.Position;
+import frc.robot.subsystems.ElevatorSubsystem.SetpointID;
 import frc.robot.utils.AprilTagDataUtil;
 import frc.robot.utils.AutoAlignUtil;
 import frc.robot.utils.AutoAlignUtil.CoralScoreDirection;
@@ -65,13 +65,13 @@ public class RobotContainer {
         // Robot is always loaded at start of Autonomous
         RobotModeTriggers.autonomous().onTrue(Commands.runOnce(() -> SharedState.get().setLoaded(true)));
 
-        NamedCommands.registerCommand("elevatorL1", new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
-        NamedCommands.registerCommand("elevatorL2", new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
-        NamedCommands.registerCommand("elevatorL3", new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
-        NamedCommands.registerCommand("elevatorL4", new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
-        NamedCommands.registerCommand("elevatorA1", new GoToElevatorPositionCommand(elevator, pivot, Position.A1));
-        NamedCommands.registerCommand("elevatorA2", new GoToElevatorPositionCommand(elevator, pivot, Position.A2));
-        NamedCommands.registerCommand("elevatorAB", new GoToElevatorPositionCommand(elevator, pivot, Position.AB));
+        NamedCommands.registerCommand("elevatorL1", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L1));
+        NamedCommands.registerCommand("elevatorL2", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L2));
+        NamedCommands.registerCommand("elevatorL3", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L3));
+        NamedCommands.registerCommand("elevatorL4", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L4));
+        NamedCommands.registerCommand("elevatorA1", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A1));
+        NamedCommands.registerCommand("elevatorA2", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A2));
+        NamedCommands.registerCommand("elevatorAB", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.AB));
 
         NamedCommands.registerCommand("loadCoralAuto", new LoadCoralLaserCANCommand(pivot));
         NamedCommands.registerCommand("spitCoralAuto", new SpitCoralAutonCommand(pivot));
@@ -116,16 +116,16 @@ public class RobotContainer {
         operatorController.a().whileTrue(pivot.spitCoral());
         operatorController.b().onTrue(pivot.invertInOut());
         operatorController.x().whileTrue(pivot.reverseCoral());
-        operatorController.povUp().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L3));
-        operatorController.povRight().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L4));
-        operatorController.povLeft().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L2));
-        operatorController.povDown().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.L1));
+        operatorController.povUp().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L3));
+        operatorController.povRight().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L4));
+        operatorController.povLeft().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L2));
+        operatorController.povDown().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L1));
         operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivot));
         operatorController.y().whileTrue(pivot.L1Shot());
-        operatorController.leftBumper().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A1));
-        operatorController.leftTrigger().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.A2));
+        operatorController.leftBumper().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A1));
+        operatorController.leftTrigger().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A2));
         operatorController.rightTrigger().onTrue(pivot.grabAlgaeBargeShotCommand());
-        operatorController.back().onTrue(new GoToElevatorPositionCommand(elevator, pivot, Position.AB));
+        operatorController.back().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.AB));
         operatorController.start().whileTrue(pivot.throwBallCommand());
     }
 

@@ -1,27 +1,33 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Minute;
+import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Rotations;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 
 public class GrabAlgaeCommand extends Command{
-    private final AlgaeGrabberSubsystem subsystem;
+    private final AlgaeGrabberSubsystem algae;
     private int delayTicks;
     private AlgaeGrabProgress algaeGrabProgress;
     boolean stopped;
     private Timer spinupTimer = new Timer();
 
-    public GrabAlgaeCommand(AlgaeGrabberSubsystem subsystem ){
-        this.subsystem = subsystem;
-        addRequirements(subsystem);
+    public GrabAlgaeCommand(AlgaeGrabberSubsystem algae){
+        addRequirements(algae);
+        this.algae = algae;
+
         algaeGrabProgress = AlgaeGrabProgress.WAITING;
     }
 
     @Override
     public void initialize() {
-        subsystem.setPositionDegrees(65);
-        subsystem.setGrabberSpeed(-1);
-        subsystem.setGrabberCurrentLimit(30);
+        algae.setReference(Degrees.of(65));
+        algae.setGrabberPower(Percent.of(-100));
+        algae.setGrabberCurrentLimit(30);
 
         stopped = false;
         delayTicks = 50;
@@ -33,7 +39,7 @@ public class GrabAlgaeCommand extends Command{
     public void execute() {
         switch (algaeGrabProgress){
             case WAITING:
-                if (spinupTimer.hasElapsed(0.4) && subsystem.checkGrabberRPM() > -30) {
+                if (spinupTimer.hasElapsed(0.4) && algae.getGrabberVelocity().gt(Rotations.per(Minute).of(-30))) {
                     algaeGrabProgress = AlgaeGrabProgress.SUCKING;
                 }
 
@@ -47,9 +53,9 @@ public class GrabAlgaeCommand extends Command{
 
                 break;
             case FINALISING:
-                subsystem.setPositionDegrees(15);
+                algae.setReference(Degrees.of(15));
 
-                if (subsystem.getPositionDegrees() > 14 && subsystem.getPositionDegrees() < 16) {
+                if (algae.getPosition().isNear(Degrees.of(15), Degrees.of(2))) {
                     algaeGrabProgress = AlgaeGrabProgress.END;
                 }
 
@@ -67,11 +73,11 @@ public class GrabAlgaeCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        subsystem.setGrabberCurrentLimit(30);
+        algae.setGrabberCurrentLimit(30);
 
         if (interrupted){
-            subsystem.setPositionDegrees(5);
-            subsystem.setGrabberSpeed(0);
+            algae.setReference(Degrees.of(5));
+            algae.setGrabberPower(Percent.zero());
         } 
     }
 
