@@ -73,9 +73,6 @@ public class RobotContainer {
         NamedCommands.registerCommand("elevatorA2", new GoToElevatorPositionCommand(elevator, pivot, Position.A2));
         NamedCommands.registerCommand("elevatorAB", new GoToElevatorPositionCommand(elevator, pivot, Position.AB));
 
-        NamedCommands.registerCommand("autoAlignLeft", AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.LEFT));
-        NamedCommands.registerCommand("autoAlignRight", AutoAlignUtil.autoAlign(swerve, CoralScoreDirection.RIGHT));
-        
         NamedCommands.registerCommand("loadCoralAuto", new LoadCoralLaserCANCommand(pivot));
         NamedCommands.registerCommand("spitCoralAuto", new SpitCoralAutonCommand(pivot));
         NamedCommands.registerCommand("throwBallAuto", new ThrowBallAutonCommand(pivot));
