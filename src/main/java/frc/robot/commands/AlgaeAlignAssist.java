@@ -42,7 +42,7 @@ public class AlgaeAlignAssist extends Command {
     private final Supplier<Double> joystickX;
 
     private final boolean shouldFinishWhenAtSetpoint;
-    private double offsetInches;
+    private Distance offset;
     private final double velocityMultiplier = 2.5;
 
     private static final Distance LEFT_RIGHT_POSITION_TOLERANCE = Inches.of(0.25);
@@ -59,15 +59,15 @@ public class AlgaeAlignAssist extends Command {
 
         switch (target) {
             case ALGAE:
-                offsetInches = 2.25; 
+                offset = Inches.of(2.25); 
                 break;
         
             case LEFT:
-                offsetInches = 6.5;
+                offset = Inches.of(6.5);
                 break;
 
             case RIGHT:
-                offsetInches = -6.5;
+                offset = Inches.of(-6.5);
                 break;
         }
 
@@ -101,7 +101,7 @@ public class AlgaeAlignAssist extends Command {
         Pose2d normalizedRobotPose = normalizeFromReef(robotPose, targetAlgaePose);
         Pose2d normalizedTargetPose = normalizeFromReef(targetAlgaePose, targetAlgaePose);
 
-        double leftRightVelocity = leftRightController.calculate(normalizedRobotPose.getY(), normalizedTargetPose.getY() + Meters.convertFrom(offsetInches, Inches));
+        double leftRightVelocity = leftRightController.calculate(normalizedRobotPose.getY(), normalizedTargetPose.getY() + offset.in(Meters));
         double thetaVelocity = thetaController.calculate(robotPose.getRotation().getRadians(), targetAlgaePose.getRotation().getRadians());
 
         double forwardsBackwardsVelocity = -joystickX.get() * velocityMultiplier;

@@ -4,7 +4,9 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Minute;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -19,6 +21,9 @@ import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -60,8 +65,8 @@ public class PivotArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Arm Coral ROtation", getPivotAngle().in(Degrees));
-        SmartDashboard.putNumber("Grabber Motor Current:", grabberMotorCurrent());
-        SmartDashboard.putNumber("grabber motor rpm:", grabberMotorRpm());
+        SmartDashboard.putNumber("Grabber Motor Current:", grabberMotorCurrent().in(Amps));
+        SmartDashboard.putNumber("grabber motor rpm:", grabberMotorVelocity().in(Rotations.per(Minute)));
         SmartDashboard.putNumber("arm current", armMotor.getOutputCurrent());
         SharedState.get().setCoralInWay(measureCoralInWay());
     }
@@ -69,11 +74,11 @@ public class PivotArmSubsystem extends SubsystemBase {
     public void setArmPosition(Position position){
         switch (position) {
             case IN:
-                SharedUtils.setCurrentLimit(armMotor, 8);
+                SharedUtils.setCurrentLimit(armMotor, Amps.of(8));
                 armMotor.set(1);
                 break;
             case OUT:
-                SharedUtils.setCurrentLimit(armMotor, 2);
+                SharedUtils.setCurrentLimit(armMotor, Amps.of(2));
                 armMotor.set(-1);
                 break;
         }
@@ -88,14 +93,14 @@ public class PivotArmSubsystem extends SubsystemBase {
         return this.runOnce(()->setArmPosition(position));
     }
     
-    public double grabberMotorCurrent(){
-        return grabberMotor.getOutputCurrent();
+    public Current grabberMotorCurrent(){
+        return Amps.of(grabberMotor.getOutputCurrent());
     }
-    public double grabberMotorRpm(){
-        return grabberMotor.getEncoder().getVelocity();
+    public AngularVelocity grabberMotorVelocity(){
+        return Rotations.per(Minute).of(grabberMotor.getEncoder().getVelocity());
     }
-    public double grabberMotorRotations() {
-        return grabberMotor.getEncoder().getPosition();
+    public Angle grabberMotorRotations() {
+        return Rotations.of(grabberMotor.getEncoder().getPosition());
     }
 
     public void loadCoral(){  
@@ -112,12 +117,12 @@ public class PivotArmSubsystem extends SubsystemBase {
         conveyorMotor.stopMotor();
     };
 
-    public void setGrabberCurrentLimit(int currentLimit) {
+    public void setGrabberCurrentLimit(Current currentLimit) {
         SharedUtils.setCurrentLimit(grabberMotor, currentLimit);
     }
 
-    public void setGrabberMotor(double percentage) {
-        grabberMotor.set(percentage);
+    public void setGrabberPower(Dimensionless power) {
+        grabberMotor.set(power.magnitude());
     }
 
     public void throwBall(){

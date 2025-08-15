@@ -1,19 +1,24 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Minute;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Seconds;
 
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 
 public class GrabAlgaeCommand extends Command{
     private final AlgaeGrabberSubsystem algae;
-    private int delayTicks;
     private AlgaeGrabProgress algaeGrabProgress;
     private final Timer spinupTimer = new Timer();
+    private final Timer suckingTimer = new Timer();
+
+    private static final Time SUCK_TIME = Seconds.of(1);
 
     public GrabAlgaeCommand(AlgaeGrabberSubsystem algae){
         addRequirements(algae);
@@ -26,9 +31,9 @@ public class GrabAlgaeCommand extends Command{
     public void initialize() {
         algae.setReference(Degrees.of(65));
         algae.setGrabberPower(Percent.of(-100));
-        algae.setGrabberCurrentLimit(30);
+        algae.setGrabberCurrentLimit(Amps.of(30));
 
-        delayTicks = 50;
+        suckingTimer.restart();
         spinupTimer.restart();
         algaeGrabProgress = AlgaeGrabProgress.WAITING;
     }
@@ -43,9 +48,7 @@ public class GrabAlgaeCommand extends Command{
 
                 break;
             case SUCKING:
-                delayTicks--;
-
-                if (delayTicks == 0) {
+                if (suckingTimer.hasElapsed(SUCK_TIME.in(Seconds))) {
                     algaeGrabProgress = AlgaeGrabProgress.FINALISING;
                 }
 
@@ -71,7 +74,7 @@ public class GrabAlgaeCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        algae.setGrabberCurrentLimit(30);
+        algae.setGrabberCurrentLimit(Amps.of(30));
 
         if (interrupted){
             algae.setReference(Degrees.of(5));

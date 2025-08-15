@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Percent;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -46,7 +48,7 @@ public class GoToElevatorSetpointCommand extends Command{
             case A1:
             case A2:
                 pivot.setArmPosition(Position.OUT);
-                pivot.setGrabberMotor(0.2);
+                pivot.setGrabberPower(Percent.of(20));
                 break;
             default:
                 pivot.setArmPosition(Position.OUT);

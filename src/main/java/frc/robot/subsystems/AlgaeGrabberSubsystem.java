@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Minute;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Rotations;
@@ -17,6 +18,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -57,7 +59,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
         angleController.setReference(reference.times(ANGLE_CONVERSION_FACTOR).in(Rotations), ControlType.kPosition);
     }
 
-    public void setGrabberCurrentLimit(int currentLimit){
+    public void setGrabberCurrentLimit(Current currentLimit){
         SharedUtils.setCurrentLimit(grabberMotor, currentLimit);
     }
 
@@ -76,11 +78,11 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     public Command spitAlgae(){
         return this.runEnd(()->{
             grabberMotor.set(1);
-            setGrabberCurrentLimit(40);
+            setGrabberCurrentLimit(Amps.of(40));
         },
         ()->{
             grabberMotor.stopMotor();
-            setGrabberCurrentLimit(30);
+            setGrabberCurrentLimit(Amps.of(30));
         });
     }
 

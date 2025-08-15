@@ -1,5 +1,9 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Rotations;
+
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.SharedState;
@@ -7,8 +11,8 @@ import frc.robot.subsystems.PivotArmSubsystem;
 
 public class SpitCoralAutonCommand extends Command{
     
-    private double startingRotations;
-    private static final double endRotations = 16;
+    private Angle startingRotations;
+    private static final Angle endRotations = Rotations.of(16);
     private final PivotArmSubsystem pivotArmSubsystem;
     
     public SpitCoralAutonCommand(PivotArmSubsystem subsystem){
@@ -19,7 +23,7 @@ public class SpitCoralAutonCommand extends Command{
     @Override
     public void initialize() {
         startingRotations = pivotArmSubsystem.grabberMotorRotations();
-        pivotArmSubsystem.setGrabberMotor(0.5);
+        pivotArmSubsystem.setGrabberPower(Percent.of(50));
     }
 
     @Override
@@ -28,7 +32,7 @@ public class SpitCoralAutonCommand extends Command{
             return true;
         }
         
-        return pivotArmSubsystem.grabberMotorRotations() - startingRotations >= endRotations;
+        return pivotArmSubsystem.grabberMotorRotations().minus(startingRotations).gte(endRotations);
     }
 
     @Override
