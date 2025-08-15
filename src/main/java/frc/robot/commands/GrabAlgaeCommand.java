@@ -13,8 +13,8 @@ public class GrabAlgaeCommand extends Command{
     private final AlgaeGrabberSubsystem algae;
     private int delayTicks;
     private AlgaeGrabProgress algaeGrabProgress;
-    boolean stopped;
-    private Timer spinupTimer = new Timer();
+    private boolean stopped;
+    private final Timer spinupTimer = new Timer();
 
     public GrabAlgaeCommand(AlgaeGrabberSubsystem algae){
         addRequirements(algae);

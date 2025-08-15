@@ -7,7 +7,7 @@ import frc.robot.SharedState;
 import frc.robot.subsystems.PivotArmSubsystem;
 
 public class ThrowBallAutonCommand extends Command{
-    private double runTimeSeconds = 1.5;
+    private static final double runTimeSeconds = 1.5;
     private final Timer runTimer = new Timer();
     private final PivotArmSubsystem pivotArmSubsystem;
     

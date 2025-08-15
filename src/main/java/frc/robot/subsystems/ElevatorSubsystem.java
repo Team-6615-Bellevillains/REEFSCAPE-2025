@@ -27,9 +27,9 @@ import frc.robot.Robot;
 
 @Logged
 public class ElevatorSubsystem extends SubsystemBase {
-    private SparkMax leftMotor = new SparkMax(34, MotorType.kBrushless);
-    private SparkMax rightMotor = new SparkMax(36, MotorType.kBrushless);
-    private SparkClosedLoopController rightController = rightMotor.getClosedLoopController();
+    private final SparkMax leftMotor = new SparkMax(34, MotorType.kBrushless);
+    private final SparkMax rightMotor = new SparkMax(36, MotorType.kBrushless);
+    private final SparkClosedLoopController rightController = rightMotor.getClosedLoopController();
 
     private static final Dimensionless DOWNWARDS_OUTPUT_LIMIT = Percent.of(45);
     private static final Dimensionless UPWARDS_OUTPUT_LIMIT = Percent.of(55); 

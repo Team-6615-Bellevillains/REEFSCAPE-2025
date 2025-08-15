@@ -120,7 +120,7 @@ public class AlgaeAlignAssist extends Command {
 
     Pose2d normalizeFromReef(Pose2d in, Pose2d tag) {
         DriverStation.Alliance alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
-        Translation2d centerOfReef = AprilTagDataUtil.get().getReefCenter(alliance);
+        Translation2d centerOfReef = AprilTagDataUtil.getReefCenter(alliance);
 
         return in.rotateAround(centerOfReef, tag.getRotation().unaryMinus());
     }

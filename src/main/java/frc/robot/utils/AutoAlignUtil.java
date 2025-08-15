@@ -25,7 +25,7 @@ public class AutoAlignUtil {
     public static Pose2d getClosestAprilTagPose(Pose2d robotPose) {
         Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
         
-        List<Pose2d> coralAprilTagPoses = AprilTagDataUtil.get().getCoralAprilTagPoses(
+        List<Pose2d> coralAprilTagPoses = AprilTagDataUtil.getCoralAprilTagPoses(
             alliance.isPresent() ? alliance.get() : DriverStation.Alliance.Blue
         );
 

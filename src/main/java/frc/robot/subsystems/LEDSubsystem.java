@@ -12,8 +12,8 @@ import frc.robot.SharedState;
 @Logged
 public class LEDSubsystem extends SubsystemBase {
     
-    private CANdle candle = new CANdle(0);
-    private Timer LEDTimer= new Timer();
+    private final CANdle candle = new CANdle(0);
+    private final Timer LEDTimer= new Timer();
     private boolean LEDState = false;
 
     public LEDSubsystem(){

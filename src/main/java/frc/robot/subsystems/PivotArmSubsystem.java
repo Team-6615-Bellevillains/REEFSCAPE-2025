@@ -28,16 +28,16 @@ import frc.robot.utils.SharedUtils;
 
 @Logged
 public class PivotArmSubsystem extends SubsystemBase {
-    public SparkMax armMotor = new SparkMax(35, MotorType.kBrushless);
-    public SparkClosedLoopController armController = armMotor.getClosedLoopController();
+    private final SparkMax armMotor = new SparkMax(35, MotorType.kBrushless);
+    private final SparkClosedLoopController armController = armMotor.getClosedLoopController();
 
-    private SparkMax grabberMotor = new SparkMax(33, MotorType.kBrushless);
-    private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
+    private final SparkMax grabberMotor = new SparkMax(33, MotorType.kBrushless);
+    private final SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
 
     private Position position = Position.IN;
     // Can't use units for conversion factor because numerator and denominator are both Rotations
     private static final double ANGLE_CONVERSION_FACTOR = 25.0; // 25 motor rotations per pivot rotation
-    private LaserCan laserCan = new LaserCan(0);
+    private final LaserCan laserCan = new LaserCan(0);
 
 
     public PivotArmSubsystem(){

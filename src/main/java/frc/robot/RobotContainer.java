@@ -27,17 +27,17 @@ import swervelib.SwerveInputStream;
 
 @Logged
 public class RobotContainer {
-    private CommandXboxController driverController = new CommandXboxController(0);
-    private CommandXboxController operatorController = new CommandXboxController(1);
+    private final CommandXboxController driverController = new CommandXboxController(0);
+    private final CommandXboxController operatorController = new CommandXboxController(1);
 
-    private SwerveSubsystem swerve = new SwerveSubsystem(driverController);
-    private AlgaeGrabberSubsystem algae = new AlgaeGrabberSubsystem();
-    private ElevatorSubsystem elevator = new ElevatorSubsystem();
-    private PivotArmSubsystem pivot = new PivotArmSubsystem();
+    private final SwerveSubsystem swerve = new SwerveSubsystem(driverController);
+    private final AlgaeGrabberSubsystem algae = new AlgaeGrabberSubsystem();
+    private final ElevatorSubsystem elevator = new ElevatorSubsystem();
+    private final PivotArmSubsystem pivot = new PivotArmSubsystem();
     @SuppressWarnings("unused") // Needs to be constructed for its periodic method to be run.
-    private LEDSubsystem ledSubsystem = new LEDSubsystem();
+    private final LEDSubsystem ledSubsystem = new LEDSubsystem();
 
-    private SendableChooser<Command> autoChooser;    
+    private final SendableChooser<Command> autoChooser;    
     
     // from the YAGSL example project, hence the diabolical formatting
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerve.getSwerveDrive(),

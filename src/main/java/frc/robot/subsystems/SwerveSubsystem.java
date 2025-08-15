@@ -35,10 +35,10 @@ import swervelib.parser.SwerveParser;
 
 @Logged
 public class SwerveSubsystem extends SubsystemBase {
-    private LinearVelocity maximumSpeed = FeetPerSecond.of(15);
-    File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+    private static final LinearVelocity maximumSpeed = FeetPerSecond.of(15);
+    private static final File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
     private SwerveDrive swerveDrive;
-    private Pigeon2 gyro = new Pigeon2(0);
+    private final Pigeon2 gyro = new Pigeon2(0);
     private final Field2d field = new Field2d();
     private final CommandXboxController driverController;
 

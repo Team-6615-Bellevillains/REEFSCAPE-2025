@@ -8,9 +8,9 @@ import frc.robot.subsystems.ElevatorSubsystem.SetpointID;
 import frc.robot.subsystems.PivotArmSubsystem.Position;
 
 public class GoToElevatorSetpointCommand extends Command{
-    ElevatorSubsystem elevator;
-    PivotArmSubsystem pivot;
-    ElevatorSubsystem.SetpointID setpointID;
+    private final ElevatorSubsystem elevator;
+    private final PivotArmSubsystem pivot;
+    private final ElevatorSubsystem.SetpointID setpointID;
 
     public GoToElevatorSetpointCommand(ElevatorSubsystem elevatorSubsystem, PivotArmSubsystem pivotArmSubsystem, ElevatorSubsystem.SetpointID setpointID){
         this.addRequirements(elevatorSubsystem, pivotArmSubsystem);
