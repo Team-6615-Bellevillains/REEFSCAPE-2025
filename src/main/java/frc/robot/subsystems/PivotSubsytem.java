@@ -39,10 +39,10 @@ public class PivotSubsytem extends SubsystemBase {
     private final SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
 
     private Position position = Position.IN;
-    // Can't use units for conversion factor because numerator and denominator are both Rotations
-    private static final double ANGLE_CONVERSION_FACTOR = 25.0; // 25 motor rotations per pivot rotation
     private final LaserCan laserCan = new LaserCan(0);
 
+    // 25 motor rotations per pivot rotation
+    private static final Dimensionless ANGLE_CONVERSION_FACTOR = Rotations.of(25.0).div(Rotations.one()); 
 
     public PivotSubsytem(){
         SparkMaxConfig config = new SparkMaxConfig();

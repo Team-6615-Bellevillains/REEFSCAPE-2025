@@ -30,8 +30,8 @@ public class FloorAlgaeSubsystem extends SubsystemBase {
     private final SparkClosedLoopController angleController = angleMotor.getClosedLoopController();
     private final SparkFlex intakeMotor = new SparkFlex(31, MotorType.kBrushless);
 
-    // Can't use units for conversion factor because numerator and denominator are both Rotations
-    private static final double ANGLE_CONVERSION_FACTOR = 20.0; // 20 motor rotations per algae grabber rotation
+    // 20 motor rotations per algae grabber rotation
+    private static final Dimensionless ANGLE_CONVERSION_FACTOR = Rotations.of(20.0).div(Rotations.one());
     private static final Dimensionless OUTWARDS_OUTPUT_LIMIT = Percent.of(100);
     private static final Dimensionless INWARDS_OUTPUT_LIMIT = Percent.of(-10); 
     
