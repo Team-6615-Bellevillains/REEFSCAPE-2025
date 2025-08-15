@@ -11,18 +11,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.SharedState;
-import frc.robot.subsystems.PivotArmSubsystem;
+import frc.robot.subsystems.PivotSubsytem;
 
 public class LoadCoralLaserCANCommand extends Command{
     private boolean finished;
     private boolean seenCoral;
 
-    private final PivotArmSubsystem pivot;
+    private final PivotSubsytem pivot;
 
     private final Timer simulationTimer = new Timer();
     private Time simulationTimeUntilLoad;
 
-    public LoadCoralLaserCANCommand(PivotArmSubsystem pivot){
+    public LoadCoralLaserCANCommand(PivotSubsytem pivot){
         this.addRequirements(pivot);
 
         this.pivot = pivot;

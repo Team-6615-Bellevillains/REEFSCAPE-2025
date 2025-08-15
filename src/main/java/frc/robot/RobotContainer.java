@@ -12,15 +12,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.commands.AlgaeAlignAssist;
 import frc.robot.commands.GoToElevatorSetpointCommand;
-import frc.robot.commands.GrabAlgaeCommand;
+import frc.robot.commands.IntakeFloorAlgaeCommand;
 import frc.robot.commands.LoadCoralLaserCANCommand;
 import frc.robot.commands.SpitCoralAutonCommand;
 import frc.robot.commands.ThrowBallAutonCommand;
 import frc.robot.commands.AlgaeAlignAssist.Target;
-import frc.robot.subsystems.AlgaeGrabberSubsystem;
+import frc.robot.subsystems.FloorAlgaeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.PivotArmSubsystem;
+import frc.robot.subsystems.PivotSubsytem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.SetpointID;
 import swervelib.SwerveInputStream;
@@ -31,9 +31,9 @@ public class RobotContainer {
     private final CommandXboxController operatorController = new CommandXboxController(1);
 
     private final SwerveSubsystem swerve = new SwerveSubsystem(driverController);
-    private final AlgaeGrabberSubsystem algae = new AlgaeGrabberSubsystem();
+    private final FloorAlgaeSubsystem floorAlgae = new FloorAlgaeSubsystem();
     private final ElevatorSubsystem elevator = new ElevatorSubsystem();
-    private final PivotArmSubsystem pivot = new PivotArmSubsystem();
+    private final PivotSubsytem pivot = new PivotSubsytem();
     @SuppressWarnings("unused") // Needs to be constructed for its periodic method to be run.
     private final LEDSubsystem ledSubsystem = new LEDSubsystem();
 
@@ -94,9 +94,9 @@ public class RobotContainer {
         );
         
         // Algae Grabber
-        driverController.x().onTrue(algae.resetAlgaeState());
-        driverController.leftBumper().whileTrue(algae.spitAlgae());
-        driverController.rightBumper().onTrue(new GrabAlgaeCommand(algae));
+        driverController.x().onTrue(floorAlgae.resetAlgaeState());
+        driverController.leftBumper().whileTrue(floorAlgae.spitAlgae());
+        driverController.rightBumper().onTrue(new IntakeFloorAlgaeCommand(floorAlgae));
 
         // Elevator
         driverController.start().onTrue(elevator.zeroElevatorCommand());

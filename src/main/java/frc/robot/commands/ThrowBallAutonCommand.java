@@ -8,22 +8,22 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.SharedState;
-import frc.robot.subsystems.PivotArmSubsystem;
+import frc.robot.subsystems.PivotSubsytem;
 
 public class ThrowBallAutonCommand extends Command{
     private static final Time runTime = Seconds.of(1.5);
     private final Timer runTimer = new Timer();
-    private final PivotArmSubsystem pivotArmSubsystem;
+    private final PivotSubsytem pivotSubsystem;
     
-    public ThrowBallAutonCommand(PivotArmSubsystem subsystem){
-        this.pivotArmSubsystem = subsystem;
+    public ThrowBallAutonCommand(PivotSubsytem subsystem){
+        this.pivotSubsystem = subsystem;
         this.addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
         runTimer.restart();
-        pivotArmSubsystem.throwBall();
+        pivotSubsystem.throwBall();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ThrowBallAutonCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         SharedState.get().setLoaded(false);
-        pivotArmSubsystem.setGrabberPower(Percent.zero());
+        pivotSubsystem.setGrabberPower(Percent.zero());
     }
 
 

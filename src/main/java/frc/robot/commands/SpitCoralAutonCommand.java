@@ -7,23 +7,23 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.SharedState;
-import frc.robot.subsystems.PivotArmSubsystem;
+import frc.robot.subsystems.PivotSubsytem;
 
 public class SpitCoralAutonCommand extends Command{
     
     private Angle startingRotations;
     private static final Angle endRotations = Rotations.of(16);
-    private final PivotArmSubsystem pivotArmSubsystem;
+    private final PivotSubsytem pivotSubsystem;
     
-    public SpitCoralAutonCommand(PivotArmSubsystem subsystem){
-        this.pivotArmSubsystem = subsystem;
+    public SpitCoralAutonCommand(PivotSubsytem subsystem){
+        this.pivotSubsystem = subsystem;
         this.addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
-        startingRotations = pivotArmSubsystem.grabberMotorRotations();
-        pivotArmSubsystem.setGrabberPower(Percent.of(50));
+        startingRotations = pivotSubsystem.grabberMotorRotations();
+        pivotSubsystem.setGrabberPower(Percent.of(50));
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SpitCoralAutonCommand extends Command{
             return true;
         }
         
-        return pivotArmSubsystem.grabberMotorRotations().minus(startingRotations).gte(endRotations);
+        return pivotSubsystem.grabberMotorRotations().minus(startingRotations).gte(endRotations);
     }
 
     @Override

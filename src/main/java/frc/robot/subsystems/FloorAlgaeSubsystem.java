@@ -25,17 +25,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.SharedUtils;
 
 @Logged
-public class AlgaeGrabberSubsystem extends SubsystemBase {
+public class FloorAlgaeSubsystem extends SubsystemBase {
     private final SparkFlex angleMotor = new SparkFlex(30, MotorType.kBrushless);
     private final SparkClosedLoopController angleController = angleMotor.getClosedLoopController();
-    private final SparkFlex grabberMotor = new SparkFlex(31, MotorType.kBrushless);
+    private final SparkFlex intakeMotor = new SparkFlex(31, MotorType.kBrushless);
 
     // Can't use units for conversion factor because numerator and denominator are both Rotations
     private static final double ANGLE_CONVERSION_FACTOR = 20.0; // 20 motor rotations per algae grabber rotation
     private static final Dimensionless OUTWARDS_OUTPUT_LIMIT = Percent.of(100);
     private static final Dimensionless INWARDS_OUTPUT_LIMIT = Percent.of(-10); 
     
-    public AlgaeGrabberSubsystem(){
+    public FloorAlgaeSubsystem(){
         SparkFlexConfig angleMotorConfig = new SparkFlexConfig();
 
         angleMotorConfig.closedLoop
@@ -52,44 +52,44 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
         
         SparkFlexConfig grabberMotorConfig = new SparkFlexConfig();
         grabberMotorConfig.smartCurrentLimit(10);
-        grabberMotor.configure(grabberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        intakeMotor.configure(grabberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void setReference(Angle reference){
         angleController.setReference(reference.times(ANGLE_CONVERSION_FACTOR).in(Rotations), ControlType.kPosition);
     }
 
-    public void setGrabberCurrentLimit(Current currentLimit){
-        SharedUtils.setCurrentLimit(grabberMotor, currentLimit);
+    public void setIntakeCurrentLimit(Current currentLimit){
+        SharedUtils.setCurrentLimit(intakeMotor, currentLimit);
     }
 
     public Angle getPosition(){
         return Rotations.of(angleMotor.getEncoder().getPosition()).div(ANGLE_CONVERSION_FACTOR);
     }
 
-    public void setGrabberPower(Dimensionless power){
-        grabberMotor.set(power.magnitude());
+    public void setIntakePower(Dimensionless power){
+        intakeMotor.set(power.magnitude());
     }
 
-    public AngularVelocity getGrabberVelocity(){
-        return Rotations.per(Minute).of(grabberMotor.getEncoder().getVelocity());
+    public AngularVelocity getIntakeVelocity(){
+        return Rotations.per(Minute).of(intakeMotor.getEncoder().getVelocity());
     }
 
     public Command spitAlgae(){
         return this.runEnd(()->{
-            grabberMotor.set(1);
-            setGrabberCurrentLimit(Amps.of(40));
+            intakeMotor.set(1);
+            setIntakeCurrentLimit(Amps.of(40));
         },
         ()->{
-            grabberMotor.stopMotor();
-            setGrabberCurrentLimit(Amps.of(30));
+            intakeMotor.stopMotor();
+            setIntakeCurrentLimit(Amps.of(30));
         });
     }
 
     public Command resetAlgaeState(){
         return this.run(()->{
             angleController.setReference(0, ControlType.kPosition);
-            grabberMotor.set(0);
+            intakeMotor.set(0);
         });
     }
 }

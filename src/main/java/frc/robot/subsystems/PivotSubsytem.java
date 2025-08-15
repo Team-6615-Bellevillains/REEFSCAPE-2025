@@ -31,7 +31,7 @@ import frc.robot.SharedState;
 import frc.robot.utils.SharedUtils;
 
 @Logged
-public class PivotArmSubsystem extends SubsystemBase {
+public class PivotSubsytem extends SubsystemBase {
     private final SparkMax armMotor = new SparkMax(35, MotorType.kBrushless);
     private final SparkClosedLoopController armController = armMotor.getClosedLoopController();
 
@@ -44,7 +44,7 @@ public class PivotArmSubsystem extends SubsystemBase {
     private final LaserCan laserCan = new LaserCan(0);
 
 
-    public PivotArmSubsystem(){
+    public PivotSubsytem(){
         SparkMaxConfig config = new SparkMaxConfig();
         config.closedLoop
             .p(1)

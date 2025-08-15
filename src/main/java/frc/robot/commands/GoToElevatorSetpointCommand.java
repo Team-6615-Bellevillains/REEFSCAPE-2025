@@ -5,20 +5,20 @@ import static edu.wpi.first.units.Units.Percent;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.PivotArmSubsystem;
+import frc.robot.subsystems.PivotSubsytem;
 import frc.robot.subsystems.ElevatorSubsystem.SetpointID;
-import frc.robot.subsystems.PivotArmSubsystem.Position;
+import frc.robot.subsystems.PivotSubsytem.Position;
 
 public class GoToElevatorSetpointCommand extends Command{
     private final ElevatorSubsystem elevator;
-    private final PivotArmSubsystem pivot;
+    private final PivotSubsytem pivot;
     private final ElevatorSubsystem.SetpointID setpointID;
 
-    public GoToElevatorSetpointCommand(ElevatorSubsystem elevatorSubsystem, PivotArmSubsystem pivotArmSubsystem, ElevatorSubsystem.SetpointID setpointID){
-        this.addRequirements(elevatorSubsystem, pivotArmSubsystem);
+    public GoToElevatorSetpointCommand(ElevatorSubsystem elevatorSubsystem, PivotSubsytem pivotSubsystem, ElevatorSubsystem.SetpointID setpointID){
+        this.addRequirements(elevatorSubsystem, pivotSubsystem);
 
         this.elevator = elevatorSubsystem;
-        this.pivot = pivotArmSubsystem;
+        this.pivot = pivotSubsystem;
         this.setpointID = setpointID;
     }
     
