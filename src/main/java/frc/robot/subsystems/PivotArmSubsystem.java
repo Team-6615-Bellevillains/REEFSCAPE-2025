@@ -35,7 +35,8 @@ public class PivotArmSubsystem extends SubsystemBase {
     private SparkFlex conveyorMotor = new SparkFlex(20, MotorType.kBrushless);
 
     private Position position = Position.IN;
-    private static final Dimensionless CONVERSION_FACTOR = Rotations.of(25).div(Degrees.of(360));
+    // Can't use units for conversion factor because numerator and denominator are both Rotations
+    private static final double ANGLE_CONVERSION_FACTOR = 25.0; // 25 motor rotations per pivot rotation
     private LaserCan laserCan = new LaserCan(0);
 
 
@@ -81,7 +82,7 @@ public class PivotArmSubsystem extends SubsystemBase {
 
     public Angle getPivotAngle(){
         return Rotations.of(armMotor.getEncoder().getPosition())
-                        .div(CONVERSION_FACTOR);
+                        .div(ANGLE_CONVERSION_FACTOR);
     }
 
     public Command setArmPositionCommand(Position position){
