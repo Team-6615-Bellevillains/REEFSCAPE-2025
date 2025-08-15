@@ -19,6 +19,7 @@ import frc.robot.commands.ThrowBallAutonCommand;
 import frc.robot.commands.AlgaeAlignAssist.Target;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.SetpointID;
@@ -33,6 +34,9 @@ public class RobotContainer {
     private AlgaeGrabberSubsystem algae = new AlgaeGrabberSubsystem();
     private ElevatorSubsystem elevator = new ElevatorSubsystem();
     private PivotArmSubsystem pivot = new PivotArmSubsystem();
+    @SuppressWarnings("unused") // Needs to be constructed for its periodic method to be run.
+    private LEDSubsystem ledSubsystem = new LEDSubsystem();
+
 
     private SendableChooser<Command> autoChooser;    
     
