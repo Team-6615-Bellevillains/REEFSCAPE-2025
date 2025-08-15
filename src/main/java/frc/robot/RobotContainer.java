@@ -37,7 +37,6 @@ public class RobotContainer {
     @SuppressWarnings("unused") // Needs to be constructed for its periodic method to be run.
     private LEDSubsystem ledSubsystem = new LEDSubsystem();
 
-
     private SendableChooser<Command> autoChooser;    
     
     // from the YAGSL example project, hence the diabolical formatting
