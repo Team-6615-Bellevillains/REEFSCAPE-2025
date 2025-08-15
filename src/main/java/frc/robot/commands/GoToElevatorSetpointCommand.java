@@ -10,32 +10,32 @@ import frc.robot.subsystems.ElevatorSubsystem.SetpointID;
 import frc.robot.subsystems.PivotSubsytem.Position;
 
 public class GoToElevatorSetpointCommand extends Command{
-    private final ElevatorSubsystem elevator;
-    private final PivotSubsytem pivot;
+    private final ElevatorSubsystem elevatorSubsystem;
+    private final PivotSubsytem pivotSubsystem;
     private final ElevatorSubsystem.SetpointID setpointID;
 
     public GoToElevatorSetpointCommand(ElevatorSubsystem elevatorSubsystem, PivotSubsytem pivotSubsystem, ElevatorSubsystem.SetpointID setpointID){
         this.addRequirements(elevatorSubsystem, pivotSubsystem);
 
-        this.elevator = elevatorSubsystem;
-        this.pivot = pivotSubsystem;
+        this.elevatorSubsystem = elevatorSubsystem;
+        this.pivotSubsystem = pivotSubsystem;
         this.setpointID = setpointID;
     }
     
     @Override
     public void initialize() {
-        if(elevator.getCurrentSetpointID() == setpointID){
+        if(elevatorSubsystem.getCurrentSetpointID() == setpointID){
             return;
         }
 
-        elevator.setReference(setpointID);
-        pivot.setArmPosition(setpointID == SetpointID.AB ? Position.IN : Position.OUT);
+        elevatorSubsystem.setReference(setpointID);
+        pivotSubsystem.setArmPosition(setpointID == SetpointID.AB ? Position.IN : Position.OUT);
     }
 
     @Override
     public boolean isFinished() {
-        SmartDashboard.putBoolean("GoToElevatorPositionCommand.isFinished()", elevator.atPosition());
-        return elevator.atPosition();
+        SmartDashboard.putBoolean("GoToElevatorPositionCommand.isFinished()", elevatorSubsystem.atPosition());
+        return elevatorSubsystem.atPosition();
     }
 
     @Override
@@ -43,15 +43,15 @@ public class GoToElevatorSetpointCommand extends Command{
         switch (setpointID) {
             case L1:
             case AB:
-                pivot.setArmPosition(Position.IN);
+                pivotSubsystem.setArmPosition(Position.IN);
                 break;
             case A1:
             case A2:
-                pivot.setArmPosition(Position.OUT);
-                pivot.setGrabberPower(Percent.of(20));
+                pivotSubsystem.setArmPosition(Position.OUT);
+                pivotSubsystem.setGrabberPower(Percent.of(20));
                 break;
             default:
-                pivot.setArmPosition(Position.OUT);
+                pivotSubsystem.setArmPosition(Position.OUT);
                 break;
         }
     }

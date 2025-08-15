@@ -30,23 +30,23 @@ public class RobotContainer {
     private final CommandXboxController driverController = new CommandXboxController(0);
     private final CommandXboxController operatorController = new CommandXboxController(1);
 
-    private final SwerveSubsystem swerve = new SwerveSubsystem(driverController);
-    private final FloorAlgaeSubsystem floorAlgae = new FloorAlgaeSubsystem();
-    private final ElevatorSubsystem elevator = new ElevatorSubsystem();
-    private final PivotSubsytem pivot = new PivotSubsytem();
+    private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(driverController);
+    private final FloorAlgaeSubsystem floorAlgaeSubsystem = new FloorAlgaeSubsystem();
+    private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+    private final PivotSubsytem pivotSubsystem = new PivotSubsytem();
     @SuppressWarnings("unused") // Needs to be constructed for its periodic method to be run.
     private final LEDSubsystem ledSubsystem = new LEDSubsystem();
 
     private final SendableChooser<Command> autoChooser;    
     
     // from the YAGSL example project, hence the diabolical formatting
-    SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerve.getSwerveDrive(),
+    SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerveSubsystem.getSwerveDrive(),
                                                                 () -> -driverController.getLeftY(),
                                                                 () -> -driverController.getLeftX())
                                                             .withControllerRotationAxis(() -> -driverController.getRightX())
                                                             .allianceRelativeControl(true);
 
-    SwerveInputStream driveAngularVelocitySlow = SwerveInputStream.of(swerve.getSwerveDrive(),
+    SwerveInputStream driveAngularVelocitySlow = SwerveInputStream.of(swerveSubsystem.getSwerveDrive(),
                                                                 () -> driverController.getLeftY() * -0.5,
                                                                 () -> driverController.getLeftX() * -0.5)
                                                             .withControllerRotationAxis(driverController::getRightX)
@@ -61,17 +61,17 @@ public class RobotContainer {
         // Robot is always loaded at start of Autonomous
         RobotModeTriggers.autonomous().onTrue(Commands.runOnce(() -> SharedState.get().setLoaded(true)));
 
-        NamedCommands.registerCommand("elevatorL1", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L1));
-        NamedCommands.registerCommand("elevatorL2", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L2));
-        NamedCommands.registerCommand("elevatorL3", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L3));
-        NamedCommands.registerCommand("elevatorL4", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L4));
-        NamedCommands.registerCommand("elevatorA1", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A1));
-        NamedCommands.registerCommand("elevatorA2", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A2));
-        NamedCommands.registerCommand("elevatorAB", new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.AB));
+        NamedCommands.registerCommand("elevatorL1", new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.L1));
+        NamedCommands.registerCommand("elevatorL2", new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.L2));
+        NamedCommands.registerCommand("elevatorL3", new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.L3));
+        NamedCommands.registerCommand("elevatorL4", new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.L4));
+        NamedCommands.registerCommand("elevatorA1", new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.A1));
+        NamedCommands.registerCommand("elevatorA2", new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.A2));
+        NamedCommands.registerCommand("elevatorAB", new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.AB));
 
-        NamedCommands.registerCommand("loadCoralAuto", new LoadCoralLaserCANCommand(pivot));
-        NamedCommands.registerCommand("spitCoralAuto", new SpitCoralAutonCommand(pivot));
-        NamedCommands.registerCommand("throwBallAuto", new ThrowBallAutonCommand(pivot));
+        NamedCommands.registerCommand("loadCoralAuto", new LoadCoralLaserCANCommand(pivotSubsystem));
+        NamedCommands.registerCommand("spitCoralAuto", new SpitCoralAutonCommand(pivotSubsystem));
+        NamedCommands.registerCommand("throwBallAuto", new ThrowBallAutonCommand(pivotSubsystem));
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -81,11 +81,11 @@ public class RobotContainer {
 
     private void configureBindings(){
         // Swerve
-        swerve.setDefaultCommand(swerve.driveCommand(driveAngularVelocity, driveAngularVelocitySlow, driverController));
-        driverController.a().onTrue(swerve.resetHeading());
+        swerveSubsystem.setDefaultCommand(swerveSubsystem.driveCommand(driveAngularVelocity, driveAngularVelocitySlow, driverController));
+        driverController.a().onTrue(swerveSubsystem.resetHeading());
         driverController.b().whileTrue(
             new AlgaeAlignAssist(
-                swerve, 
+                swerveSubsystem, 
                 () -> -driverController.getLeftY(),
                 () -> -driverController.getLeftX(), 
                 false,
@@ -94,31 +94,31 @@ public class RobotContainer {
         );
         
         // Algae Grabber
-        driverController.x().onTrue(floorAlgae.resetAlgaeState());
-        driverController.leftBumper().whileTrue(floorAlgae.spitAlgae());
-        driverController.rightBumper().onTrue(new IntakeFloorAlgaeCommand(floorAlgae));
+        driverController.x().onTrue(floorAlgaeSubsystem.resetAlgaeState());
+        driverController.leftBumper().whileTrue(floorAlgaeSubsystem.spitAlgae());
+        driverController.rightBumper().onTrue(new IntakeFloorAlgaeCommand(floorAlgaeSubsystem));
 
         // Elevator
-        driverController.start().onTrue(elevator.zeroElevatorCommand());
+        driverController.start().onTrue(elevatorSubsystem.zeroElevatorCommand());
 
-        operatorController.povDown().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L1));
-        operatorController.povLeft().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L2));
-        operatorController.povUp().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L3));
-        operatorController.povRight().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.L4));
-        operatorController.leftBumper().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A1));
-        operatorController.leftTrigger().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.A2));
-        operatorController.back().onTrue(new GoToElevatorSetpointCommand(elevator, pivot, SetpointID.AB));
+        operatorController.povDown().onTrue(new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.L1));
+        operatorController.povLeft().onTrue(new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.L2));
+        operatorController.povUp().onTrue(new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.L3));
+        operatorController.povRight().onTrue(new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.L4));
+        operatorController.leftBumper().onTrue(new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.A1));
+        operatorController.leftTrigger().onTrue(new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.A2));
+        operatorController.back().onTrue(new GoToElevatorSetpointCommand(elevatorSubsystem, pivotSubsystem, SetpointID.AB));
 
         // Pivot
-        operatorController.a().whileTrue(pivot.spitCoral());
-        operatorController.b().onTrue(pivot.invertInOut());
-        operatorController.x().whileTrue(pivot.reverseCoral());
-        operatorController.y().whileTrue(pivot.L1Shot());
-        operatorController.rightTrigger().onTrue(pivot.grabAlgaeBargeShotCommand());
-        operatorController.start().whileTrue(pivot.throwBallCommand());
+        operatorController.a().whileTrue(pivotSubsystem.spitCoral());
+        operatorController.b().onTrue(pivotSubsystem.invertInOut());
+        operatorController.x().whileTrue(pivotSubsystem.reverseCoral());
+        operatorController.y().whileTrue(pivotSubsystem.L1Shot());
+        operatorController.rightTrigger().onTrue(pivotSubsystem.grabAlgaeBargeShotCommand());
+        operatorController.start().whileTrue(pivotSubsystem.throwBallCommand());
 
         // Misc.
-        operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivot));
+        operatorController.rightBumper().onTrue(new LoadCoralLaserCANCommand(pivotSubsystem));
     }
 
     public Command getAutonomousCommand(){

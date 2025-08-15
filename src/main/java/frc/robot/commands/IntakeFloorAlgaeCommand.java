@@ -13,25 +13,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.FloorAlgaeSubsystem;
 
 public class IntakeFloorAlgaeCommand extends Command{
-    private final FloorAlgaeSubsystem floorAlgae;
+    private final FloorAlgaeSubsystem floorAlgaeSubsystem;
     private AlgaeGrabProgress algaeGrabProgress;
     private final Timer spinupTimer = new Timer();
     private final Timer suckingTimer = new Timer();
 
     private static final Time SUCK_TIME = Seconds.of(1);
 
-    public IntakeFloorAlgaeCommand(FloorAlgaeSubsystem floorAlgaealgae){
-        addRequirements(floorAlgaealgae);
-        this.floorAlgae = floorAlgaealgae;
+    public IntakeFloorAlgaeCommand(FloorAlgaeSubsystem floorAlgaeSubsystem){
+        addRequirements(floorAlgaeSubsystem);
+        this.floorAlgaeSubsystem = floorAlgaeSubsystem;
 
         algaeGrabProgress = AlgaeGrabProgress.WAITING;
     }
 
     @Override
     public void initialize() {
-        floorAlgae.setReference(Degrees.of(65));
-        floorAlgae.setIntakePower(Percent.of(-100));
-        floorAlgae.setIntakeCurrentLimit(Amps.of(30));
+        floorAlgaeSubsystem.setReference(Degrees.of(65));
+        floorAlgaeSubsystem.setIntakePower(Percent.of(-100));
+        floorAlgaeSubsystem.setIntakeCurrentLimit(Amps.of(30));
 
         suckingTimer.restart();
         spinupTimer.restart();
@@ -42,7 +42,7 @@ public class IntakeFloorAlgaeCommand extends Command{
     public void execute() {
         switch (algaeGrabProgress){
             case WAITING:
-                if (spinupTimer.hasElapsed(0.4) && floorAlgae.getIntakeVelocity().gt(Rotations.per(Minute).of(-30))) {
+                if (spinupTimer.hasElapsed(0.4) && floorAlgaeSubsystem.getIntakeVelocity().gt(Rotations.per(Minute).of(-30))) {
                     algaeGrabProgress = AlgaeGrabProgress.SUCKING;
                 }
 
@@ -54,9 +54,9 @@ public class IntakeFloorAlgaeCommand extends Command{
 
                 break;
             case FINALISING:
-                floorAlgae.setReference(Degrees.of(15));
+                floorAlgaeSubsystem.setReference(Degrees.of(15));
 
-                if (floorAlgae.getPosition().isNear(Degrees.of(15), Degrees.of(2))) {
+                if (floorAlgaeSubsystem.getPosition().isNear(Degrees.of(15), Degrees.of(2))) {
                     algaeGrabProgress = AlgaeGrabProgress.END;
                 }
 
@@ -74,11 +74,11 @@ public class IntakeFloorAlgaeCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        floorAlgae.setIntakeCurrentLimit(Amps.of(30));
+        floorAlgaeSubsystem.setIntakeCurrentLimit(Amps.of(30));
 
         if (interrupted){
-            floorAlgae.setReference(Degrees.of(5));
-            floorAlgae.setIntakePower(Percent.zero());
+            floorAlgaeSubsystem.setReference(Degrees.of(5));
+            floorAlgaeSubsystem.setIntakePower(Percent.zero());
         } 
     }
 

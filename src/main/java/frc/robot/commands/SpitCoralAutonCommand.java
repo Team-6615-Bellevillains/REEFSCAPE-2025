@@ -15,9 +15,9 @@ public class SpitCoralAutonCommand extends Command{
     private static final Angle endRotations = Rotations.of(16);
     private final PivotSubsytem pivotSubsystem;
     
-    public SpitCoralAutonCommand(PivotSubsytem subsystem){
-        this.pivotSubsystem = subsystem;
-        this.addRequirements(subsystem);
+    public SpitCoralAutonCommand(PivotSubsytem pivotSubsystem){
+        this.pivotSubsystem = pivotSubsystem;
+        this.addRequirements(pivotSubsystem);
     }
 
     @Override

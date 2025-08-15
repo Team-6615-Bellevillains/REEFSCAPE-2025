@@ -15,9 +15,9 @@ public class ThrowBallAutonCommand extends Command{
     private final Timer runTimer = new Timer();
     private final PivotSubsytem pivotSubsystem;
     
-    public ThrowBallAutonCommand(PivotSubsytem subsystem){
-        this.pivotSubsystem = subsystem;
-        this.addRequirements(subsystem);
+    public ThrowBallAutonCommand(PivotSubsytem pivotSubsystem){
+        this.pivotSubsystem = pivotSubsystem;
+        this.addRequirements(pivotSubsystem);
     }
 
     @Override

@@ -41,7 +41,7 @@ public class PivotSubsytem extends SubsystemBase {
     private Position position = Position.IN;
     private final LaserCan laserCan = new LaserCan(0);
 
-    // 25 motor rotations per pivot rotation
+    // 25 motor rotations per pivotSubsystem rotation
     private static final Dimensionless ANGLE_CONVERSION_FACTOR = Rotations.of(25.0).div(Rotations.one()); 
 
     public PivotSubsytem(){

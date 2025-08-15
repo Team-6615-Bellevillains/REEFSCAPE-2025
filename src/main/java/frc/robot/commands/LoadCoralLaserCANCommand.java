@@ -17,22 +17,22 @@ public class LoadCoralLaserCANCommand extends Command{
     private boolean finished;
     private boolean seenCoral;
 
-    private final PivotSubsytem pivot;
+    private final PivotSubsytem pivotSubsystem;
 
     private final Timer simulationTimer = new Timer();
     private Time simulationTimeUntilLoad;
 
-    public LoadCoralLaserCANCommand(PivotSubsytem pivot){
-        this.addRequirements(pivot);
+    public LoadCoralLaserCANCommand(PivotSubsytem pivotSubsystem){
+        this.addRequirements(pivotSubsystem);
 
-        this.pivot = pivot;
+        this.pivotSubsystem = pivotSubsystem;
     }
     
     @Override
     public void initialize() {
        finished = false;
        seenCoral = false; 
-       pivot.loadCoral();
+       pivotSubsystem.loadCoral();
        
        if (Robot.isSimulation()) {
         simulationTimer.restart();
@@ -43,8 +43,8 @@ public class LoadCoralLaserCANCommand extends Command{
     @Override
     public void execute() {
         if(!seenCoral){
-            seenCoral = pivot.measureCoralInWay();
-        } else finished = !pivot.measureCoralInWay();
+            seenCoral = pivotSubsystem.measureCoralInWay();
+        } else finished = !pivotSubsystem.measureCoralInWay();
 
         if (Robot.isSimulation()) {
             SmartDashboard.putNumber("Sim. Load Finished Countdown", simulationTimeUntilLoad.in(Seconds) - simulationTimer.get());
@@ -62,7 +62,7 @@ public class LoadCoralLaserCANCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        pivot.stopMotors();
+        pivotSubsystem.stopMotors();
         if (!interrupted) {
             SharedState.get().setLoaded(true);
         }
