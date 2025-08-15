@@ -13,7 +13,6 @@ public class GrabAlgaeCommand extends Command{
     private final AlgaeGrabberSubsystem algae;
     private int delayTicks;
     private AlgaeGrabProgress algaeGrabProgress;
-    private boolean stopped;
     private final Timer spinupTimer = new Timer();
 
     public GrabAlgaeCommand(AlgaeGrabberSubsystem algae){
@@ -29,7 +28,6 @@ public class GrabAlgaeCommand extends Command{
         algae.setGrabberPower(Percent.of(-100));
         algae.setGrabberCurrentLimit(30);
 
-        stopped = false;
         delayTicks = 50;
         spinupTimer.restart();
         algaeGrabProgress = AlgaeGrabProgress.WAITING;
