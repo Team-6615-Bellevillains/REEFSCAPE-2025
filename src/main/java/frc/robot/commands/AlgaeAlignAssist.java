@@ -15,7 +15,6 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -30,7 +29,6 @@ import frc.robot.utils.AutoAlignUtil;
 
 @Logged
 public class AlgaeAlignAssist extends Command {
-
     private final PIDController leftRightController = new PIDController(5.0, 0, 0);
     private final ProfiledPIDController thetaController = new ProfiledPIDController(5.0, 0, 0, 
         new TrapezoidProfile.Constraints(
@@ -42,34 +40,34 @@ public class AlgaeAlignAssist extends Command {
     private Pose2d targetAlgaePose;
 
     private final Supplier<Double> joystickX;
-    private final Supplier<Double> joystickY;
 
     private final boolean shouldFinishWhenAtSetpoint;
-    private double offsetInches;
+    private Distance offset;
     private final double velocityMultiplier = 2.5;
 
-    private final Distance LEFT_RIGHT_POSITION_TOLERANCE = Inches.of(0.25);
-    private final Angle ROTATION_TOLERANCE = Degrees.of(1);
+    private static final Distance LEFT_RIGHT_POSITION_TOLERANCE = Inches.of(0.25);
+    private static final Angle ROTATION_TOLERANCE = Degrees.of(1);
 
     private final SwerveSubsystem swerveSubsystem;
     
     public AlgaeAlignAssist(SwerveSubsystem swerveSubsystem, Supplier<Double> joystickX, Supplier<Double> joystickY, boolean shouldFinishWhenAtSetpoint, Target target) {
+        addRequirements(swerveSubsystem);
+
         this.joystickX = joystickX;
-        this.joystickY = joystickY;
 
         this.shouldFinishWhenAtSetpoint = shouldFinishWhenAtSetpoint;
 
         switch (target) {
             case ALGAE:
-                offsetInches = 2.25; 
+                offset = Inches.of(2.25); 
                 break;
         
             case LEFT:
-                offsetInches = 6.5;
+                offset = Inches.of(6.5);
                 break;
 
             case RIGHT:
-                offsetInches = -6.5;
+                offset = Inches.of(-6.5);
                 break;
         }
 
@@ -81,7 +79,6 @@ public class AlgaeAlignAssist extends Command {
         thetaController.enableContinuousInput(0, Units.degreesToRadians(360));
 
         this.swerveSubsystem = swerveSubsystem;
-        addRequirements(swerveSubsystem);
     }
 
     @Override
@@ -104,17 +101,8 @@ public class AlgaeAlignAssist extends Command {
         Pose2d normalizedRobotPose = normalizeFromReef(robotPose, targetAlgaePose);
         Pose2d normalizedTargetPose = normalizeFromReef(targetAlgaePose, targetAlgaePose);
 
-        double leftRightVelocity = leftRightController.calculate(normalizedRobotPose.getY(), normalizedTargetPose.getY() + Meters.convertFrom(offsetInches, Inches));
+        double leftRightVelocity = leftRightController.calculate(normalizedRobotPose.getY(), normalizedTargetPose.getY() + offset.in(Meters));
         double thetaVelocity = thetaController.calculate(robotPose.getRotation().getRadians(), targetAlgaePose.getRotation().getRadians());
-
-        DriverStation.Alliance alliance = 
-            DriverStation.getAlliance()
-                         .orElse(DriverStation.Alliance.Blue);
-
-        Rotation2d sideBiasedFieldOrientedRotation =
-            alliance == DriverStation.Alliance.Blue ? 
-                robotPose.getRotation() : 
-                robotPose.getRotation().rotateBy(Rotation2d.k180deg);
 
         double forwardsBackwardsVelocity = -joystickX.get() * velocityMultiplier;
 
@@ -132,7 +120,7 @@ public class AlgaeAlignAssist extends Command {
 
     Pose2d normalizeFromReef(Pose2d in, Pose2d tag) {
         DriverStation.Alliance alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
-        Translation2d centerOfReef = AprilTagDataUtil.get().getReefCenter(alliance);
+        Translation2d centerOfReef = AprilTagDataUtil.getReefCenter(alliance);
 
         return in.rotateAround(centerOfReef, tag.getRotation().unaryMinus());
     }
