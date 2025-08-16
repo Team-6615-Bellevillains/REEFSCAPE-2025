@@ -40,154 +40,151 @@ public class SwerveSubsystem extends SubsystemBase {
     private SwerveDrive swerveDrive;
     private final Pigeon2 gyro = new Pigeon2(0);
     private final Field2d field = new Field2d();
-    private final CommandXboxController driverController;
 
-    public SwerveSubsystem(CommandXboxController driverController){
-        this.driverController = driverController;
-
+    public SwerveSubsystem() {
         try {
-           swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed.in(MetersPerSecond));
-           swerveDrive.setChassisDiscretization(true, 0.02);
-           swerveDrive.setCosineCompensator(true);
-           swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
+            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed.in(MetersPerSecond));
+            swerveDrive.setChassisDiscretization(true, 0.02);
+            swerveDrive.setCosineCompensator(true);
+            swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
         } catch (Exception e) {
             e.printStackTrace();
         }
-       
-        
+
         RobotConfig config;
         try {
-          config = RobotConfig.fromGUISettings();
+            config = RobotConfig.fromGUISettings();
         } catch (Exception e) {
-          throw new RuntimeException("PathPlanner config file missing");
+            throw new RuntimeException("PathPlanner config file missing");
         }
-        
-        AutoBuilder.configure(this::getPose, 
-        this::resetOdometry, 
-        this::getRobotVelocity, 
-        (speeds, feedForward)->{swerveDrive.setChassisSpeeds(speeds);}, 
-        new PPHolonomicDriveController(new PIDConstants(2.0, 0.0,0.0), 
-        new PIDConstants(2.0,0.0,0.0)), 
-        config, 
-        () -> {
-            // Boolean supplier that controls when the path will be mirrored for the red alliance
-            // This will flip the path being followed to the red side of the field.
-            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-            Optional<Alliance> alliance = DriverStation.getAlliance();
-            if (alliance.isPresent())
-            {
-              return alliance.get() == DriverStation.Alliance.Red;
-            }
-            return false;
-          }, 
-          this);
-          SmartDashboard.putData("field", field);
+        AutoBuilder.configure(
+            this::getPose,
+            this::resetOdometry,
+            this::getRobotVelocity,
+            (speeds, feedForward) -> swerveDrive.setChassisSpeeds(speeds),
+            new PPHolonomicDriveController(
+                new PIDConstants(2.0, 0.0, 0.0),
+                new PIDConstants(2.0, 0.0, 0.0)
+            ),
+            config,
+            () -> {
+                // Boolean supplier that controls when the path will be mirrored for the red
+                // alliance
+                // This will flip the path being followed to the red side of the field.
+                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
+                Optional<Alliance> alliance = DriverStation.getAlliance();
+                if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
+            },
+            this
+        );
+        SmartDashboard.putData("field", field);
 
-      LimelightHelpers.setCameraPose_RobotSpace("limelight", -0.1524, -.2794, .3683, 0, 0, 180);
-      
-      // Use only reef tags for pose estimation
-      LimelightHelpers.SetFiducialIDFiltersOverride("limelight", new int[]{
-         6,  7,  8,  9, 10, 11, // Red Reef Tags
-        17, 18, 19, 20, 21, 22  // Blue Reef Tags
-      });
+        LimelightHelpers.setCameraPose_RobotSpace("limelight", -0.1524, -.2794, .3683, 0, 0, 180);
+
+        // Use only reef tags for pose estimation
+        LimelightHelpers.SetFiducialIDFiltersOverride("limelight", new int[] {
+                6, 7, 8, 9, 10, 11, // Red Reef Tags
+                17, 18, 19, 20, 21, 22 // Blue Reef Tags
+        });
     }
 
     @Override
     public void periodic() {
-      
+        Pose2d currentRobotPose = getPose();
+        field.setRobotPose(currentRobotPose);
 
+        addLimelightPoseEstimate(currentRobotPose);
 
-      Pose2d currentRobotPose = getPose();
-      field.setRobotPose(currentRobotPose);
-      SmartDashboard.putNumber("rotation fed to limelight", currentRobotPose.getRotation().getDegrees());
-      LimelightHelpers.SetRobotOrientation("limelight", currentRobotPose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-      if(mt2 != null && !(Math.abs(gyro.getAngularVelocityYWorld().getValueAsDouble())>360 || mt2.tagCount == 0)){
-        swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1
-          , 9999999));
-        swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-      }
-
-      SmartDashboard.putNumber("Pose X", swerveDrive.getPose().getX());
-      SmartDashboard.putNumber("Pose Y", swerveDrive.getPose().getY());
+        SmartDashboard.putNumber("Pose X", swerveDrive.getPose().getX());
+        SmartDashboard.putNumber("Pose Y", swerveDrive.getPose().getY());
     }
 
+    private void addLimelightPoseEstimate(Pose2d currentRobotPose) {
+        LimelightHelpers.SetRobotOrientation("limelight", currentRobotPose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 
-  public Command driveCommand(SwerveInputStream velocity, SwerveInputStream slowedVelocity, CommandXboxController controller){
-    return run(()->{
-      if (controller.leftTrigger().getAsBoolean()){
-        swerveDrive.driveFieldOriented(slowedVelocity.get());
-      } else {
-        swerveDrive.driveFieldOriented(velocity.get());
-      }
-    });
-  }
-  
-  
-  public void driveFieldOriented(ChassisSpeeds velocity){
-    swerveDrive.driveFieldOriented(velocity);
-  }
+        if (mt2 == null // No pose estimate
+            || Math.abs(gyro.getAngularVelocityYWorld().getValueAsDouble()) > 360 // Robot is rotating too fast to be accurate
+            || mt2.tagCount == 0 // Can't see any tags
+        ) {
+            return;
+        }
 
-  public SwerveDrive getSwerveDrive(){
-    return swerveDrive;
-  }
+        swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1, 9999999));
+        swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+    }
 
-  public Pose2d getPose(){
-    return swerveDrive.getPose();
-  }
+    public Command driveCommand(
+        SwerveInputStream velocity, 
+        SwerveInputStream slowedVelocity,
+        CommandXboxController controller
+    ) {
+        return run(() -> {
+            if (controller.leftTrigger().getAsBoolean()) {
+                swerveDrive.driveFieldOriented(slowedVelocity.get());
+            } else {
+                swerveDrive.driveFieldOriented(velocity.get());
+            }
+        });
+    }
 
-  public void resetOdometry(Pose2d initialHolonomicPose){
-    swerveDrive.resetOdometry(initialHolonomicPose);
-  }
+    public void driveFieldOriented(ChassisSpeeds velocity) {
+        swerveDrive.driveFieldOriented(velocity);
+    }
 
-  public ChassisSpeeds getRobotVelocity(){
-    return swerveDrive.getRobotVelocity();
-  }
+    public SwerveDrive getSwerveDrive() {
+        return swerveDrive;
+    }
 
-  public Command resetHeading(){
-    return this.runOnce(()->{
-      swerveDrive.zeroGyro();
-    });
-  }
+    public Pose2d getPose() {
+        return swerveDrive.getPose();
+    }
 
-  public Command angleNegative60(){
-    return this.runOnce(()->{
-      swerveDrive.zeroGyro();
-      swerveDrive.setGyro(new Rotation3d(Rotation2d.fromDegrees(-60)));
-    });
-  }
+    public void resetOdometry(Pose2d initialHolonomicPose) {
+        swerveDrive.resetOdometry(initialHolonomicPose);
+    }
 
-  // Used to retake control from AutoAlign
-  public boolean isBeingControlledByHuman() {
-    double leftStickPower = Math.abs(new Translation2d(driverController.getLeftX(), driverController.getLeftY()).getNorm());
-    double rightStickPower = Math.abs(new Translation2d(driverController.getRightX(), driverController.getRightY()).getNorm());
+    public ChassisSpeeds getRobotVelocity() {
+        return swerveDrive.getRobotVelocity();
+    }
 
-    return leftStickPower > 0.05 || rightStickPower > 0.05;
-  }
+    public Command resetHeading() {
+        return this.runOnce(() -> {
+            swerveDrive.zeroGyro();
+        });
+    }
 
-  public ChassisSpeeds getFieldVelocity(){
-    return swerveDrive.getFieldVelocity();
-  }
+    public Command angleNegative60() {
+        return this.runOnce(() -> {
+            swerveDrive.zeroGyro();
+            swerveDrive.setGyro(new Rotation3d(Rotation2d.fromDegrees(-60)));
+        });
+    }
 
-  public LinearVelocity getVelocityMagnitude() {
-    ChassisSpeeds cs = getFieldVelocity();
-    return MetersPerSecond.of(new Translation2d(cs.vxMetersPerSecond, cs.vyMetersPerSecond).getNorm());
-  }
+    public ChassisSpeeds getFieldVelocity() {
+        return swerveDrive.getFieldVelocity();
+    }
 
-  public Rotation2d getHeading()
-  {
-    return swerveDrive.getYaw();
-  }
+    public LinearVelocity getVelocityMagnitude() {
+        ChassisSpeeds cs = getFieldVelocity();
+        return MetersPerSecond.of(new Translation2d(cs.vxMetersPerSecond, cs.vyMetersPerSecond).getNorm());
+    }
 
-  public Command resetGyroToPlayground() {
-    return this.runOnce(() -> {
-      resetOdometry(new Pose2d(
-        new Translation2d(),
-        Rotation2d.fromDegrees(-60 + 180)
-      ));
-    });
-  }
+    public Rotation2d getHeading() {
+        return swerveDrive.getYaw();
+    }
+
+    public Command resetGyroToPlayground() {
+        return this.runOnce(() -> {
+            resetOdometry(new Pose2d(
+                    new Translation2d(),
+                    Rotation2d.fromDegrees(-60 + 180)));
+        });
+    }
 
 }

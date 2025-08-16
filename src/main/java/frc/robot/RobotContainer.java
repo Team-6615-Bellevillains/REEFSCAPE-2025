@@ -30,7 +30,7 @@ public class RobotContainer {
     private final CommandXboxController driverController = new CommandXboxController(0);
     private final CommandXboxController operatorController = new CommandXboxController(1);
 
-    private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(driverController);
+    private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
     private final FloorAlgaeSubsystem floorAlgaeSubsystem = new FloorAlgaeSubsystem();
     private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     private final PivotSubsytem pivotSubsystem = new PivotSubsytem();
